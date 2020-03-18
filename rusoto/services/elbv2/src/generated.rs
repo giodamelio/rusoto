@@ -37,25 +37,39 @@ use xml::reader::ParserConfig;
 use xml::EventReader;
 
 /// <p>Information about an action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Action {
     /// <p>[HTTPS listeners] Information for using Amazon Cognito to authenticate users. Specify only when <code>Type</code> is <code>authenticate-cognito</code>.</p>
+    #[serde(rename = "AuthenticateCognitoConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub authenticate_cognito_config: Option<AuthenticateCognitoActionConfig>,
     /// <p>[HTTPS listeners] Information about an identity provider that is compliant with OpenID Connect (OIDC). Specify only when <code>Type</code> is <code>authenticate-oidc</code>.</p>
+    #[serde(rename = "AuthenticateOidcConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub authenticate_oidc_config: Option<AuthenticateOidcActionConfig>,
     /// <p>[Application Load Balancer] Information for creating an action that returns a custom HTTP response. Specify only when <code>Type</code> is <code>fixed-response</code>.</p>
+    #[serde(rename = "FixedResponseConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub fixed_response_config: Option<FixedResponseActionConfig>,
     /// <p>Information for creating an action that distributes requests among one or more target groups. For Network Load Balancers, you can specify a single target group. Specify only when <code>Type</code> is <code>forward</code>. If you specify both <code>ForwardConfig</code> and <code>TargetGroupArn</code>, you can specify only one target group using <code>ForwardConfig</code> and it must be the same target group specified in <code>TargetGroupArn</code>.</p>
+    #[serde(rename = "ForwardConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub forward_config: Option<ForwardActionConfig>,
     /// <p>The order for the action. This value is required for rules with multiple actions. The action with the lowest value for order is performed first. The last action to be performed must be one of the following types of actions: a <code>forward</code>, <code>fixed-response</code>, or <code>redirect</code>.</p>
+    #[serde(rename = "Order")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub order: Option<i64>,
     /// <p>[Application Load Balancer] Information for creating a redirect action. Specify only when <code>Type</code> is <code>redirect</code>.</p>
+    #[serde(rename = "RedirectConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub redirect_config: Option<RedirectActionConfig>,
     /// <p>The Amazon Resource Name (ARN) of the target group. Specify only when <code>Type</code> is <code>forward</code> and you want to route to a single target group. To route to one or more target groups, use <code>ForwardConfig</code> instead.</p>
+    #[serde(rename = "TargetGroupArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_group_arn: Option<String>,
     /// <p>The type of action.</p>
+    #[serde(rename = "Type")]
     pub type_: String,
 }
 
@@ -249,10 +263,12 @@ impl AddListenerCertificatesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AddListenerCertificatesOutput {
     /// <p>Information about the certificates in the certificate list.</p>
+    #[serde(rename = "Certificates")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub certificates: Option<Vec<Certificate>>,
 }
 
@@ -307,8 +323,8 @@ impl AddTagsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AddTagsOutput {}
 
 struct AddTagsOutputDeserializer;
@@ -418,25 +434,37 @@ impl AuthenticateCognitoActionConditionalBehaviorEnumDeserializer {
     }
 }
 /// <p>Request parameters to use when integrating with Amazon Cognito to authenticate users.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AuthenticateCognitoActionConfig {
     /// <p>The query parameters (up to 10) to include in the redirect request to the authorization endpoint.</p>
+    #[serde(rename = "AuthenticationRequestExtraParams")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub authentication_request_extra_params: Option<::std::collections::HashMap<String, String>>,
     /// <p><p>The behavior if the user is not authenticated. The following are possible values:</p> <ul> <li> <p>deny<code/> - Return an HTTP 401 Unauthorized error.</p> </li> <li> <p>allow<code/> - Allow the request to be forwarded to the target.</p> </li> <li> <p>authenticate<code/> - Redirect the request to the IdP authorization endpoint. This is the default value.</p> </li> </ul></p>
+    #[serde(rename = "OnUnauthenticatedRequest")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub on_unauthenticated_request: Option<String>,
     /// <p>The set of user claims to be requested from the IdP. The default is <code>openid</code>.</p> <p>To verify which scope values your IdP supports and how to separate multiple values, see the documentation for your IdP.</p>
+    #[serde(rename = "Scope")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scope: Option<String>,
     /// <p>The name of the cookie used to maintain session information. The default is AWSELBAuthSessionCookie.</p>
+    #[serde(rename = "SessionCookieName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub session_cookie_name: Option<String>,
     /// <p>The maximum duration of the authentication session, in seconds. The default is 604800 seconds (7 days).</p>
+    #[serde(rename = "SessionTimeout")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub session_timeout: Option<i64>,
     /// <p>The Amazon Resource Name (ARN) of the Amazon Cognito user pool.</p>
+    #[serde(rename = "UserPoolArn")]
     pub user_pool_arn: String,
     /// <p>The ID of the Amazon Cognito user pool client.</p>
+    #[serde(rename = "UserPoolClientId")]
     pub user_pool_client_id: String,
     /// <p>The domain prefix or fully-qualified domain name of the Amazon Cognito user pool.</p>
+    #[serde(rename = "UserPoolDomain")]
     pub user_pool_domain: String,
 }
 
@@ -730,33 +758,51 @@ impl AuthenticateOidcActionConditionalBehaviorEnumDeserializer {
     }
 }
 /// <p>Request parameters when using an identity provider (IdP) that is compliant with OpenID Connect (OIDC) to authenticate users.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AuthenticateOidcActionConfig {
     /// <p>The query parameters (up to 10) to include in the redirect request to the authorization endpoint.</p>
+    #[serde(rename = "AuthenticationRequestExtraParams")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub authentication_request_extra_params: Option<::std::collections::HashMap<String, String>>,
     /// <p>The authorization endpoint of the IdP. This must be a full URL, including the HTTPS protocol, the domain, and the path.</p>
+    #[serde(rename = "AuthorizationEndpoint")]
     pub authorization_endpoint: String,
     /// <p>The OAuth 2.0 client identifier.</p>
+    #[serde(rename = "ClientId")]
     pub client_id: String,
     /// <p>The OAuth 2.0 client secret. This parameter is required if you are creating a rule. If you are modifying a rule, you can omit this parameter if you set <code>UseExistingClientSecret</code> to true.</p>
+    #[serde(rename = "ClientSecret")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub client_secret: Option<String>,
     /// <p>The OIDC issuer identifier of the IdP. This must be a full URL, including the HTTPS protocol, the domain, and the path.</p>
+    #[serde(rename = "Issuer")]
     pub issuer: String,
     /// <p><p>The behavior if the user is not authenticated. The following are possible values:</p> <ul> <li> <p>deny<code/> - Return an HTTP 401 Unauthorized error.</p> </li> <li> <p>allow<code/> - Allow the request to be forwarded to the target.</p> </li> <li> <p>authenticate<code/> - Redirect the request to the IdP authorization endpoint. This is the default value.</p> </li> </ul></p>
+    #[serde(rename = "OnUnauthenticatedRequest")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub on_unauthenticated_request: Option<String>,
     /// <p>The set of user claims to be requested from the IdP. The default is <code>openid</code>.</p> <p>To verify which scope values your IdP supports and how to separate multiple values, see the documentation for your IdP.</p>
+    #[serde(rename = "Scope")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scope: Option<String>,
     /// <p>The name of the cookie used to maintain session information. The default is AWSELBAuthSessionCookie.</p>
+    #[serde(rename = "SessionCookieName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub session_cookie_name: Option<String>,
     /// <p>The maximum duration of the authentication session, in seconds. The default is 604800 seconds (7 days).</p>
+    #[serde(rename = "SessionTimeout")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub session_timeout: Option<i64>,
     /// <p>The token endpoint of the IdP. This must be a full URL, including the HTTPS protocol, the domain, and the path.</p>
+    #[serde(rename = "TokenEndpoint")]
     pub token_endpoint: String,
     /// <p>Indicates whether to use the existing client secret when modifying a rule. If you are creating a rule, you can omit this parameter or set it to false.</p>
+    #[serde(rename = "UseExistingClientSecret")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub use_existing_client_secret: Option<bool>,
     /// <p>The user info endpoint of the IdP. This must be a full URL, including the HTTPS protocol, the domain, and the path.</p>
+    #[serde(rename = "UserInfoEndpoint")]
     pub user_info_endpoint: String,
 }
 
@@ -992,14 +1038,20 @@ impl AuthenticateOidcActionUserInfoEndpointDeserializer {
     }
 }
 /// <p>Information about an Availability Zone.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AvailabilityZone {
     /// <p>[Network Load Balancers] If you need static IP addresses for your load balancer, you can specify one Elastic IP address per Availability Zone when you create an internal-facing load balancer. For internal load balancers, you can specify a private IP address from the IPv4 range of the subnet.</p>
+    #[serde(rename = "LoadBalancerAddresses")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancer_addresses: Option<Vec<LoadBalancerAddress>>,
     /// <p>The ID of the subnet. You can specify one subnet per Availability Zone.</p>
+    #[serde(rename = "SubnetId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subnet_id: Option<String>,
     /// <p>The name of the Availability Zone.</p>
+    #[serde(rename = "ZoneName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub zone_name: Option<String>,
 }
 
@@ -1061,13 +1113,16 @@ impl CanonicalHostedZoneIdDeserializer {
     }
 }
 /// <p>Information about an SSL server certificate.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Certificate {
     /// <p>The Amazon Resource Name (ARN) of the certificate.</p>
+    #[serde(rename = "CertificateArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub certificate_arn: Option<String>,
     /// <p>Indicates whether the certificate is the default certificate. Do not set this value when specifying a certificate as an input. This value is not included in the output when describing a listener, but is included when describing listener certificates.</p>
+    #[serde(rename = "IsDefault")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_default: Option<bool>,
 }
 
@@ -1155,12 +1210,16 @@ impl CertificateListSerializer {
 }
 
 /// <p>Information about a cipher used in a policy.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Cipher {
     /// <p>The name of the cipher.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p>The priority of the cipher.</p>
+    #[serde(rename = "Priority")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub priority: Option<i64>,
 }
 
@@ -1283,10 +1342,12 @@ impl CreateListenerInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateListenerOutput {
     /// <p>Information about the listener.</p>
+    #[serde(rename = "Listeners")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub listeners: Option<Vec<Listener>>,
 }
 
@@ -1373,10 +1434,12 @@ impl CreateLoadBalancerInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateLoadBalancerOutput {
     /// <p>Information about the load balancer.</p>
+    #[serde(rename = "LoadBalancers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancers: Option<Vec<LoadBalancer>>,
 }
 
@@ -1437,10 +1500,12 @@ impl CreateRuleInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateRuleOutput {
     /// <p>Information about the rule.</p>
+    #[serde(rename = "Rules")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rules: Option<Vec<Rule>>,
 }
 
@@ -1564,10 +1629,12 @@ impl CreateTargetGroupInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateTargetGroupOutput {
     /// <p>Information about the target group.</p>
+    #[serde(rename = "TargetGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_groups: Option<Vec<TargetGroup>>,
 }
 
@@ -1648,8 +1715,8 @@ impl DeleteListenerInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteListenerOutput {}
 
 struct DeleteListenerOutputDeserializer;
@@ -1691,8 +1758,8 @@ impl DeleteLoadBalancerInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteLoadBalancerOutput {}
 
 struct DeleteLoadBalancerOutputDeserializer;
@@ -1731,8 +1798,8 @@ impl DeleteRuleInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteRuleOutput {}
 
 struct DeleteRuleOutputDeserializer;
@@ -1774,8 +1841,8 @@ impl DeleteTargetGroupInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteTargetGroupOutput {}
 
 struct DeleteTargetGroupOutputDeserializer;
@@ -1824,8 +1891,8 @@ impl DeregisterTargetsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeregisterTargetsOutput {}
 
 struct DeregisterTargetsOutputDeserializer;
@@ -1871,12 +1938,16 @@ impl DescribeAccountLimitsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeAccountLimitsOutput {
     /// <p>Information about the limits.</p>
+    #[serde(rename = "Limits")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub limits: Option<Vec<Limit>>,
     /// <p>If there are additional results, this is the marker for the next set of results. Otherwise, this is null.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
 }
 
@@ -1938,12 +2009,16 @@ impl DescribeListenerCertificatesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeListenerCertificatesOutput {
     /// <p>Information about the certificates.</p>
+    #[serde(rename = "Certificates")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub certificates: Option<Vec<Certificate>>,
     /// <p>If there are additional results, this is the marker for the next set of results. Otherwise, this is null.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
 }
 
@@ -2016,12 +2091,16 @@ impl DescribeListenersInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeListenersOutput {
     /// <p>Information about the listeners.</p>
+    #[serde(rename = "Listeners")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub listeners: Option<Vec<Listener>>,
     /// <p>If there are additional results, this is the marker for the next set of results. Otherwise, this is null.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
 }
 
@@ -2076,10 +2155,12 @@ impl DescribeLoadBalancerAttributesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeLoadBalancerAttributesOutput {
     /// <p>Information about the load balancer attributes.</p>
+    #[serde(rename = "Attributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<Vec<LoadBalancerAttribute>>,
 }
 
@@ -2152,12 +2233,16 @@ impl DescribeLoadBalancersInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeLoadBalancersOutput {
     /// <p>Information about the load balancers.</p>
+    #[serde(rename = "LoadBalancers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancers: Option<Vec<LoadBalancer>>,
     /// <p>If there are additional results, this is the marker for the next set of results. Otherwise, this is null.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
 }
 
@@ -2230,12 +2315,16 @@ impl DescribeRulesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeRulesOutput {
     /// <p>If there are additional results, this is the marker for the next set of results. Otherwise, this is null.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
     /// <p>Information about the rules.</p>
+    #[serde(rename = "Rules")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rules: Option<Vec<Rule>>,
 }
 
@@ -2298,12 +2387,16 @@ impl DescribeSSLPoliciesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeSSLPoliciesOutput {
     /// <p>If there are additional results, this is the marker for the next set of results. Otherwise, this is null.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
     /// <p>Information about the policies.</p>
+    #[serde(rename = "SslPolicies")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssl_policies: Option<Vec<SslPolicy>>,
 }
 
@@ -2359,10 +2452,12 @@ impl DescribeTagsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeTagsOutput {
     /// <p>Information about the tags.</p>
+    #[serde(rename = "TagDescriptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tag_descriptions: Option<Vec<TagDescription>>,
 }
 
@@ -2409,10 +2504,12 @@ impl DescribeTargetGroupAttributesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeTargetGroupAttributesOutput {
     /// <p>Information about the target group attributes</p>
+    #[serde(rename = "Attributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<Vec<TargetGroupAttribute>>,
 }
 
@@ -2490,12 +2587,16 @@ impl DescribeTargetGroupsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeTargetGroupsOutput {
     /// <p>If there are additional results, this is the marker for the next set of results. Otherwise, this is null.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
     /// <p>Information about the target groups.</p>
+    #[serde(rename = "TargetGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_groups: Option<Vec<TargetGroup>>,
 }
 
@@ -2559,10 +2660,12 @@ impl DescribeTargetHealthInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeTargetHealthOutput {
     /// <p>Information about the health of the targets.</p>
+    #[serde(rename = "TargetHealthDescriptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_health_descriptions: Option<Vec<TargetHealthDescription>>,
 }
 
@@ -2605,15 +2708,19 @@ impl DescriptionDeserializer {
     }
 }
 /// <p>Information about an action that returns a custom HTTP response.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FixedResponseActionConfig {
     /// <p>The content type.</p> <p>Valid Values: text/plain | text/css | text/html | application/javascript | application/json</p>
+    #[serde(rename = "ContentType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub content_type: Option<String>,
     /// <p>The message.</p>
+    #[serde(rename = "MessageBody")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message_body: Option<String>,
     /// <p>The HTTP response code (2XX, 4XX, or 5XX).</p>
+    #[serde(rename = "StatusCode")]
     pub status_code: String,
 }
 
@@ -2710,13 +2817,16 @@ impl FixedResponseActionStatusCodeDeserializer {
     }
 }
 /// <p>Information about a forward action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ForwardActionConfig {
     /// <p>The target group stickiness for the rule.</p>
+    #[serde(rename = "TargetGroupStickinessConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_group_stickiness_config: Option<TargetGroupStickinessConfig>,
     /// <p>One or more target groups. For Network Load Balancers, you can specify a single target group.</p>
+    #[serde(rename = "TargetGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_groups: Option<Vec<TargetGroupTuple>>,
 }
 
@@ -2830,11 +2940,12 @@ impl HealthCheckTimeoutSecondsDeserializer {
     }
 }
 /// <p>Information about a host header condition.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct HostHeaderConditionConfig {
     /// <p>One or more host names. The maximum size of each name is 128 characters. The comparison is case insensitive. The following wildcard characters are supported: * (matches 0 or more characters) and ? (matches exactly 1 character).</p> <p>If you specify multiple strings, the condition is satisfied if one of the strings matches the host name.</p>
+    #[serde(rename = "Values")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub values: Option<Vec<String>>,
 }
 
@@ -2894,13 +3005,16 @@ impl HttpCodeDeserializer {
     }
 }
 /// <p>Information about an HTTP header condition.</p> <p>There is a set of standard HTTP header fields. You can also define custom HTTP header fields.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct HttpHeaderConditionConfig {
     /// <p>The name of the HTTP header field. The maximum size is 40 characters. The header name is case insensitive. The allowed characters are specified by RFC 7230. Wildcards are not supported.</p> <p>You can't use an HTTP header condition to specify the host header. Use <a>HostHeaderConditionConfig</a> to specify a host header condition.</p>
+    #[serde(rename = "HttpHeaderName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub http_header_name: Option<String>,
     /// <p>One or more strings to compare against the value of the HTTP header. The maximum size of each string is 128 characters. The comparison strings are case insensitive. The following wildcard characters are supported: * (matches 0 or more characters) and ? (matches exactly 1 character).</p> <p>If the same header appears multiple times in the request, we search them in order until a match is found.</p> <p>If you specify multiple strings, the condition is satisfied if one of the strings matches the value of the HTTP header. To require that all of the strings are a match, create one condition per string.</p>
+    #[serde(rename = "Values")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub values: Option<Vec<String>>,
 }
 
@@ -2970,11 +3084,12 @@ impl HttpHeaderConditionNameDeserializer {
     }
 }
 /// <p>Information about an HTTP method condition.</p> <p>HTTP defines a set of request methods, also referred to as HTTP verbs. For more information, see the <a href="https://www.iana.org/assignments/http-methods/http-methods.xhtml">HTTP Method Registry</a>. You can also define custom HTTP methods.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct HttpRequestMethodConditionConfig {
     /// <p>The name of the request method. The maximum size is 40 characters. The allowed characters are A-Z, hyphen (-), and underscore (_). The comparison is case sensitive. Wildcards are not supported; therefore, the method name must be an exact match.</p> <p>If you specify multiple strings, the condition is satisfied if one of the strings matches the HTTP request method. We recommend that you route GET and HEAD requests in the same way, because the response to a HEAD request may be cached.</p>
+    #[serde(rename = "Values")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub values: Option<Vec<String>>,
 }
 
@@ -3056,12 +3171,16 @@ impl IsDefaultDeserializer {
     }
 }
 /// <p>Information about an Elastic Load Balancing resource limit for your AWS account.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Limit {
     /// <p>The maximum value of the limit.</p>
+    #[serde(rename = "Max")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max: Option<String>,
     /// <p><p>The name of the limit. The possible values are:</p> <ul> <li> <p>application-load-balancers</p> </li> <li> <p>listeners-per-application-load-balancer</p> </li> <li> <p>listeners-per-network-load-balancer</p> </li> <li> <p>network-load-balancers</p> </li> <li> <p>rules-per-application-load-balancer</p> </li> <li> <p>target-groups</p> </li> <li> <p>target-groups-per-action-on-application-load-balancer</p> </li> <li> <p>target-groups-per-action-on-network-load-balancer</p> </li> <li> <p>target-groups-per-application-load-balancer</p> </li> <li> <p>targets-per-application-load-balancer</p> </li> <li> <p>targets-per-availability-zone-per-network-load-balancer</p> </li> <li> <p>targets-per-network-load-balancer</p> </li> </ul></p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
@@ -3130,22 +3249,36 @@ impl ListOfStringSerializer {
 }
 
 /// <p>Information about a listener.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Listener {
     /// <p>[HTTPS or TLS listener] The default certificate for the listener.</p>
+    #[serde(rename = "Certificates")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub certificates: Option<Vec<Certificate>>,
     /// <p>The default actions for the listener.</p>
+    #[serde(rename = "DefaultActions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_actions: Option<Vec<Action>>,
     /// <p>The Amazon Resource Name (ARN) of the listener.</p>
+    #[serde(rename = "ListenerArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub listener_arn: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the load balancer.</p>
+    #[serde(rename = "LoadBalancerArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancer_arn: Option<String>,
     /// <p>The port on which the load balancer is listening.</p>
+    #[serde(rename = "Port")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub port: Option<i64>,
     /// <p>The protocol for connections from clients to the load balancer.</p>
+    #[serde(rename = "Protocol")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
     /// <p>[HTTPS or TLS listener] The security policy that defines which ciphers and protocols are supported. The default is the current predefined security policy.</p>
+    #[serde(rename = "SslPolicy")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssl_policy: Option<String>,
 }
 
@@ -3235,32 +3368,56 @@ impl ListenersDeserializer {
     }
 }
 /// <p>Information about a load balancer.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LoadBalancer {
     /// <p>The Availability Zones for the load balancer.</p>
+    #[serde(rename = "AvailabilityZones")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub availability_zones: Option<Vec<AvailabilityZone>>,
     /// <p>The ID of the Amazon Route 53 hosted zone associated with the load balancer.</p>
+    #[serde(rename = "CanonicalHostedZoneId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub canonical_hosted_zone_id: Option<String>,
     /// <p>The date and time the load balancer was created.</p>
+    #[serde(rename = "CreatedTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub created_time: Option<String>,
     /// <p>The public DNS name of the load balancer.</p>
+    #[serde(rename = "DNSName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dns_name: Option<String>,
     /// <p>The type of IP addresses used by the subnets for your load balancer. The possible values are <code>ipv4</code> (for IPv4 addresses) and <code>dualstack</code> (for IPv4 and IPv6 addresses).</p>
+    #[serde(rename = "IpAddressType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ip_address_type: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the load balancer.</p>
+    #[serde(rename = "LoadBalancerArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancer_arn: Option<String>,
     /// <p>The name of the load balancer.</p>
+    #[serde(rename = "LoadBalancerName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancer_name: Option<String>,
     /// <p>The nodes of an Internet-facing load balancer have public IP addresses. The DNS name of an Internet-facing load balancer is publicly resolvable to the public IP addresses of the nodes. Therefore, Internet-facing load balancers can route requests from clients over the internet.</p> <p>The nodes of an internal load balancer have only private IP addresses. The DNS name of an internal load balancer is publicly resolvable to the private IP addresses of the nodes. Therefore, internal load balancers can route requests only from clients with access to the VPC for the load balancer.</p>
+    #[serde(rename = "Scheme")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scheme: Option<String>,
     /// <p>The IDs of the security groups for the load balancer.</p>
+    #[serde(rename = "SecurityGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub security_groups: Option<Vec<String>>,
     /// <p>The state of the load balancer.</p>
+    #[serde(rename = "State")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub state: Option<LoadBalancerState>,
     /// <p>The type of load balancer.</p>
+    #[serde(rename = "Type")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_: Option<String>,
     /// <p>The ID of the VPC for the load balancer.</p>
+    #[serde(rename = "VpcId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vpc_id: Option<String>,
 }
 
@@ -3338,14 +3495,20 @@ impl LoadBalancerDeserializer {
     }
 }
 /// <p>Information about a static IP address for a load balancer.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LoadBalancerAddress {
     /// <p>[Network Load Balancers] The allocation ID of the Elastic IP address for an internal-facing load balancer.</p>
+    #[serde(rename = "AllocationId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub allocation_id: Option<String>,
     /// <p>The static IP address.</p>
+    #[serde(rename = "IpAddress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ip_address: Option<String>,
     /// <p>[Network Load Balancers] The private IPv4 address for an internal load balancer.</p>
+    #[serde(rename = "PrivateIPv4Address")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub private_i_pv_4_address: Option<String>,
 }
 
@@ -3439,13 +3602,16 @@ impl LoadBalancerArnsSerializer {
 }
 
 /// <p>Information about a load balancer attribute.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LoadBalancerAttribute {
     /// <p><p>The name of the attribute.</p> <p>The following attributes are supported by both Application Load Balancers and Network Load Balancers:</p> <ul> <li> <p> <code>access<em>logs.s3.enabled</code> - Indicates whether access logs are enabled. The value is <code>true</code> or <code>false</code>. The default is <code>false</code>.</p> </li> <li> <p> <code>access</em>logs.s3.bucket</code> - The name of the S3 bucket for the access logs. This attribute is required if access logs are enabled. The bucket must exist in the same region as the load balancer and have a bucket policy that grants Elastic Load Balancing permissions to write to the bucket.</p> </li> <li> <p> <code>access<em>logs.s3.prefix</code> - The prefix for the location in the S3 bucket for the access logs.</p> </li> <li> <p> <code>deletion</em>protection.enabled</code> - Indicates whether deletion protection is enabled. The value is <code>true</code> or <code>false</code>. The default is <code>false</code>.</p> </li> </ul> <p>The following attributes are supported by only Application Load Balancers:</p> <ul> <li> <p> <code>idle<em>timeout.timeout</em>seconds</code> - The idle timeout value, in seconds. The valid range is 1-4000 seconds. The default is 60 seconds.</p> </li> <li> <p> <code>routing.http.drop<em>invalid</em>header<em>fields.enabled</code> - Indicates whether HTTP headers with invalid header fields are removed by the load balancer (<code>true</code>) or routed to targets (<code>false</code>). The default is <code>false</code>.</p> </li> <li> <p> <code>routing.http2.enabled</code> - Indicates whether HTTP/2 is enabled. The value is <code>true</code> or <code>false</code>. The default is <code>true</code>.</p> </li> </ul> <p>The following attributes are supported by only Network Load Balancers:</p> <ul> <li> <p> <code>load</em>balancing.cross_zone.enabled</code> - Indicates whether cross-zone load balancing is enabled. The value is <code>true</code> or <code>false</code>. The default is <code>false</code>.</p> </li> </ul></p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>The value of the attribute.</p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -3581,12 +3747,16 @@ impl LoadBalancerSchemeEnumDeserializer {
     }
 }
 /// <p>Information about the state of the load balancer.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LoadBalancerState {
     /// <p>The state code. The initial state of the load balancer is <code>provisioning</code>. After the load balancer is fully set up and ready to route traffic, its state is <code>active</code>. If the load balancer could not be set up, its state is <code>failed</code>.</p>
+    #[serde(rename = "Code")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
     /// <p>A description of the state.</p>
+    #[serde(rename = "Reason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub reason: Option<String>,
 }
 
@@ -3664,11 +3834,11 @@ impl MarkerDeserializer {
     }
 }
 /// <p>Information to use when checking for a successful response from a target.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Matcher {
     /// <p>The HTTP codes.</p> <p>For Application Load Balancers, you can specify values between 200 and 499, and the default value is 200. You can specify multiple values (for example, "200,202") or a range of values (for example, "200-299").</p> <p>For Network Load Balancers, this is 200–399.</p>
+    #[serde(rename = "HttpCode")]
     pub http_code: String,
 }
 
@@ -3768,10 +3938,12 @@ impl ModifyListenerInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ModifyListenerOutput {
     /// <p>Information about the modified listener.</p>
+    #[serde(rename = "Listeners")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub listeners: Option<Vec<Listener>>,
 }
 
@@ -3825,10 +3997,12 @@ impl ModifyLoadBalancerAttributesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ModifyLoadBalancerAttributesOutput {
     /// <p>Information about the load balancer attributes.</p>
+    #[serde(rename = "Attributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<Vec<LoadBalancerAttribute>>,
 }
 
@@ -3890,10 +4064,12 @@ impl ModifyRuleInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ModifyRuleOutput {
     /// <p>Information about the modified rule.</p>
+    #[serde(rename = "Rules")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rules: Option<Vec<Rule>>,
 }
 
@@ -3947,10 +4123,12 @@ impl ModifyTargetGroupAttributesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ModifyTargetGroupAttributesOutput {
     /// <p>Information about the attributes.</p>
+    #[serde(rename = "Attributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<Vec<TargetGroupAttribute>>,
 }
 
@@ -4061,10 +4239,12 @@ impl ModifyTargetGroupInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ModifyTargetGroupOutput {
     /// <p>Information about the modified target group.</p>
+    #[serde(rename = "TargetGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_groups: Option<Vec<TargetGroup>>,
 }
 
@@ -4115,11 +4295,12 @@ impl PathDeserializer {
     }
 }
 /// <p>Information about a path pattern condition.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PathPatternConditionConfig {
     /// <p>One or more path patterns to compare against the request URL. The maximum size of each string is 128 characters. The comparison is case sensitive. The following wildcard characters are supported: * (matches 0 or more characters) and ? (matches exactly 1 character).</p> <p>If you specify multiple strings, the condition is satisfied if one of them matches the request URL. The path pattern is compared only to the path of the URL, not to its query string. To compare against the query string, use <a>QueryStringConditionConfig</a>.</p>
+    #[serde(rename = "Values")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub values: Option<Vec<String>>,
 }
 
@@ -4201,11 +4382,12 @@ impl ProtocolEnumDeserializer {
     }
 }
 /// <p>Information about a query string condition.</p> <p>The query string component of a URI starts after the first '?' character and is terminated by either a '#' character or the end of the URI. A typical query string contains key/value pairs separated by '&amp;' characters. The allowed characters are specified by RFC 3986. Any character can be percentage encoded.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct QueryStringConditionConfig {
     /// <p>One or more key/value pairs or values to find in the query string. The maximum size of each string is 128 characters. The comparison is case insensitive. The following wildcard characters are supported: * (matches 0 or more characters) and ? (matches exactly 1 character). To search for a literal '*' or '?' character in a query string, you must escape these characters in <code>Values</code> using a '\' character.</p> <p>If you specify multiple key/value pairs or values, the condition is satisfied if one of them is found in the query string.</p>
+    #[serde(rename = "Values")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub values: Option<Vec<QueryStringKeyValuePair>>,
 }
 
@@ -4254,13 +4436,16 @@ impl QueryStringConditionConfigSerializer {
 }
 
 /// <p>Information about a key/value pair.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct QueryStringKeyValuePair {
     /// <p>The key. You can omit the key.</p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>The value.</p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -4340,21 +4525,31 @@ impl QueryStringKeyValuePairListSerializer {
 }
 
 /// <p>Information about a redirect action.</p> <p>A URI consists of the following components: protocol://hostname:port/path?query. You must modify at least one of the following components to avoid a redirect loop: protocol, hostname, port, or path. Any components that you do not modify retain their original values.</p> <p>You can reuse URI components using the following reserved keywords:</p> <ul> <li> <p>#{protocol}</p> </li> <li> <p>#{host}</p> </li> <li> <p>#{port}</p> </li> <li> <p>#{path} (the leading "/" is removed)</p> </li> <li> <p>#{query}</p> </li> </ul> <p>For example, you can change the path to "/new/#{path}", the hostname to "example.#{host}", or the query to "#{query}&amp;value=xyz".</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RedirectActionConfig {
     /// <p>The hostname. This component is not percent-encoded. The hostname can contain #{host}.</p>
+    #[serde(rename = "Host")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub host: Option<String>,
     /// <p>The absolute path, starting with the leading "/". This component is not percent-encoded. The path can contain #{host}, #{path}, and #{port}.</p>
+    #[serde(rename = "Path")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     /// <p>The port. You can specify a value from 1 to 65535 or #{port}.</p>
+    #[serde(rename = "Port")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub port: Option<String>,
     /// <p>The protocol. You can specify HTTP, HTTPS, or #{protocol}. You can redirect HTTP to HTTP, HTTP to HTTPS, and HTTPS to HTTPS. You cannot redirect HTTPS to HTTP.</p>
+    #[serde(rename = "Protocol")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
     /// <p>The query parameters, URL-encoded when necessary, but not percent-encoded. Do not include the leading "?", as it is automatically added. You can specify any of the reserved keywords.</p>
+    #[serde(rename = "Query")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub query: Option<String>,
     /// <p>The HTTP redirect code. The redirect is either permanent (HTTP 301) or temporary (HTTP 302).</p>
+    #[serde(rename = "StatusCode")]
     pub status_code: String,
 }
 
@@ -4521,8 +4716,8 @@ impl RegisterTargetsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RegisterTargetsOutput {}
 
 struct RegisterTargetsOutputDeserializer;
@@ -4568,8 +4763,8 @@ impl RemoveListenerCertificatesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RemoveListenerCertificatesOutput {}
 
 struct RemoveListenerCertificatesOutputDeserializer;
@@ -4615,8 +4810,8 @@ impl RemoveTagsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RemoveTagsOutput {}
 
 struct RemoveTagsOutputDeserializer;
@@ -4659,18 +4854,28 @@ impl ResourceArnsSerializer {
 }
 
 /// <p>Information about a rule.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Rule {
     /// <p>The actions. Each rule must include exactly one of the following types of actions: <code>forward</code>, <code>redirect</code>, or <code>fixed-response</code>, and it must be the last action to be performed.</p>
+    #[serde(rename = "Actions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub actions: Option<Vec<Action>>,
     /// <p>The conditions. Each rule can include zero or one of the following conditions: <code>http-request-method</code>, <code>host-header</code>, <code>path-pattern</code>, and <code>source-ip</code>, and zero or more of the following conditions: <code>http-header</code> and <code>query-string</code>.</p>
+    #[serde(rename = "Conditions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub conditions: Option<Vec<RuleCondition>>,
     /// <p>Indicates whether this is the default rule.</p>
+    #[serde(rename = "IsDefault")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_default: Option<bool>,
     /// <p>The priority.</p>
+    #[serde(rename = "Priority")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub priority: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the rule.</p>
+    #[serde(rename = "RuleArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rule_arn: Option<String>,
 }
 
@@ -4729,25 +4934,40 @@ impl RuleArnsSerializer {
 }
 
 /// <p>Information about a condition for a rule.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RuleCondition {
     /// <p><p>The field in the HTTP request. The following are the possible values:</p> <ul> <li> <p> <code>http-header</code> </p> </li> <li> <p> <code>http-request-method</code> </p> </li> <li> <p> <code>host-header</code> </p> </li> <li> <p> <code>path-pattern</code> </p> </li> <li> <p> <code>query-string</code> </p> </li> <li> <p> <code>source-ip</code> </p> </li> </ul></p>
+    #[serde(rename = "Field")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field: Option<String>,
     /// <p>Information for a host header condition. Specify only when <code>Field</code> is <code>host-header</code>.</p>
+    #[serde(rename = "HostHeaderConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub host_header_config: Option<HostHeaderConditionConfig>,
     /// <p>Information for an HTTP header condition. Specify only when <code>Field</code> is <code>http-header</code>.</p>
+    #[serde(rename = "HttpHeaderConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub http_header_config: Option<HttpHeaderConditionConfig>,
     /// <p>Information for an HTTP method condition. Specify only when <code>Field</code> is <code>http-request-method</code>.</p>
+    #[serde(rename = "HttpRequestMethodConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub http_request_method_config: Option<HttpRequestMethodConditionConfig>,
     /// <p>Information for a path pattern condition. Specify only when <code>Field</code> is <code>path-pattern</code>.</p>
+    #[serde(rename = "PathPatternConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub path_pattern_config: Option<PathPatternConditionConfig>,
     /// <p>Information for a query string condition. Specify only when <code>Field</code> is <code>query-string</code>.</p>
+    #[serde(rename = "QueryStringConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub query_string_config: Option<QueryStringConditionConfig>,
     /// <p>Information for a source IP condition. Specify only when <code>Field</code> is <code>source-ip</code>.</p>
+    #[serde(rename = "SourceIpConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_ip_config: Option<SourceIpConditionConfig>,
     /// <p><p>The condition value. You can use <code>Values</code> if the rule contains only <code>host-header</code> and <code>path-pattern</code> conditions. Otherwise, you can use <code>HostHeaderConfig</code> for <code>host-header</code> conditions and <code>PathPatternConfig</code> for <code>path-pattern</code> conditions.</p> <p>If <code>Field</code> is <code>host-header</code>, you can specify a single host name (for example, my.example.com). A host name is case insensitive, can be up to 128 characters in length, and can contain any of the following characters.</p> <ul> <li> <p>A-Z, a-z, 0-9</p> </li> <li> <p>- .</p> </li> <li> <p>* (matches 0 or more characters)</p> </li> <li> <p>? (matches exactly 1 character)</p> </li> </ul> <p>If <code>Field</code> is <code>path-pattern</code>, you can specify a single path pattern (for example, /img/<em>). A path pattern is case-sensitive, can be up to 128 characters in length, and can contain any of the following characters.</p> <ul> <li> <p>A-Z, a-z, 0-9</p> </li> <li> <p>_ - . $ / ~ &quot; &#39; @ : +</p> </li> <li> <p>&amp; (using &amp;amp;)</p> </li> <li> <p></em> (matches 0 or more characters)</p> </li> <li> <p>? (matches exactly 1 character)</p> </li> </ul></p>
+    #[serde(rename = "Values")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub values: Option<Vec<String>>,
 }
 
@@ -5034,10 +5254,12 @@ impl SetIpAddressTypeInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetIpAddressTypeOutput {
     /// <p>The IP address type.</p>
+    #[serde(rename = "IpAddressType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ip_address_type: Option<String>,
 }
 
@@ -5086,10 +5308,12 @@ impl SetRulePrioritiesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetRulePrioritiesOutput {
     /// <p>Information about the rules.</p>
+    #[serde(rename = "Rules")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rules: Option<Vec<Rule>>,
 }
 
@@ -5147,10 +5371,12 @@ impl SetSecurityGroupsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetSecurityGroupsOutput {
     /// <p>The IDs of the security groups associated with the load balancer.</p>
+    #[serde(rename = "SecurityGroupIds")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub security_group_ids: Option<Vec<String>>,
 }
 
@@ -5215,10 +5441,12 @@ impl SetSubnetsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetSubnetsOutput {
     /// <p>Information about the subnet and Availability Zone.</p>
+    #[serde(rename = "AvailabilityZones")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub availability_zones: Option<Vec<AvailabilityZone>>,
 }
 
@@ -5243,11 +5471,12 @@ impl SetSubnetsOutputDeserializer {
     }
 }
 /// <p>Information about a source IP condition.</p> <p>You can use this condition to route based on the IP address of the source that connects to the load balancer. If a client is behind a proxy, this is the IP address of the proxy not the IP address of the client.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SourceIpConditionConfig {
     /// <p>One or more source IP addresses, in CIDR format. You can use both IPv4 and IPv6 addresses. Wildcards are not supported.</p> <p>If you specify multiple addresses, the condition is satisfied if the source IP address of the request matches one of the CIDR blocks. This condition is not satisfied by the addresses in the X-Forwarded-For header. To search for addresses in the X-Forwarded-For header, use <a>HttpHeaderConditionConfig</a>.</p>
+    #[serde(rename = "Values")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub values: Option<Vec<String>>,
 }
 
@@ -5313,14 +5542,20 @@ impl SslPoliciesDeserializer {
     }
 }
 /// <p>Information about a policy used for SSL negotiation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SslPolicy {
     /// <p>The ciphers.</p>
+    #[serde(rename = "Ciphers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ciphers: Option<Vec<Cipher>>,
     /// <p>The name of the policy.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p>The protocols.</p>
+    #[serde(rename = "SslProtocols")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssl_protocols: Option<Vec<String>>,
 }
 
@@ -5503,13 +5738,15 @@ impl SubnetsSerializer {
 }
 
 /// <p>Information about a tag.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Tag {
     /// <p>The key of the tag.</p>
+    #[serde(rename = "Key")]
     pub key: String,
     /// <p>The value of the tag.</p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -5549,12 +5786,16 @@ impl TagSerializer {
 }
 
 /// <p>The tags associated with a resource.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TagDescription {
     /// <p>The Amazon Resource Name (ARN) of the resource.</p>
+    #[serde(rename = "ResourceArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_arn: Option<String>,
     /// <p>Information about the tags.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
 }
 
@@ -5663,15 +5904,19 @@ impl TagValueDeserializer {
     }
 }
 /// <p>Information about a target.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TargetDescription {
     /// <p>An Availability Zone or <code>all</code>. This determines whether the target receives traffic from the load balancer nodes in the specified Availability Zone or from all enabled Availability Zones for the load balancer.</p> <p>This parameter is not supported if the target type of the target group is <code>instance</code>.</p> <p>If the target type is <code>ip</code> and the IP address is in a subnet of the VPC for the target group, the Availability Zone is automatically detected and this parameter is optional. If the IP address is outside the VPC, this parameter is required.</p> <p>With an Application Load Balancer, if the target type is <code>ip</code> and the IP address is outside the VPC for the target group, the only supported value is <code>all</code>.</p> <p>If the target type is <code>lambda</code>, this parameter is optional and the only supported value is <code>all</code>.</p>
+    #[serde(rename = "AvailabilityZone")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub availability_zone: Option<String>,
     /// <p>The ID of the target. If the target type of the target group is <code>instance</code>, specify an instance ID. If the target type is <code>ip</code>, specify an IP address. If the target type is <code>lambda</code>, specify the ARN of the Lambda function.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The port on which the target is listening. Not used if the target is a Lambda function.</p>
+    #[serde(rename = "Port")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub port: Option<i64>,
 }
 
@@ -5734,40 +5979,72 @@ impl TargetDescriptionsSerializer {
 }
 
 /// <p>Information about a target group.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TargetGroup {
     /// <p>Indicates whether health checks are enabled.</p>
+    #[serde(rename = "HealthCheckEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health_check_enabled: Option<bool>,
     /// <p>The approximate amount of time, in seconds, between health checks of an individual target.</p>
+    #[serde(rename = "HealthCheckIntervalSeconds")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health_check_interval_seconds: Option<i64>,
     /// <p>The destination for the health check request.</p>
+    #[serde(rename = "HealthCheckPath")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health_check_path: Option<String>,
     /// <p>The port to use to connect with the target.</p>
+    #[serde(rename = "HealthCheckPort")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health_check_port: Option<String>,
     /// <p>The protocol to use to connect with the target.</p>
+    #[serde(rename = "HealthCheckProtocol")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health_check_protocol: Option<String>,
     /// <p>The amount of time, in seconds, during which no response means a failed health check.</p>
+    #[serde(rename = "HealthCheckTimeoutSeconds")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health_check_timeout_seconds: Option<i64>,
     /// <p>The number of consecutive health checks successes required before considering an unhealthy target healthy.</p>
+    #[serde(rename = "HealthyThresholdCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub healthy_threshold_count: Option<i64>,
     /// <p>The Amazon Resource Names (ARN) of the load balancers that route traffic to this target group.</p>
+    #[serde(rename = "LoadBalancerArns")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancer_arns: Option<Vec<String>>,
     /// <p>The HTTP codes to use when checking for a successful response from a target.</p>
+    #[serde(rename = "Matcher")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub matcher: Option<Matcher>,
     /// <p>The port on which the targets are listening. Not used if the target is a Lambda function.</p>
+    #[serde(rename = "Port")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub port: Option<i64>,
     /// <p>The protocol to use for routing traffic to the targets.</p>
+    #[serde(rename = "Protocol")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the target group.</p>
+    #[serde(rename = "TargetGroupArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_group_arn: Option<String>,
     /// <p>The name of the target group.</p>
+    #[serde(rename = "TargetGroupName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_group_name: Option<String>,
     /// <p>The type of target that you must specify when registering targets with this target group. The possible values are <code>instance</code> (targets are specified by instance ID) or <code>ip</code> (targets are specified by IP address).</p>
+    #[serde(rename = "TargetType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_type: Option<String>,
     /// <p>The number of consecutive health check failures required before considering the target unhealthy.</p>
+    #[serde(rename = "UnhealthyThresholdCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub unhealthy_threshold_count: Option<i64>,
     /// <p>The ID of the VPC for the targets.</p>
+    #[serde(rename = "VpcId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vpc_id: Option<String>,
 }
 
@@ -5895,13 +6172,16 @@ impl TargetGroupArnsSerializer {
 }
 
 /// <p>Information about a target group attribute.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TargetGroupAttribute {
     /// <p><p>The name of the attribute.</p> <p>The following attribute is supported by both Application Load Balancers and Network Load Balancers:</p> <ul> <li> <p> <code>deregistration<em>delay.timeout</em>seconds</code> - The amount of time, in seconds, for Elastic Load Balancing to wait before changing the state of a deregistering target from <code>draining</code> to <code>unused</code>. The range is 0-3600 seconds. The default value is 300 seconds. If the target is a Lambda function, this attribute is not supported.</p> </li> </ul> <p>The following attributes are supported by Application Load Balancers if the target is not a Lambda function:</p> <ul> <li> <p> <code>load<em>balancing.algorithm.type</code> - The load balancing algorithm determines how the load balancer selects targets when routing requests. The value is <code>round</em>robin</code> or <code>least<em>outstanding</em>requests</code>. The default is <code>round<em>robin</code>.</p> </li> <li> <p> <code>slow</em>start.duration<em>seconds</code> - The time period, in seconds, during which a newly registered target receives a linearly increasing share of the traffic to the target group. After this time period ends, the target receives its full share of traffic. The range is 30-900 seconds (15 minutes). Slow start mode is disabled by default.</p> </li> <li> <p> <code>stickiness.enabled</code> - Indicates whether sticky sessions are enabled. The value is <code>true</code> or <code>false</code>. The default is <code>false</code>.</p> </li> <li> <p> <code>stickiness.type</code> - The type of sticky sessions. The possible value is <code>lb</em>cookie</code>.</p> </li> <li> <p> <code>stickiness.lb<em>cookie.duration</em>seconds</code> - The time period, in seconds, during which requests from a client should be routed to the same target. After this time period expires, the load balancer-generated cookie is considered stale. The range is 1 second to 1 week (604800 seconds). The default value is 1 day (86400 seconds).</p> </li> </ul> <p>The following attribute is supported only if the target is a Lambda function.</p> <ul> <li> <p> <code>lambda.multi<em>value</em>headers.enabled</code> - Indicates whether the request and response headers exchanged between the load balancer and the Lambda function include arrays of values or strings. The value is <code>true</code> or <code>false</code>. The default is <code>false</code>. If the value is <code>false</code> and the request contains a duplicate header field name or query parameter key, the load balancer uses the last value sent by the client.</p> </li> </ul> <p>The following attribute is supported only by Network Load Balancers:</p> <ul> <li> <p> <code>proxy<em>protocol</em>v2.enabled</code> - Indicates whether Proxy Protocol version 2 is enabled. The value is <code>true</code> or <code>false</code>. The default is <code>false</code>.</p> </li> </ul></p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>The value of the attribute.</p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -6055,13 +6335,16 @@ impl TargetGroupNamesSerializer {
 }
 
 /// <p>Information about the target group stickiness for a rule.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TargetGroupStickinessConfig {
     /// <p>The time period, in seconds, during which requests from a client should be routed to the same target group. The range is 1-604800 seconds (7 days).</p>
+    #[serde(rename = "DurationSeconds")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub duration_seconds: Option<i64>,
     /// <p>Indicates whether target group stickiness is enabled.</p>
+    #[serde(rename = "Enabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
 }
 
@@ -6139,13 +6422,16 @@ impl TargetGroupStickinessEnabledDeserializer {
     }
 }
 /// <p>Information about how traffic will be distributed between multiple target groups in a forward rule.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TargetGroupTuple {
     /// <p>The Amazon Resource Name (ARN) of the target group.</p>
+    #[serde(rename = "TargetGroupArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_group_arn: Option<String>,
     /// <p>The weight. The range is 0 to 999.</p>
+    #[serde(rename = "Weight")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub weight: Option<i64>,
 }
 
@@ -6221,14 +6507,20 @@ impl TargetGroupsDeserializer {
     }
 }
 /// <p>Information about the current health of a target.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TargetHealth {
     /// <p>A description of the target health that provides additional details. If the state is <code>healthy</code>, a description is not provided.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p><p>The reason code.</p> <p>If the target state is <code>healthy</code>, a reason code is not provided.</p> <p>If the target state is <code>initial</code>, the reason code can be one of the following values:</p> <ul> <li> <p> <code>Elb.RegistrationInProgress</code> - The target is in the process of being registered with the load balancer.</p> </li> <li> <p> <code>Elb.InitialHealthChecking</code> - The load balancer is still sending the target the minimum number of health checks required to determine its health status.</p> </li> </ul> <p>If the target state is <code>unhealthy</code>, the reason code can be one of the following values:</p> <ul> <li> <p> <code>Target.ResponseCodeMismatch</code> - The health checks did not return an expected HTTP code. Applies only to Application Load Balancers.</p> </li> <li> <p> <code>Target.Timeout</code> - The health check requests timed out. Applies only to Application Load Balancers.</p> </li> <li> <p> <code>Target.FailedHealthChecks</code> - The load balancer received an error while establishing a connection to the target or the target response was malformed.</p> </li> <li> <p> <code>Elb.InternalError</code> - The health checks failed due to an internal error. Applies only to Application Load Balancers.</p> </li> </ul> <p>If the target state is <code>unused</code>, the reason code can be one of the following values:</p> <ul> <li> <p> <code>Target.NotRegistered</code> - The target is not registered with the target group.</p> </li> <li> <p> <code>Target.NotInUse</code> - The target group is not used by any load balancer or the target is in an Availability Zone that is not enabled for its load balancer.</p> </li> <li> <p> <code>Target.InvalidState</code> - The target is in the stopped or terminated state.</p> </li> <li> <p> <code>Target.IpUnusable</code> - The target IP address is reserved for use by a load balancer.</p> </li> </ul> <p>If the target state is <code>draining</code>, the reason code can be the following value:</p> <ul> <li> <p> <code>Target.DeregistrationInProgress</code> - The target is in the process of being deregistered and the deregistration delay period has not expired.</p> </li> </ul> <p>If the target state is <code>unavailable</code>, the reason code can be the following value:</p> <ul> <li> <p> <code>Target.HealthCheckDisabled</code> - Health checks are disabled for the target group. Applies only to Application Load Balancers.</p> </li> <li> <p> <code>Elb.InternalError</code> - Target health is unavailable due to an internal error. Applies only to Network Load Balancers.</p> </li> </ul></p>
+    #[serde(rename = "Reason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub reason: Option<String>,
     /// <p>The state of the target.</p>
+    #[serde(rename = "State")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub state: Option<String>,
 }
 
@@ -6262,14 +6554,20 @@ impl TargetHealthDeserializer {
     }
 }
 /// <p>Information about the health of a target.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TargetHealthDescription {
     /// <p>The port to use to connect with the target.</p>
+    #[serde(rename = "HealthCheckPort")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health_check_port: Option<String>,
     /// <p>The description of the target.</p>
+    #[serde(rename = "Target")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target: Option<TargetDescription>,
     /// <p>The health information for the target.</p>
+    #[serde(rename = "TargetHealth")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_health: Option<TargetHealth>,
 }
 

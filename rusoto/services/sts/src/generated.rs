@@ -155,14 +155,20 @@ impl AssumeRoleRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>AssumeRole</a> request, including temporary AWS credentials that can be used to make AWS requests. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AssumeRoleResponse {
     /// <p>The Amazon Resource Name (ARN) and the assumed role ID, which are identifiers that you can use to refer to the resulting temporary security credentials. For example, you can reference these credentials as a principal in a resource-based policy by using the ARN or assumed role ID. The ARN and ID include the <code>RoleSessionName</code> that you specified when you called <code>AssumeRole</code>. </p>
+    #[serde(rename = "AssumedRoleUser")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub assumed_role_user: Option<AssumedRoleUser>,
     /// <p><p>The temporary security credentials, which include an access key ID, a secret access key, and a security (or session) token.</p> <note> <p>The size of the security token that STS API operations return is not fixed. We strongly recommend that you make no assumptions about the maximum size.</p> </note></p>
+    #[serde(rename = "Credentials")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub credentials: Option<Credentials>,
     /// <p>A percentage value that indicates the packed size of the session policies and session tags combined passed in the request. The request fails if the packed size is greater than 100 percent, which means the policies and tags exceeded the allowed space.</p>
+    #[serde(rename = "PackedPolicySize")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub packed_policy_size: Option<i64>,
 }
 
@@ -246,24 +252,40 @@ impl AssumeRoleWithSAMLRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>AssumeRoleWithSAML</a> request, including temporary AWS credentials that can be used to make AWS requests. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AssumeRoleWithSAMLResponse {
     /// <p>The identifiers for the temporary security credentials that the operation returns.</p>
+    #[serde(rename = "AssumedRoleUser")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub assumed_role_user: Option<AssumedRoleUser>,
     /// <p> The value of the <code>Recipient</code> attribute of the <code>SubjectConfirmationData</code> element of the SAML assertion. </p>
+    #[serde(rename = "Audience")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub audience: Option<String>,
     /// <p><p>The temporary security credentials, which include an access key ID, a secret access key, and a security (or session) token.</p> <note> <p>The size of the security token that STS API operations return is not fixed. We strongly recommend that you make no assumptions about the maximum size.</p> </note></p>
+    #[serde(rename = "Credentials")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub credentials: Option<Credentials>,
     /// <p>The value of the <code>Issuer</code> element of the SAML assertion.</p>
+    #[serde(rename = "Issuer")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub issuer: Option<String>,
     /// <p>A hash value based on the concatenation of the <code>Issuer</code> response value, the AWS account ID, and the friendly name (the last part of the ARN) of the SAML provider in IAM. The combination of <code>NameQualifier</code> and <code>Subject</code> can be used to uniquely identify a federated user. </p> <p>The following pseudocode shows how the hash value is calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" + "123456789012" + "/MySAMLIdP" ) )</code> </p>
+    #[serde(rename = "NameQualifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name_qualifier: Option<String>,
     /// <p>A percentage value that indicates the packed size of the session policies and session tags combined passed in the request. The request fails if the packed size is greater than 100 percent, which means the policies and tags exceeded the allowed space.</p>
+    #[serde(rename = "PackedPolicySize")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub packed_policy_size: Option<i64>,
     /// <p>The value of the <code>NameID</code> element in the <code>Subject</code> element of the SAML assertion.</p>
+    #[serde(rename = "Subject")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subject: Option<String>,
     /// <p> The format of the name ID, as defined by the <code>Format</code> attribute in the <code>NameID</code> element of the SAML assertion. Typical examples of the format are <code>transient</code> or <code>persistent</code>. </p> <p> If the format includes the prefix <code>urn:oasis:names:tc:SAML:2.0:nameid-format</code>, that prefix is removed. For example, <code>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</code> is returned as <code>transient</code>. If the format includes any other prefix, the format is returned with no modifications.</p>
+    #[serde(rename = "SubjectType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subject_type: Option<String>,
 }
 
@@ -379,20 +401,32 @@ impl AssumeRoleWithWebIdentityRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>AssumeRoleWithWebIdentity</a> request, including temporary AWS credentials that can be used to make AWS requests. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AssumeRoleWithWebIdentityResponse {
     /// <p>The Amazon Resource Name (ARN) and the assumed role ID, which are identifiers that you can use to refer to the resulting temporary security credentials. For example, you can reference these credentials as a principal in a resource-based policy by using the ARN or assumed role ID. The ARN and ID include the <code>RoleSessionName</code> that you specified when you called <code>AssumeRole</code>. </p>
+    #[serde(rename = "AssumedRoleUser")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub assumed_role_user: Option<AssumedRoleUser>,
     /// <p>The intended audience (also known as client ID) of the web identity token. This is traditionally the client identifier issued to the application that requested the web identity token.</p>
+    #[serde(rename = "Audience")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub audience: Option<String>,
     /// <p><p>The temporary security credentials, which include an access key ID, a secret access key, and a security token.</p> <note> <p>The size of the security token that STS API operations return is not fixed. We strongly recommend that you make no assumptions about the maximum size.</p> </note></p>
+    #[serde(rename = "Credentials")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub credentials: Option<Credentials>,
     /// <p>A percentage value that indicates the packed size of the session policies and session tags combined passed in the request. The request fails if the packed size is greater than 100 percent, which means the policies and tags exceeded the allowed space.</p>
+    #[serde(rename = "PackedPolicySize")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub packed_policy_size: Option<i64>,
     /// <p> The issuing authority of the web identity token presented. For OpenID Connect ID tokens, this contains the value of the <code>iss</code> field. For OAuth 2.0 access tokens, this contains the value of the <code>ProviderId</code> parameter that was passed in the <code>AssumeRoleWithWebIdentity</code> request.</p>
+    #[serde(rename = "Provider")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub provider: Option<String>,
     /// <p>The unique user identifier that is returned by the identity provider. This identifier is associated with the <code>WebIdentityToken</code> that was submitted with the <code>AssumeRoleWithWebIdentity</code> call. The identifier is typically unique to the user and the application that acquired the <code>WebIdentityToken</code> (pairwise identifier). For OpenID Connect ID tokens, this field contains the value returned by the identity provider as the token's <code>sub</code> (Subject) claim. </p>
+    #[serde(rename = "SubjectFromWebIdentityToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subject_from_web_identity_token: Option<String>,
 }
 
@@ -457,12 +491,14 @@ impl AssumedRoleIdTypeDeserializer {
     }
 }
 /// <p>The identifiers for the temporary security credentials that the operation returns.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AssumedRoleUser {
     /// <p>The ARN of the temporary security credentials that are returned from the <a>AssumeRole</a> action. For more information about ARNs and how to use them in policies, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "Arn")]
     pub arn: String,
     /// <p>A unique identifier that contains the role ID and the role session name of the role that is being assumed. The role ID is generated by AWS when the role is created.</p>
+    #[serde(rename = "AssumedRoleId")]
     pub assumed_role_id: String,
 }
 
@@ -500,16 +536,20 @@ impl AudienceDeserializer {
     }
 }
 /// <p>AWS credentials for API authentication.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Credentials {
     /// <p>The access key ID that identifies the temporary security credentials.</p>
+    #[serde(rename = "AccessKeyId")]
     pub access_key_id: String,
     /// <p>The date on which the current credentials expire.</p>
+    #[serde(rename = "Expiration")]
     pub expiration: String,
     /// <p>The secret access key that can be used to sign requests.</p>
+    #[serde(rename = "SecretAccessKey")]
     pub secret_access_key: String,
     /// <p>The token that users must pass to the service API to use the temporary credentials.</p>
+    #[serde(rename = "SessionToken")]
     pub session_token: String,
 }
 
@@ -577,10 +617,12 @@ impl DecodeAuthorizationMessageRequestSerializer {
 }
 
 /// <p>A document that contains additional information about the authorization status of a request from an encoded message that is returned in response to an AWS request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DecodeAuthorizationMessageResponse {
     /// <p>An XML document that contains the decoded message.</p>
+    #[serde(rename = "DecodedMessage")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub decoded_message: Option<String>,
 }
 
@@ -632,12 +674,14 @@ impl FederatedIdTypeDeserializer {
     }
 }
 /// <p>Identifiers for the federated user that is associated with the credentials.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FederatedUser {
     /// <p>The ARN that specifies the federated user that is associated with the credentials. For more information about ARNs and how to use them in policies, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "Arn")]
     pub arn: String,
     /// <p>The string that identifies the federated user associated with the credentials, similar to the unique ID of an IAM user.</p>
+    #[serde(rename = "FederatedUserId")]
     pub federated_user_id: String,
 }
 
@@ -683,10 +727,12 @@ impl GetAccessKeyInfoRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetAccessKeyInfoResponse {
     /// <p>The number used to identify the AWS account.</p>
+    #[serde(rename = "Account")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub account: Option<String>,
 }
 
@@ -728,14 +774,20 @@ impl GetCallerIdentityRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetCallerIdentity</a> request, including information about the entity making the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetCallerIdentityResponse {
     /// <p>The AWS account ID number of the account that owns or contains the calling entity.</p>
+    #[serde(rename = "Account")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub account: Option<String>,
     /// <p>The AWS ARN associated with the calling entity.</p>
+    #[serde(rename = "Arn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arn: Option<String>,
     /// <p>The unique identifier of the calling entity. The exact value depends on the type of entity that is making the call. The values returned are those listed in the <b>aws:userid</b> column in the <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_variables.html#principaltable">Principal table</a> found on the <b>Policy Variables</b> reference page in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "UserId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_id: Option<String>,
 }
 
@@ -812,14 +864,20 @@ impl GetFederationTokenRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetFederationToken</a> request, including temporary AWS credentials that can be used to make AWS requests. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetFederationTokenResponse {
     /// <p><p>The temporary security credentials, which include an access key ID, a secret access key, and a security (or session) token.</p> <note> <p>The size of the security token that STS API operations return is not fixed. We strongly recommend that you make no assumptions about the maximum size.</p> </note></p>
+    #[serde(rename = "Credentials")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub credentials: Option<Credentials>,
     /// <p>Identifiers for the federated user associated with the credentials (such as <code>arn:aws:sts::123456789012:federated-user/Bob</code> or <code>123456789012:Bob</code>). You can use the federated user's ARN in your resource-based policies, such as an Amazon S3 bucket policy. </p>
+    #[serde(rename = "FederatedUser")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub federated_user: Option<FederatedUser>,
     /// <p>A percentage value that indicates the packed size of the session policies and session tags combined passed in the request. The request fails if the packed size is greater than 100 percent, which means the policies and tags exceeded the allowed space.</p>
+    #[serde(rename = "PackedPolicySize")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub packed_policy_size: Option<i64>,
 }
 
@@ -892,10 +950,12 @@ impl GetSessionTokenRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetSessionToken</a> request, including temporary AWS credentials that can be used to make AWS requests. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetSessionTokenResponse {
     /// <p><p>The temporary security credentials, which include an access key ID, a secret access key, and a security (or session) token.</p> <note> <p>The size of the security token that STS API operations return is not fixed. We strongly recommend that you make no assumptions about the maximum size.</p> </note></p>
+    #[serde(rename = "Credentials")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub credentials: Option<Credentials>,
 }
 

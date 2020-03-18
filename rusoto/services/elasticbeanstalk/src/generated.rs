@@ -131,24 +131,40 @@ impl ApplicationArnDeserializer {
     }
 }
 /// <p>Describes the properties of an application.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ApplicationDescription {
     /// <p>The Amazon Resource Name (ARN) of the application.</p>
+    #[serde(rename = "ApplicationArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_arn: Option<String>,
     /// <p>The name of the application.</p>
+    #[serde(rename = "ApplicationName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_name: Option<String>,
     /// <p>The names of the configuration templates associated with this application.</p>
+    #[serde(rename = "ConfigurationTemplates")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub configuration_templates: Option<Vec<String>>,
     /// <p>The date when the application was created.</p>
+    #[serde(rename = "DateCreated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date_created: Option<String>,
     /// <p>The date when the application was last modified.</p>
+    #[serde(rename = "DateUpdated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date_updated: Option<String>,
     /// <p>User-defined description of the application.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>The lifecycle settings for the application.</p>
+    #[serde(rename = "ResourceLifecycleConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_lifecycle_config: Option<ApplicationResourceLifecycleConfig>,
     /// <p>The names of the versions for this application.</p>
+    #[serde(rename = "Versions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub versions: Option<Vec<String>>,
 }
 
@@ -231,10 +247,12 @@ impl ApplicationDescriptionListDeserializer {
     }
 }
 /// <p>Result message containing a single description of an application.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ApplicationDescriptionMessage {
     /// <p> The <a>ApplicationDescription</a> of the application. </p>
+    #[serde(rename = "Application")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application: Option<ApplicationDescription>,
 }
 
@@ -264,10 +282,12 @@ impl ApplicationDescriptionMessageDeserializer {
     }
 }
 /// <p>Result message containing a list of application descriptions.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ApplicationDescriptionsMessage {
     /// <p>This parameter contains a list of <a>ApplicationDescription</a>.</p>
+    #[serde(rename = "Applications")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub applications: Option<Vec<ApplicationDescription>>,
 }
 
@@ -299,16 +319,24 @@ impl ApplicationDescriptionsMessageDeserializer {
     }
 }
 /// <p>Application request metrics for an AWS Elastic Beanstalk environment.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ApplicationMetrics {
     /// <p>The amount of time that the metrics cover (usually 10 seconds). For example, you might have 5 requests (<code>request_count</code>) within the most recent time slice of 10 seconds (<code>duration</code>).</p>
+    #[serde(rename = "Duration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub duration: Option<i64>,
     /// <p>Represents the average latency for the slowest X percent of requests over the last 10 seconds. Latencies are in seconds with one millisecond resolution.</p>
+    #[serde(rename = "Latency")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub latency: Option<Latency>,
     /// <p>Average number of requests handled by the web server per second over the last 10 seconds.</p>
+    #[serde(rename = "RequestCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_count: Option<i64>,
     /// <p>Represents the percentage of requests over the last 10 seconds that resulted in each type of status code response.</p>
+    #[serde(rename = "StatusCodes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_codes: Option<StatusCodes>,
 }
 
@@ -368,13 +396,16 @@ impl ApplicationNamesListSerializer {
 }
 
 /// <p>The resource lifecycle configuration for an application. Defines lifecycle settings for resources that belong to the application, and the service role that Elastic Beanstalk assumes in order to apply lifecycle settings. The version lifecycle configuration defines lifecycle settings for application versions.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ApplicationResourceLifecycleConfig {
     /// <p>The ARN of an IAM service role that Elastic Beanstalk has permission to assume.</p> <p>The <code>ServiceRole</code> property is required the first time that you provide a <code>VersionLifecycleConfig</code> for the application in one of the supporting calls (<code>CreateApplication</code> or <code>UpdateApplicationResourceLifecycle</code>). After you provide it once, in either one of the calls, Elastic Beanstalk persists the Service Role with the application, and you don't need to specify it again in subsequent <code>UpdateApplicationResourceLifecycle</code> calls. You can, however, specify it in subsequent calls to change the Service Role to another value.</p>
+    #[serde(rename = "ServiceRole")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub service_role: Option<String>,
     /// <p>The application version lifecycle configuration.</p>
+    #[serde(rename = "VersionLifecycleConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_lifecycle_config: Option<ApplicationVersionLifecycleConfig>,
 }
 
@@ -431,12 +462,16 @@ impl ApplicationResourceLifecycleConfigSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ApplicationResourceLifecycleDescriptionMessage {
     /// <p>The name of the application.</p>
+    #[serde(rename = "ApplicationName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_name: Option<String>,
     /// <p>The lifecycle configuration.</p>
+    #[serde(rename = "ResourceLifecycleConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_lifecycle_config: Option<ApplicationResourceLifecycleConfig>,
 }
 
@@ -484,28 +519,48 @@ impl ApplicationVersionArnDeserializer {
     }
 }
 /// <p>Describes the properties of an application version.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ApplicationVersionDescription {
     /// <p>The name of the application to which the application version belongs.</p>
+    #[serde(rename = "ApplicationName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_name: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the application version.</p>
+    #[serde(rename = "ApplicationVersionArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_version_arn: Option<String>,
     /// <p>Reference to the artifact from the AWS CodeBuild build.</p>
+    #[serde(rename = "BuildArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub build_arn: Option<String>,
     /// <p>The creation date of the application version.</p>
+    #[serde(rename = "DateCreated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date_created: Option<String>,
     /// <p>The last modified date of the application version.</p>
+    #[serde(rename = "DateUpdated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date_updated: Option<String>,
     /// <p>The description of the application version.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>If the version's source code was retrieved from AWS CodeCommit, the location of the source code for the application version.</p>
+    #[serde(rename = "SourceBuildInformation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_build_information: Option<SourceBuildInformation>,
     /// <p>The storage location of the application version's source bundle in Amazon S3.</p>
+    #[serde(rename = "SourceBundle")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_bundle: Option<S3Location>,
     /// <p><p>The processing status of the application version. Reflects the state of the application version during its creation. Many of the values are only applicable if you specified <code>True</code> for the <code>Process</code> parameter of the <code>CreateApplicationVersion</code> action. The following list describes the possible values.</p> <ul> <li> <p> <code>Unprocessed</code> – Application version wasn&#39;t pre-processed or validated. Elastic Beanstalk will validate configuration files during deployment of the application version to an environment.</p> </li> <li> <p> <code>Processing</code> – Elastic Beanstalk is currently processing the application version.</p> </li> <li> <p> <code>Building</code> – Application version is currently undergoing an AWS CodeBuild build.</p> </li> <li> <p> <code>Processed</code> – Elastic Beanstalk was successfully pre-processed and validated.</p> </li> <li> <p> <code>Failed</code> – Either the AWS CodeBuild build failed or configuration files didn&#39;t pass validation. This application version isn&#39;t usable.</p> </li> </ul></p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>A unique identifier for the application version.</p>
+    #[serde(rename = "VersionLabel")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_label: Option<String>,
 }
 
@@ -598,10 +653,12 @@ impl ApplicationVersionDescriptionListDeserializer {
     }
 }
 /// <p>Result message wrapping a single description of an application version.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ApplicationVersionDescriptionMessage {
     /// <p> The <a>ApplicationVersionDescription</a> of the application version. </p>
+    #[serde(rename = "ApplicationVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_version: Option<ApplicationVersionDescription>,
 }
 
@@ -632,12 +689,16 @@ impl ApplicationVersionDescriptionMessageDeserializer {
     }
 }
 /// <p>Result message wrapping a list of application version descriptions.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ApplicationVersionDescriptionsMessage {
     /// <p>List of <code>ApplicationVersionDescription</code> objects sorted in order of creation.</p>
+    #[serde(rename = "ApplicationVersions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_versions: Option<Vec<ApplicationVersionDescription>>,
     /// <p>In a paginated request, the token that you can pass in a subsequent request to get the next response page.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -672,13 +733,16 @@ impl ApplicationVersionDescriptionsMessageDeserializer {
     }
 }
 /// <p>The application version lifecycle settings for an application. Defines the rules that Elastic Beanstalk applies to an application's versions in order to avoid hitting the per-region limit for application versions.</p> <p>When Elastic Beanstalk deletes an application version from its database, you can no longer deploy that version to an environment. The source bundle remains in S3 unless you configure the rule to delete it.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ApplicationVersionLifecycleConfig {
     /// <p>Specify a max age rule to restrict the length of time that application versions are retained for an application.</p>
+    #[serde(rename = "MaxAgeRule")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_age_rule: Option<MaxAgeRule>,
     /// <p>Specify a max count rule to restrict the number of application versions that are retained for an application.</p>
+    #[serde(rename = "MaxCountRule")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_count_rule: Option<MaxCountRule>,
 }
 
@@ -781,16 +845,24 @@ impl ApplyEnvironmentManagedActionRequestSerializer {
 }
 
 /// <p>The result message containing information about the managed action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ApplyEnvironmentManagedActionResult {
     /// <p>A description of the managed action.</p>
+    #[serde(rename = "ActionDescription")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action_description: Option<String>,
     /// <p>The action ID of the managed action.</p>
+    #[serde(rename = "ActionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action_id: Option<String>,
     /// <p>The type of managed action.</p>
+    #[serde(rename = "ActionType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action_type: Option<String>,
     /// <p>The status of the managed action.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -828,10 +900,12 @@ impl ApplyEnvironmentManagedActionResultDeserializer {
     }
 }
 /// <p>Describes an Auto Scaling launch configuration.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AutoScalingGroup {
     /// <p>The name of the <code>AutoScalingGroup</code> . </p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
@@ -971,10 +1045,12 @@ impl BuildConfigurationSerializer {
 }
 
 /// <p>The builder used to build the custom platform.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Builder {
     /// <p>The ARN of the builder.</p>
+    #[serde(rename = "ARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arn: Option<String>,
 }
 
@@ -997,24 +1073,40 @@ impl BuilderDeserializer {
     }
 }
 /// <p>CPU utilization metrics for an instance.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CPUUtilization {
     /// <p>Available on Linux environments only.</p> <p>Percentage of time that the CPU has spent in the <code>I/O Wait</code> state over the last 10 seconds.</p>
+    #[serde(rename = "IOWait")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub io_wait: Option<f64>,
     /// <p>Available on Linux environments only.</p> <p>Percentage of time that the CPU has spent in the <code>IRQ</code> state over the last 10 seconds.</p>
+    #[serde(rename = "IRQ")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub irq: Option<f64>,
     /// <p>Percentage of time that the CPU has spent in the <code>Idle</code> state over the last 10 seconds.</p>
+    #[serde(rename = "Idle")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub idle: Option<f64>,
     /// <p>Available on Linux environments only.</p> <p>Percentage of time that the CPU has spent in the <code>Nice</code> state over the last 10 seconds.</p>
+    #[serde(rename = "Nice")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub nice: Option<f64>,
     /// <p>Available on Windows environments only.</p> <p>Percentage of time that the CPU has spent in the <code>Privileged</code> state over the last 10 seconds.</p>
+    #[serde(rename = "Privileged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub privileged: Option<f64>,
     /// <p>Available on Linux environments only.</p> <p>Percentage of time that the CPU has spent in the <code>SoftIRQ</code> state over the last 10 seconds.</p>
+    #[serde(rename = "SoftIRQ")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub soft_irq: Option<f64>,
     /// <p>Available on Linux environments only.</p> <p>Percentage of time that the CPU has spent in the <code>System</code> state over the last 10 seconds.</p>
+    #[serde(rename = "System")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub system: Option<f64>,
     /// <p>Percentage of time that the CPU has spent in the <code>User</code> state over the last 10 seconds.</p>
+    #[serde(rename = "User")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user: Option<f64>,
 }
 
@@ -1110,12 +1202,16 @@ impl CheckDNSAvailabilityMessageSerializer {
 }
 
 /// <p>Indicates if the specified CNAME is available.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CheckDNSAvailabilityResultMessage {
     /// <p><p>Indicates if the specified CNAME is available:</p> <ul> <li> <p> <code>true</code> : The CNAME is available.</p> </li> <li> <p> <code>false</code> : The CNAME is not available.</p> </li> </ul></p>
+    #[serde(rename = "Available")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub available: Option<bool>,
     /// <p>The fully qualified CNAME to reserve when <a>CreateEnvironment</a> is called with the provided prefix.</p>
+    #[serde(rename = "FullyQualifiedCNAME")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub fully_qualified_cname: Option<String>,
 }
 
@@ -1221,30 +1317,52 @@ impl ConfigurationOptionDefaultValueDeserializer {
     }
 }
 /// <p>Describes the possible values for a configuration option.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ConfigurationOptionDescription {
     /// <p><p>An indication of which action is required if the value for this configuration option changes:</p> <ul> <li> <p> <code>NoInterruption</code> : There is no interruption to the environment or application availability.</p> </li> <li> <p> <code>RestartEnvironment</code> : The environment is entirely restarted, all AWS resources are deleted and recreated, and the environment is unavailable during the process.</p> </li> <li> <p> <code>RestartApplicationServer</code> : The environment is available the entire time. However, a short application outage occurs when the application servers on the running Amazon EC2 instances are restarted.</p> </li> </ul></p>
+    #[serde(rename = "ChangeSeverity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub change_severity: Option<String>,
     /// <p>The default value for this configuration option.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<String>,
     /// <p>If specified, the configuration option must be a string value no longer than this value.</p>
+    #[serde(rename = "MaxLength")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_length: Option<i64>,
     /// <p>If specified, the configuration option must be a numeric value less than this value.</p>
+    #[serde(rename = "MaxValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_value: Option<i64>,
     /// <p>If specified, the configuration option must be a numeric value greater than this value.</p>
+    #[serde(rename = "MinValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub min_value: Option<i64>,
     /// <p>The name of the configuration option.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p>A unique namespace identifying the option's associated AWS resource.</p>
+    #[serde(rename = "Namespace")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     /// <p>If specified, the configuration option must be a string value that satisfies this regular expression.</p>
+    #[serde(rename = "Regex")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub regex: Option<OptionRestrictionRegex>,
     /// <p>An indication of whether the user defined this configuration option:</p> <ul> <li> <p> <code>true</code> : This configuration option was defined by the user. It is a valid choice for specifying if this as an <code>Option to Remove</code> when updating configuration settings. </p> </li> <li> <p> <code>false</code> : This configuration was not defined by the user.</p> </li> </ul> <p> Constraint: You can remove only <code>UserDefined</code> options from a configuration. </p> <p> Valid Values: <code>true</code> | <code>false</code> </p>
+    #[serde(rename = "UserDefined")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_defined: Option<bool>,
     /// <p>If specified, values for the configuration option are selected from this list.</p>
+    #[serde(rename = "ValueOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value_options: Option<Vec<String>>,
     /// <p><p>An indication of which type of values this option has and whether it is allowable to select one or more than one of the possible values:</p> <ul> <li> <p> <code>Scalar</code> : Values for this option are a single selection from the possible values, or an unformatted string, or numeric value governed by the <code>MIN/MAX/Regex</code> constraints.</p> </li> <li> <p> <code>List</code> : Values for this option are multiple selections from the possible values.</p> </li> <li> <p> <code>Boolean</code> : Values for this option are either <code>true</code> or <code>false</code> .</p> </li> <li> <p> <code>Json</code> : Values for this option are a JSON representation of a <code>ConfigDocument</code>.</p> </li> </ul></p>
+    #[serde(rename = "ValueType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value_type: Option<String>,
 }
 
@@ -1395,17 +1513,24 @@ impl ConfigurationOptionPossibleValuesDeserializer {
     }
 }
 /// <p> A specification identifying an individual configuration option along with its current value. For a list of possible option values, go to <a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options.html">Option Values</a> in the <i>AWS Elastic Beanstalk Developer Guide</i>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ConfigurationOptionSetting {
     /// <p>A unique namespace identifying the option's associated AWS resource.</p>
+    #[serde(rename = "Namespace")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     /// <p>The name of the configuration option.</p>
+    #[serde(rename = "OptionName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub option_name: Option<String>,
     /// <p>A unique resource name for a time-based scaling configuration option.</p>
+    #[serde(rename = "ResourceName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_name: Option<String>,
     /// <p>The current value for the configuration option.</p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -1541,14 +1666,20 @@ impl ConfigurationOptionValueTypeDeserializer {
     }
 }
 /// <p>Describes the settings for a specified configuration set.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ConfigurationOptionsDescription {
     /// <p> A list of <a>ConfigurationOptionDescription</a>. </p>
+    #[serde(rename = "Options")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub options: Option<Vec<ConfigurationOptionDescription>>,
     /// <p>The ARN of the platform.</p>
+    #[serde(rename = "PlatformArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_arn: Option<String>,
     /// <p>The name of the solution stack these configuration options belong to.</p>
+    #[serde(rename = "SolutionStackName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub solution_stack_name: Option<String>,
 }
 
@@ -1589,28 +1720,48 @@ impl ConfigurationOptionsDescriptionDeserializer {
     }
 }
 /// <p>Describes the settings for a configuration set.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ConfigurationSettingsDescription {
     /// <p>The name of the application associated with this configuration set.</p>
+    #[serde(rename = "ApplicationName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_name: Option<String>,
     /// <p>The date (in UTC time) when this configuration set was created.</p>
+    #[serde(rename = "DateCreated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date_created: Option<String>,
     /// <p>The date (in UTC time) when this configuration set was last modified.</p>
+    #[serde(rename = "DateUpdated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date_updated: Option<String>,
     /// <p><p> If this configuration set is associated with an environment, the <code>DeploymentStatus</code> parameter indicates the deployment status of this configuration set: </p> <ul> <li> <p> <code>null</code>: This configuration is not associated with a running environment.</p> </li> <li> <p> <code>pending</code>: This is a draft configuration that is not deployed to the associated environment but is in the process of deploying.</p> </li> <li> <p> <code>deployed</code>: This is the configuration that is currently deployed to the associated running environment.</p> </li> <li> <p> <code>failed</code>: This is a draft configuration that failed to successfully deploy.</p> </li> </ul></p>
+    #[serde(rename = "DeploymentStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub deployment_status: Option<String>,
     /// <p>Describes this configuration set.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p> If not <code>null</code>, the name of the environment for this configuration set. </p>
+    #[serde(rename = "EnvironmentName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environment_name: Option<String>,
     /// <p>A list of the configuration options and their values in this configuration set.</p>
+    #[serde(rename = "OptionSettings")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub option_settings: Option<Vec<ConfigurationOptionSetting>>,
     /// <p>The ARN of the platform.</p>
+    #[serde(rename = "PlatformArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_arn: Option<String>,
     /// <p>The name of the solution stack this configuration set uses.</p>
+    #[serde(rename = "SolutionStackName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub solution_stack_name: Option<String>,
     /// <p> If not <code>null</code>, the name of the configuration template for this configuration set. </p>
+    #[serde(rename = "TemplateName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub template_name: Option<String>,
 }
 
@@ -1709,10 +1860,12 @@ impl ConfigurationSettingsDescriptionListDeserializer {
     }
 }
 /// <p>The results from a request to change the configuration settings of an environment.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ConfigurationSettingsDescriptions {
     /// <p> A list of <a>ConfigurationSettingsDescription</a>. </p>
+    #[serde(rename = "ConfigurationSettings")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub configuration_settings: Option<Vec<ConfigurationSettingsDescription>>,
 }
 
@@ -1744,10 +1897,12 @@ impl ConfigurationSettingsDescriptionsDeserializer {
     }
 }
 /// <p>Provides a list of validation messages.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ConfigurationSettingsValidationMessages {
     /// <p> A list of <a>ValidationMessage</a>. </p>
+    #[serde(rename = "Messages")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub messages: Option<Vec<ValidationMessage>>,
 }
 
@@ -2144,12 +2299,16 @@ impl CreatePlatformVersionRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreatePlatformVersionResult {
     /// <p>The builder used to create the custom platform.</p>
+    #[serde(rename = "Builder")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub builder: Option<Builder>,
     /// <p>Detailed information about the new version of the custom platform.</p>
+    #[serde(rename = "PlatformSummary")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_summary: Option<PlatformSummary>,
 }
 
@@ -2182,10 +2341,12 @@ impl CreatePlatformVersionResultDeserializer {
     }
 }
 /// <p>Results of a <a>CreateStorageLocationResult</a> call.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateStorageLocationResultMessage {
     /// <p>The name of the Amazon S3 bucket created.</p>
+    #[serde(rename = "S3Bucket")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub s3_bucket: Option<String>,
 }
 
@@ -2223,12 +2384,16 @@ impl CreationDateDeserializer {
     }
 }
 /// <p>A custom AMI available to platforms.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CustomAmi {
     /// <p>THe ID of the image used to create the custom AMI.</p>
+    #[serde(rename = "ImageId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub image_id: Option<String>,
     /// <p>The type of virtualization used to create the custom AMI.</p>
+    #[serde(rename = "VirtualizationType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub virtualization_type: Option<String>,
 }
 
@@ -2427,10 +2592,12 @@ impl DeletePlatformVersionRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeletePlatformVersionResult {
     /// <p>Detailed information about the version of the custom platform.</p>
+    #[serde(rename = "PlatformSummary")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_summary: Option<PlatformSummary>,
 }
 
@@ -2460,16 +2627,24 @@ impl DeletePlatformVersionResultDeserializer {
     }
 }
 /// <p>Information about an application version deployment.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Deployment {
     /// <p>The ID of the deployment. This number increases by one each time that you deploy source code or change instance configuration settings.</p>
+    #[serde(rename = "DeploymentId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub deployment_id: Option<i64>,
     /// <p>For in-progress deployments, the time that the deployment started.</p> <p>For completed deployments, the time that the deployment ended.</p>
+    #[serde(rename = "DeploymentTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub deployment_time: Option<String>,
     /// <p><p>The status of the deployment:</p> <ul> <li> <p> <code>In Progress</code> : The deployment is in progress.</p> </li> <li> <p> <code>Deployed</code> : The deployment succeeded.</p> </li> <li> <p> <code>Failed</code> : The deployment failed.</p> </li> </ul></p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>The version label of the application version in the deployment.</p>
+    #[serde(rename = "VersionLabel")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_label: Option<String>,
 }
 
@@ -2518,10 +2693,12 @@ impl DeploymentTimestampDeserializer {
         Ok(obj)
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeAccountAttributesResult {
     /// <p>The Elastic Beanstalk resource quotas associated with the calling AWS account.</p>
+    #[serde(rename = "ResourceQuotas")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_quotas: Option<ResourceQuotas>,
 }
 
@@ -2743,24 +2920,40 @@ impl DescribeEnvironmentHealthRequestSerializer {
 }
 
 /// <p>Health details for an AWS Elastic Beanstalk environment.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeEnvironmentHealthResult {
     /// <p>Application request metrics for the environment.</p>
+    #[serde(rename = "ApplicationMetrics")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_metrics: Option<ApplicationMetrics>,
     /// <p>Descriptions of the data that contributed to the environment's current health status.</p>
+    #[serde(rename = "Causes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub causes: Option<Vec<String>>,
     /// <p>The <a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced-status.html">health color</a> of the environment.</p>
+    #[serde(rename = "Color")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub color: Option<String>,
     /// <p>The environment's name.</p>
+    #[serde(rename = "EnvironmentName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environment_name: Option<String>,
     /// <p>The <a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced-status.html">health status</a> of the environment. For example, <code>Ok</code>.</p>
+    #[serde(rename = "HealthStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health_status: Option<String>,
     /// <p>Summary health information for the instances in the environment.</p>
+    #[serde(rename = "InstancesHealth")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub instances_health: Option<InstanceHealthSummary>,
     /// <p>The date and time that the health information was retrieved.</p>
+    #[serde(rename = "RefreshedAt")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub refreshed_at: Option<String>,
     /// <p>The environment's operational status. <code>Ready</code>, <code>Launching</code>, <code>Updating</code>, <code>Terminating</code>, or <code>Terminated</code>.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -2866,12 +3059,16 @@ impl DescribeEnvironmentManagedActionHistoryRequestSerializer {
 }
 
 /// <p>A result message containing a list of completed and failed managed actions.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeEnvironmentManagedActionHistoryResult {
     /// <p>A list of completed and failed managed actions.</p>
+    #[serde(rename = "ManagedActionHistoryItems")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub managed_action_history_items: Option<Vec<ManagedActionHistoryItem>>,
     /// <p>A pagination token that you pass to <a>DescribeEnvironmentManagedActionHistory</a> to get the next page of results.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -2939,10 +3136,12 @@ impl DescribeEnvironmentManagedActionsRequestSerializer {
 }
 
 /// <p>The result message containing a list of managed actions.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeEnvironmentManagedActionsResult {
     /// <p>A list of upcoming and in-progress managed actions.</p>
+    #[serde(rename = "ManagedActions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub managed_actions: Option<Vec<ManagedAction>>,
 }
 
@@ -3188,14 +3387,20 @@ impl DescribeInstancesHealthRequestSerializer {
 }
 
 /// <p>Detailed health information about the Amazon EC2 instances in an AWS Elastic Beanstalk environment.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeInstancesHealthResult {
     /// <p>Detailed health information about each instance.</p> <p>The output differs slightly between Linux and Windows environments. There is a difference in the members that are supported under the <code>&lt;CPUUtilization&gt;</code> type.</p>
+    #[serde(rename = "InstanceHealthList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub instance_health_list: Option<Vec<SingleInstanceHealth>>,
     /// <p>Pagination token for the next page of results, if available.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>The date and time that the health information was retrieved.</p>
+    #[serde(rename = "RefreshedAt")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub refreshed_at: Option<String>,
 }
 
@@ -3256,10 +3461,12 @@ impl DescribePlatformVersionRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribePlatformVersionResult {
     /// <p>Detailed information about the version of the platform.</p>
+    #[serde(rename = "PlatformDescription")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_description: Option<PlatformDescription>,
 }
 
@@ -3334,48 +3541,88 @@ impl EnvironmentArnDeserializer {
     }
 }
 /// <p>Describes the properties of an environment.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EnvironmentDescription {
     /// <p>Indicates if there is an in-progress environment configuration update or application version deployment that you can cancel.</p> <p> <code>true:</code> There is an update in progress. </p> <p> <code>false:</code> There are no updates currently in progress. </p>
+    #[serde(rename = "AbortableOperationInProgress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub abortable_operation_in_progress: Option<bool>,
     /// <p>The name of the application associated with this environment.</p>
+    #[serde(rename = "ApplicationName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_name: Option<String>,
     /// <p>The URL to the CNAME for this environment.</p>
+    #[serde(rename = "CNAME")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cname: Option<String>,
     /// <p>The creation date for this environment.</p>
+    #[serde(rename = "DateCreated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date_created: Option<String>,
     /// <p>The last modified date for this environment.</p>
+    #[serde(rename = "DateUpdated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date_updated: Option<String>,
     /// <p>Describes this environment.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>For load-balanced, autoscaling environments, the URL to the LoadBalancer. For single-instance environments, the IP address of the instance.</p>
+    #[serde(rename = "EndpointURL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub endpoint_url: Option<String>,
     /// <p>The environment's Amazon Resource Name (ARN), which can be used in other API requests that require an ARN.</p>
+    #[serde(rename = "EnvironmentArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environment_arn: Option<String>,
     /// <p>The ID of this environment.</p>
+    #[serde(rename = "EnvironmentId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environment_id: Option<String>,
     /// <p>A list of links to other environments in the same group.</p>
+    #[serde(rename = "EnvironmentLinks")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environment_links: Option<Vec<EnvironmentLink>>,
     /// <p>The name of this environment.</p>
+    #[serde(rename = "EnvironmentName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environment_name: Option<String>,
     /// <p>Describes the health status of the environment. AWS Elastic Beanstalk indicates the failure levels for a running environment:</p> <ul> <li> <p> <code>Red</code>: Indicates the environment is not responsive. Occurs when three or more consecutive failures occur for an environment.</p> </li> <li> <p> <code>Yellow</code>: Indicates that something is wrong. Occurs when two consecutive failures occur for an environment.</p> </li> <li> <p> <code>Green</code>: Indicates the environment is healthy and fully functional.</p> </li> <li> <p> <code>Grey</code>: Default health for a new environment. The environment is not fully launched and health checks have not started or health checks are suspended during an <code>UpdateEnvironment</code> or <code>RestartEnvironment</code> request.</p> </li> </ul> <p> Default: <code>Grey</code> </p>
+    #[serde(rename = "Health")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health: Option<String>,
     /// <p>Returns the health status of the application running in your environment. For more information, see <a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced-status.html">Health Colors and Statuses</a>.</p>
+    #[serde(rename = "HealthStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health_status: Option<String>,
     /// <p>The ARN of the platform.</p>
+    #[serde(rename = "PlatformArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_arn: Option<String>,
     /// <p>The description of the AWS resources used by this environment.</p>
+    #[serde(rename = "Resources")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resources: Option<EnvironmentResourcesDescription>,
     /// <p> The name of the <code>SolutionStack</code> deployed with this environment. </p>
+    #[serde(rename = "SolutionStackName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub solution_stack_name: Option<String>,
     /// <p><p>The current operational status of the environment:</p> <ul> <li> <p> <code>Launching</code>: Environment is in the process of initial deployment.</p> </li> <li> <p> <code>Updating</code>: Environment is in the process of updating its configuration settings or application version.</p> </li> <li> <p> <code>Ready</code>: Environment is available to have an action performed on it, such as update or terminate.</p> </li> <li> <p> <code>Terminating</code>: Environment is in the shut-down process.</p> </li> <li> <p> <code>Terminated</code>: Environment is not running.</p> </li> </ul></p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>The name of the configuration template used to originally launch this environment.</p>
+    #[serde(rename = "TemplateName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub template_name: Option<String>,
     /// <p>Describes the current tier of this environment.</p>
+    #[serde(rename = "Tier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tier: Option<EnvironmentTier>,
     /// <p>The application version deployed in this environment.</p>
+    #[serde(rename = "VersionLabel")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_label: Option<String>,
 }
 
@@ -3512,12 +3759,16 @@ impl EnvironmentDescriptionsListDeserializer {
     }
 }
 /// <p>Result message containing a list of environment descriptions.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EnvironmentDescriptionsMessage {
     /// <p> Returns an <a>EnvironmentDescription</a> list. </p>
+    #[serde(rename = "Environments")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environments: Option<Vec<EnvironmentDescription>>,
     /// <p>In a paginated request, the token that you can pass in a subsequent request to get the next response page.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -3609,16 +3860,24 @@ impl EnvironmentIdListSerializer {
 }
 
 /// <p>The information retrieved from the Amazon EC2 instances.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EnvironmentInfoDescription {
     /// <p>The Amazon EC2 Instance ID for this information.</p>
+    #[serde(rename = "Ec2InstanceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ec_2_instance_id: Option<String>,
     /// <p>The type of information retrieved.</p>
+    #[serde(rename = "InfoType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub info_type: Option<String>,
     /// <p>The retrieved information. Currently contains a presigned Amazon S3 URL. The files are deleted after 15 minutes.</p> <p>Anyone in possession of this URL can access the files before they are deleted. Make the URL available only to trusted parties.</p>
+    #[serde(rename = "Message")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
     /// <p>The time stamp when this information was retrieved.</p>
+    #[serde(rename = "SampleTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sample_timestamp: Option<String>,
 }
 
@@ -3692,12 +3951,16 @@ impl EnvironmentInfoTypeDeserializer {
     }
 }
 /// <p>A link to another environment, defined in the environment's manifest. Links provide connection information in system properties that can be used to connect to another environment in the same group. See <a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environment-cfg-manifest.html">Environment Manifest (env.yaml)</a> for details.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EnvironmentLink {
     /// <p>The name of the linked environment (the dependency).</p>
+    #[serde(rename = "EnvironmentName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environment_name: Option<String>,
     /// <p>The name of the link.</p>
+    #[serde(rename = "LinkName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub link_name: Option<String>,
 }
 
@@ -3764,24 +4027,40 @@ impl EnvironmentNamesListSerializer {
 }
 
 /// <p>Describes the AWS resources in use by this environment. This data is live.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EnvironmentResourceDescription {
     /// <p> The <code>AutoScalingGroups</code> used by this environment. </p>
+    #[serde(rename = "AutoScalingGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_scaling_groups: Option<Vec<AutoScalingGroup>>,
     /// <p>The name of the environment.</p>
+    #[serde(rename = "EnvironmentName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environment_name: Option<String>,
     /// <p>The Amazon EC2 instances used by this environment.</p>
+    #[serde(rename = "Instances")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub instances: Option<Vec<Instance>>,
     /// <p>The Auto Scaling launch configurations in use by this environment.</p>
+    #[serde(rename = "LaunchConfigurations")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launch_configurations: Option<Vec<LaunchConfiguration>>,
     /// <p>The Amazon EC2 launch templates in use by this environment.</p>
+    #[serde(rename = "LaunchTemplates")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launch_templates: Option<Vec<LaunchTemplate>>,
     /// <p>The LoadBalancers in use by this environment.</p>
+    #[serde(rename = "LoadBalancers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancers: Option<Vec<LoadBalancer>>,
     /// <p>The queues used by this environment.</p>
+    #[serde(rename = "Queues")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub queues: Option<Vec<Queue>>,
     /// <p>The <code>AutoScaling</code> triggers in use by this environment. </p>
+    #[serde(rename = "Triggers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub triggers: Option<Vec<Trigger>>,
 }
 
@@ -3852,10 +4131,12 @@ impl EnvironmentResourceDescriptionDeserializer {
     }
 }
 /// <p>Result message containing a list of environment resource descriptions.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EnvironmentResourceDescriptionsMessage {
     /// <p> A list of <a>EnvironmentResourceDescription</a>. </p>
+    #[serde(rename = "EnvironmentResources")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environment_resources: Option<EnvironmentResourceDescription>,
 }
 
@@ -3886,10 +4167,12 @@ impl EnvironmentResourceDescriptionsMessageDeserializer {
     }
 }
 /// <p>Describes the AWS resources in use by this environment. This data is not live data.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EnvironmentResourcesDescription {
     /// <p>Describes the LoadBalancer.</p>
+    #[serde(rename = "LoadBalancer")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancer: Option<LoadBalancerDescription>,
 }
 
@@ -3930,15 +4213,20 @@ impl EnvironmentStatusDeserializer {
     }
 }
 /// <p>Describes the properties of an environment tier</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EnvironmentTier {
     /// <p><p>The name of this environment tier.</p> <p>Valid values:</p> <ul> <li> <p>For <i>Web server tier</i> – <code>WebServer</code> </p> </li> <li> <p>For <i>Worker tier</i> – <code>Worker</code> </p> </li> </ul></p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p><p>The type of this environment tier.</p> <p>Valid values:</p> <ul> <li> <p>For <i>Web server tier</i> – <code>Standard</code> </p> </li> <li> <p>For <i>Worker tier</i> – <code>SQS/HTTP</code> </p> </li> </ul></p>
+    #[serde(rename = "Type")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_: Option<String>,
     /// <p><p>The version of this environment tier. When you don&#39;t set a value to it, Elastic Beanstalk uses the latest compatible worker tier version.</p> <note> <p>This member is deprecated. Any specific version that you set may become out of date. We recommend leaving it unspecified.</p> </note></p>
+    #[serde(rename = "Version")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
 
@@ -4000,26 +4288,44 @@ impl EventDateDeserializer {
     }
 }
 /// <p>Describes an event.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EventDescription {
     /// <p>The application associated with the event.</p>
+    #[serde(rename = "ApplicationName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_name: Option<String>,
     /// <p>The name of the environment associated with this event.</p>
+    #[serde(rename = "EnvironmentName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environment_name: Option<String>,
     /// <p>The date when the event occurred.</p>
+    #[serde(rename = "EventDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub event_date: Option<String>,
     /// <p>The event message.</p>
+    #[serde(rename = "Message")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
     /// <p>The ARN of the platform.</p>
+    #[serde(rename = "PlatformArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_arn: Option<String>,
     /// <p>The web service request ID for the activity of this event.</p>
+    #[serde(rename = "RequestId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_id: Option<String>,
     /// <p>The severity level of this event.</p>
+    #[serde(rename = "Severity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub severity: Option<String>,
     /// <p>The name of the configuration associated with this event.</p>
+    #[serde(rename = "TemplateName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub template_name: Option<String>,
     /// <p>The release label for the application version associated with this event.</p>
+    #[serde(rename = "VersionLabel")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_label: Option<String>,
 }
 
@@ -4096,12 +4402,16 @@ impl EventDescriptionListDeserializer {
     }
 }
 /// <p>Result message wrapping a list of event descriptions.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EventDescriptionsMessage {
     /// <p> A list of <a>EventDescription</a>. </p>
+    #[serde(rename = "Events")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub events: Option<Vec<EventDescription>>,
     /// <p> If returned, this indicates that there are more results to obtain. Use this token in the next <a>DescribeEvents</a> call to get the next batch of events. </p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -4188,10 +4498,12 @@ impl ImageIdDeserializer {
     }
 }
 /// <p>The description of an Amazon EC2 instance.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Instance {
     /// <p>The ID of the Amazon EC2 instance.</p>
+    #[serde(rename = "Id")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 }
 
@@ -4233,24 +4545,40 @@ impl InstanceHealthListDeserializer {
     }
 }
 /// <p>Represents summary information about the health of an instance. For more information, see <a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced-status.html">Health Colors and Statuses</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InstanceHealthSummary {
     /// <p> <b>Red.</b> The health agent is reporting a high number of request failures or other issues for an instance or environment.</p>
+    #[serde(rename = "Degraded")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub degraded: Option<i64>,
     /// <p> <b>Green.</b> An operation is in progress on an instance.</p>
+    #[serde(rename = "Info")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub info: Option<i64>,
     /// <p> <b>Grey.</b> AWS Elastic Beanstalk and the health agent are reporting no data on an instance.</p>
+    #[serde(rename = "NoData")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub no_data: Option<i64>,
     /// <p> <b>Green.</b> An instance is passing health checks and the health agent is not reporting any problems.</p>
+    #[serde(rename = "Ok")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ok: Option<i64>,
     /// <p> <b>Grey.</b> An operation is in progress on an instance within the command timeout.</p>
+    #[serde(rename = "Pending")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pending: Option<i64>,
     /// <p> <b>Red.</b> The health agent is reporting a very high number of request failures or other issues for an instance or environment.</p>
+    #[serde(rename = "Severe")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub severe: Option<i64>,
     /// <p> <b>Grey.</b> AWS Elastic Beanstalk and the health agent are reporting an insufficient amount of data on an instance.</p>
+    #[serde(rename = "Unknown")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub unknown: Option<i64>,
     /// <p> <b>Yellow.</b> The health agent is reporting a moderate number of request failures or other issues for an instance or environment.</p>
+    #[serde(rename = "Warning")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub warning: Option<i64>,
 }
 
@@ -4346,24 +4674,40 @@ impl IntegerDeserializer {
     }
 }
 /// <p>Represents the average latency for the slowest X percent of requests over the last 10 seconds.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Latency {
     /// <p>The average latency for the slowest 90 percent of requests over the last 10 seconds.</p>
+    #[serde(rename = "P10")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub p10: Option<f64>,
     /// <p>The average latency for the slowest 50 percent of requests over the last 10 seconds.</p>
+    #[serde(rename = "P50")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub p50: Option<f64>,
     /// <p>The average latency for the slowest 25 percent of requests over the last 10 seconds.</p>
+    #[serde(rename = "P75")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub p75: Option<f64>,
     /// <p>The average latency for the slowest 15 percent of requests over the last 10 seconds.</p>
+    #[serde(rename = "P85")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub p85: Option<f64>,
     /// <p>The average latency for the slowest 10 percent of requests over the last 10 seconds.</p>
+    #[serde(rename = "P90")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub p90: Option<f64>,
     /// <p>The average latency for the slowest 5 percent of requests over the last 10 seconds.</p>
+    #[serde(rename = "P95")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub p95: Option<f64>,
     /// <p>The average latency for the slowest 1 percent of requests over the last 10 seconds.</p>
+    #[serde(rename = "P99")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub p99: Option<f64>,
     /// <p>The average latency for the slowest 0.1 percent of requests over the last 10 seconds.</p>
+    #[serde(rename = "P999")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub p999: Option<f64>,
 }
 
@@ -4407,10 +4751,12 @@ impl LatencyDeserializer {
     }
 }
 /// <p>Describes an Auto Scaling launch configuration.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LaunchConfiguration {
     /// <p>The name of the launch configuration.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
@@ -4452,10 +4798,12 @@ impl LaunchConfigurationListDeserializer {
     }
 }
 /// <p>Describes an Amazon EC2 launch template.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LaunchTemplate {
     /// <p>The ID of the launch template.</p>
+    #[serde(rename = "Id")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 }
 
@@ -4506,12 +4854,16 @@ impl LaunchedAtDeserializer {
     }
 }
 /// <p>A list of available AWS Elastic Beanstalk solution stacks.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListAvailableSolutionStacksResultMessage {
     /// <p> A list of available solution stacks and their <a>SolutionStackDescription</a>. </p>
+    #[serde(rename = "SolutionStackDetails")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub solution_stack_details: Option<Vec<SolutionStackDescription>>,
     /// <p>A list of available solution stacks.</p>
+    #[serde(rename = "SolutionStacks")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub solution_stacks: Option<Vec<String>>,
 }
 
@@ -4586,12 +4938,16 @@ impl ListPlatformVersionsRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListPlatformVersionsResult {
     /// <p>The starting index into the remaining list of platforms. if this value is not <code>null</code>, you can use it in a subsequent <code>ListPlatformVersion</code> call. </p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>Detailed information about the platforms.</p>
+    #[serde(rename = "PlatformSummaryList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_summary_list: Option<Vec<PlatformSummary>>,
 }
 
@@ -4646,12 +5002,16 @@ impl ListTagsForResourceMessageSerializer {
 }
 
 /// <p>Describes the properties of a Listener for the LoadBalancer.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Listener {
     /// <p>The port that is used by the Listener.</p>
+    #[serde(rename = "Port")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub port: Option<i64>,
     /// <p>The protocol that is used by the Listener.</p>
+    #[serde(rename = "Protocol")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
 }
 
@@ -4705,10 +5065,12 @@ impl LoadAverageValueDeserializer {
     }
 }
 /// <p>Describes a LoadBalancer.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LoadBalancer {
     /// <p>The name of the LoadBalancer.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
@@ -4731,14 +5093,20 @@ impl LoadBalancerDeserializer {
     }
 }
 /// <p>Describes the details of a LoadBalancer.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LoadBalancerDescription {
     /// <p>The domain name of the LoadBalancer.</p>
+    #[serde(rename = "Domain")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub domain: Option<String>,
     /// <p>A list of Listeners used by the LoadBalancer.</p>
+    #[serde(rename = "Listeners")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub listeners: Option<Vec<Listener>>,
     /// <p>The name of the LoadBalancer.</p>
+    #[serde(rename = "LoadBalancerName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancer_name: Option<String>,
 }
 
@@ -4822,18 +5190,28 @@ impl MaintainerDeserializer {
     }
 }
 /// <p>The record of an upcoming or in-progress managed action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ManagedAction {
     /// <p>A description of the managed action.</p>
+    #[serde(rename = "ActionDescription")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action_description: Option<String>,
     /// <p>A unique identifier for the managed action.</p>
+    #[serde(rename = "ActionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action_id: Option<String>,
     /// <p>The type of managed action.</p>
+    #[serde(rename = "ActionType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action_type: Option<String>,
     /// <p>The status of the managed action. If the action is <code>Scheduled</code>, you can apply it immediately with <a>ApplyEnvironmentManagedAction</a>.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>The start time of the maintenance window in which the managed action will execute.</p>
+    #[serde(rename = "WindowStartTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub window_start_time: Option<String>,
 }
 
@@ -4873,24 +5251,40 @@ impl ManagedActionDeserializer {
     }
 }
 /// <p>The record of a completed or failed managed action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ManagedActionHistoryItem {
     /// <p>A description of the managed action.</p>
+    #[serde(rename = "ActionDescription")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action_description: Option<String>,
     /// <p>A unique identifier for the managed action.</p>
+    #[serde(rename = "ActionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action_id: Option<String>,
     /// <p>The type of the managed action.</p>
+    #[serde(rename = "ActionType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action_type: Option<String>,
     /// <p>The date and time that the action started executing.</p>
+    #[serde(rename = "ExecutedTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub executed_time: Option<String>,
     /// <p>If the action failed, a description of the failure.</p>
+    #[serde(rename = "FailureDescription")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failure_description: Option<String>,
     /// <p>If the action failed, the type of failure.</p>
+    #[serde(rename = "FailureType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failure_type: Option<String>,
     /// <p>The date and time that the action finished executing.</p>
+    #[serde(rename = "FinishedTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub finished_time: Option<String>,
     /// <p>The status of the action.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -4984,15 +5378,19 @@ impl ManagedActionsDeserializer {
     }
 }
 /// <p>A lifecycle rule that deletes application versions after the specified number of days.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MaxAgeRule {
     /// <p>Set to <code>true</code> to delete a version's source bundle from Amazon S3 when Elastic Beanstalk deletes the application version.</p>
+    #[serde(rename = "DeleteSourceFromS3")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delete_source_from_s3: Option<bool>,
     /// <p>Specify <code>true</code> to apply the rule, or <code>false</code> to disable it.</p>
+    #[serde(rename = "Enabled")]
     pub enabled: bool,
     /// <p>Specify the number of days to retain an application versions.</p>
+    #[serde(rename = "MaxAgeInDays")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_age_in_days: Option<i64>,
 }
 
@@ -5045,15 +5443,19 @@ impl MaxAgeRuleSerializer {
 }
 
 /// <p>A lifecycle rule that deletes the oldest application version when the maximum count is exceeded.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MaxCountRule {
     /// <p>Set to <code>true</code> to delete a version's source bundle from Amazon S3 when Elastic Beanstalk deletes the application version.</p>
+    #[serde(rename = "DeleteSourceFromS3")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delete_source_from_s3: Option<bool>,
     /// <p>Specify <code>true</code> to apply the rule, or <code>false</code> to disable it.</p>
+    #[serde(rename = "Enabled")]
     pub enabled: bool,
     /// <p>Specify the maximum number of application versions to retain.</p>
+    #[serde(rename = "MaxCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_count: Option<i64>,
 }
 
@@ -5226,12 +5628,16 @@ impl OptionRestrictionMinValueDeserializer {
     }
 }
 /// <p>A regular expression representing a restriction on a string configuration option value.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OptionRestrictionRegex {
     /// <p>A unique name representing this regular expression.</p>
+    #[serde(rename = "Label")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
     /// <p>The regular expression pattern that a string configuration option value with this restriction must match.</p>
+    #[serde(rename = "Pattern")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pattern: Option<String>,
 }
 
@@ -5323,44 +5729,80 @@ impl PlatformCategoryDeserializer {
     }
 }
 /// <p>Detailed information about a platform.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PlatformDescription {
     /// <p>The custom AMIs supported by the platform.</p>
+    #[serde(rename = "CustomAmiList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub custom_ami_list: Option<Vec<CustomAmi>>,
     /// <p>The date when the platform was created.</p>
+    #[serde(rename = "DateCreated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date_created: Option<String>,
     /// <p>The date when the platform was last updated.</p>
+    #[serde(rename = "DateUpdated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date_updated: Option<String>,
     /// <p>The description of the platform.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>The frameworks supported by the platform.</p>
+    #[serde(rename = "Frameworks")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub frameworks: Option<Vec<PlatformFramework>>,
     /// <p>Information about the maintainer of the platform.</p>
+    #[serde(rename = "Maintainer")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub maintainer: Option<String>,
     /// <p>The operating system used by the platform.</p>
+    #[serde(rename = "OperatingSystemName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub operating_system_name: Option<String>,
     /// <p>The version of the operating system used by the platform.</p>
+    #[serde(rename = "OperatingSystemVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub operating_system_version: Option<String>,
     /// <p>The ARN of the platform.</p>
+    #[serde(rename = "PlatformArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_arn: Option<String>,
     /// <p>The category of the platform.</p>
+    #[serde(rename = "PlatformCategory")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_category: Option<String>,
     /// <p>The name of the platform.</p>
+    #[serde(rename = "PlatformName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_name: Option<String>,
     /// <p>The AWS account ID of the person who created the platform.</p>
+    #[serde(rename = "PlatformOwner")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_owner: Option<String>,
     /// <p>The status of the platform.</p>
+    #[serde(rename = "PlatformStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_status: Option<String>,
     /// <p>The version of the platform.</p>
+    #[serde(rename = "PlatformVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_version: Option<String>,
     /// <p>The programming languages supported by the platform.</p>
+    #[serde(rename = "ProgrammingLanguages")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub programming_languages: Option<Vec<PlatformProgrammingLanguage>>,
     /// <p>The name of the solution stack used by the platform.</p>
+    #[serde(rename = "SolutionStackName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub solution_stack_name: Option<String>,
     /// <p>The additions supported by the platform.</p>
+    #[serde(rename = "SupportedAddonList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub supported_addon_list: Option<Vec<String>>,
     /// <p>The tiers supported by the platform.</p>
+    #[serde(rename = "SupportedTierList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub supported_tier_list: Option<Vec<String>>,
 }
 
@@ -5536,12 +5978,16 @@ impl PlatformFiltersSerializer {
 }
 
 /// <p>A framework supported by the custom platform.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PlatformFramework {
     /// <p>The name of the framework.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p>The version of the framework.</p>
+    #[serde(rename = "Version")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
 
@@ -5606,12 +6052,16 @@ impl PlatformOwnerDeserializer {
     }
 }
 /// <p>A programming language supported by the platform.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PlatformProgrammingLanguage {
     /// <p>The name of the programming language.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p>The version of the programming language.</p>
+    #[serde(rename = "Version")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
 
@@ -5671,24 +6121,40 @@ impl PlatformStatusDeserializer {
     }
 }
 /// <p>Detailed information about a platform.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PlatformSummary {
     /// <p>The operating system used by the platform.</p>
+    #[serde(rename = "OperatingSystemName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub operating_system_name: Option<String>,
     /// <p>The version of the operating system used by the platform.</p>
+    #[serde(rename = "OperatingSystemVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub operating_system_version: Option<String>,
     /// <p>The ARN of the platform.</p>
+    #[serde(rename = "PlatformArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_arn: Option<String>,
     /// <p>The category of platform.</p>
+    #[serde(rename = "PlatformCategory")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_category: Option<String>,
     /// <p>The AWS account ID of the person who created the platform.</p>
+    #[serde(rename = "PlatformOwner")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_owner: Option<String>,
     /// <p>The status of the platform. You can create an environment from the platform once it is ready.</p>
+    #[serde(rename = "PlatformStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_status: Option<String>,
     /// <p>The additions associated with the platform.</p>
+    #[serde(rename = "SupportedAddonList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub supported_addon_list: Option<Vec<String>>,
     /// <p>The tiers in which the platform runs.</p>
+    #[serde(rename = "SupportedTierList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub supported_tier_list: Option<Vec<String>>,
 }
 
@@ -5781,12 +6247,16 @@ impl PlatformVersionDeserializer {
     }
 }
 /// <p>Describes a queue.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Queue {
     /// <p>The name of the queue.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p>The URL of the queue.</p>
+    #[serde(rename = "URL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub url: Option<String>,
 }
 
@@ -5973,10 +6443,12 @@ impl ResourceNameDeserializer {
     }
 }
 /// <p>The AWS Elastic Beanstalk quota information for a single resource type in an AWS account. It reflects the resource's limits for this account.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ResourceQuota {
     /// <p>The maximum number of instances of this Elastic Beanstalk resource type that an AWS account can use.</p>
+    #[serde(rename = "Maximum")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub maximum: Option<i64>,
 }
 
@@ -5999,18 +6471,28 @@ impl ResourceQuotaDeserializer {
     }
 }
 /// <p>A set of per-resource AWS Elastic Beanstalk quotas associated with an AWS account. They reflect Elastic Beanstalk resource limits for this account.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ResourceQuotas {
     /// <p>The quota for applications in the AWS account.</p>
+    #[serde(rename = "ApplicationQuota")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_quota: Option<ResourceQuota>,
     /// <p>The quota for application versions in the AWS account.</p>
+    #[serde(rename = "ApplicationVersionQuota")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_version_quota: Option<ResourceQuota>,
     /// <p>The quota for configuration templates in the AWS account.</p>
+    #[serde(rename = "ConfigurationTemplateQuota")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub configuration_template_quota: Option<ResourceQuota>,
     /// <p>The quota for custom platforms in the AWS account.</p>
+    #[serde(rename = "CustomPlatformQuota")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub custom_platform_quota: Option<ResourceQuota>,
     /// <p>The quota for environments in the AWS account.</p>
+    #[serde(rename = "EnvironmentQuota")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environment_quota: Option<ResourceQuota>,
 }
 
@@ -6060,12 +6542,16 @@ impl ResourceQuotasDeserializer {
         })
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ResourceTagsDescriptionMessage {
     /// <p>The Amazon Resource Name (ARN) of the resouce for which a tag list was requested.</p>
+    #[serde(rename = "ResourceArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_arn: Option<String>,
     /// <p>A list of tag key-value pairs.</p>
+    #[serde(rename = "ResourceTags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_tags: Option<Vec<Tag>>,
 }
 
@@ -6157,10 +6643,12 @@ impl RetrieveEnvironmentInfoMessageSerializer {
 }
 
 /// <p>Result message containing a description of the requested environment info.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RetrieveEnvironmentInfoResultMessage {
     /// <p> The <a>EnvironmentInfoDescription</a> of the environment. </p>
+    #[serde(rename = "EnvironmentInfo")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environment_info: Option<Vec<EnvironmentInfoDescription>>,
 }
 
@@ -6214,13 +6702,16 @@ impl S3KeyDeserializer {
     }
 }
 /// <p>The bucket and key of an item stored in Amazon S3.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct S3Location {
     /// <p>The Amazon S3 bucket where the data is located.</p>
+    #[serde(rename = "S3Bucket")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub s3_bucket: Option<String>,
     /// <p>The Amazon S3 key where the data is located.</p>
+    #[serde(rename = "S3Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub s3_key: Option<String>,
 }
 
@@ -6276,28 +6767,48 @@ impl SampleTimestampDeserializer {
     }
 }
 /// <p>Detailed health information about an Amazon EC2 instance in your Elastic Beanstalk environment.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SingleInstanceHealth {
     /// <p>Request metrics from your application.</p>
+    #[serde(rename = "ApplicationMetrics")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub application_metrics: Option<ApplicationMetrics>,
     /// <p>The availability zone in which the instance runs.</p>
+    #[serde(rename = "AvailabilityZone")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub availability_zone: Option<String>,
     /// <p>Represents the causes, which provide more information about the current health status.</p>
+    #[serde(rename = "Causes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub causes: Option<Vec<String>>,
     /// <p>Represents the color indicator that gives you information about the health of the EC2 instance. For more information, see <a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced-status.html">Health Colors and Statuses</a>.</p>
+    #[serde(rename = "Color")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub color: Option<String>,
     /// <p>Information about the most recent deployment to an instance.</p>
+    #[serde(rename = "Deployment")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub deployment: Option<Deployment>,
     /// <p>Returns the health status of the specified instance. For more information, see <a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced-status.html">Health Colors and Statuses</a>.</p>
+    #[serde(rename = "HealthStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health_status: Option<String>,
     /// <p>The ID of the Amazon EC2 instance.</p>
+    #[serde(rename = "InstanceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub instance_id: Option<String>,
     /// <p>The instance's type.</p>
+    #[serde(rename = "InstanceType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub instance_type: Option<String>,
     /// <p>The time at which the EC2 instance was launched.</p>
+    #[serde(rename = "LaunchedAt")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launched_at: Option<String>,
     /// <p>Operating system metrics from the instance.</p>
+    #[serde(rename = "System")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub system: Option<SystemStatus>,
 }
 
@@ -6358,12 +6869,16 @@ impl SingleInstanceHealthDeserializer {
     }
 }
 /// <p>Describes the solution stack.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SolutionStackDescription {
     /// <p>The permitted file types allowed for a solution stack.</p>
+    #[serde(rename = "PermittedFileTypes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permitted_file_types: Option<Vec<String>>,
     /// <p>The name of the solution stack.</p>
+    #[serde(rename = "SolutionStackName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub solution_stack_name: Option<String>,
 }
 
@@ -6429,15 +6944,17 @@ impl SolutionStackNameDeserializer {
     }
 }
 /// <p>Location of the source code for an application version.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SourceBuildInformation {
     /// <p><p>The location of the source code, as a formatted string, depending on the value of <code>SourceRepository</code> </p> <ul> <li> <p>For <code>CodeCommit</code>, the format is the repository name and commit ID, separated by a forward slash. For example, <code>my-git-repo/265cfa0cf6af46153527f55d6503ec030551f57a</code>.</p> </li> <li> <p>For <code>S3</code>, the format is the S3 bucket name and object key, separated by a forward slash. For example, <code>my-s3-bucket/Folders/my-source-file</code>.</p> </li> </ul></p>
+    #[serde(rename = "SourceLocation")]
     pub source_location: String,
     /// <p><p>Location where the repository is stored.</p> <ul> <li> <p> <code>CodeCommit</code> </p> </li> <li> <p> <code>S3</code> </p> </li> </ul></p>
+    #[serde(rename = "SourceRepository")]
     pub source_repository: String,
     /// <p><p>The type of repository.</p> <ul> <li> <p> <code>Git</code> </p> </li> <li> <p> <code>Zip</code> </p> </li> </ul></p>
+    #[serde(rename = "SourceType")]
     pub source_type: String,
 }
 
@@ -6551,16 +7068,24 @@ impl SourceTypeDeserializer {
     }
 }
 /// <p>Represents the percentage of requests over the last 10 seconds that resulted in each type of status code response. For more information, see <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">Status Code Definitions</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StatusCodes {
     /// <p>The percentage of requests over the last 10 seconds that resulted in a 2xx (200, 201, etc.) status code.</p>
+    #[serde(rename = "Status2xx")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_2xx: Option<i64>,
     /// <p>The percentage of requests over the last 10 seconds that resulted in a 3xx (300, 301, etc.) status code.</p>
+    #[serde(rename = "Status3xx")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_3xx: Option<i64>,
     /// <p>The percentage of requests over the last 10 seconds that resulted in a 4xx (400, 401, etc.) status code.</p>
+    #[serde(rename = "Status4xx")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_4xx: Option<i64>,
     /// <p>The percentage of requests over the last 10 seconds that resulted in a 5xx (500, 501, etc.) status code.</p>
+    #[serde(rename = "Status5xx")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_5xx: Option<i64>,
 }
 
@@ -6721,12 +7246,16 @@ impl SwapEnvironmentCNAMEsMessageSerializer {
 }
 
 /// <p>CPU utilization and load average metrics for an Amazon EC2 instance.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SystemStatus {
     /// <p>CPU utilization metrics for the instance.</p>
+    #[serde(rename = "CPUUtilization")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_utilization: Option<CPUUtilization>,
     /// <p>Load average in the last 1-minute, 5-minute, and 15-minute periods. For more information, see <a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced-metrics.html#health-enhanced-metrics-os">Operating System Metrics</a>.</p>
+    #[serde(rename = "LoadAverage")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_average: Option<Vec<f64>>,
 }
 
@@ -6757,13 +7286,16 @@ impl SystemStatusDeserializer {
     }
 }
 /// <p>Describes a tag applied to a resource in an environment.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Tag {
     /// <p>The key of the tag.</p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>The value of the tag.</p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -6940,10 +7472,12 @@ impl TokenDeserializer {
     }
 }
 /// <p>Describes a trigger.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Trigger {
     /// <p>The name of the trigger.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
@@ -7315,16 +7849,24 @@ impl ValidateConfigurationSettingsMessageSerializer {
 }
 
 /// <p>An error or warning for a desired configuration option value.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ValidationMessage {
     /// <p>A message describing the error or warning.</p>
+    #[serde(rename = "Message")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
     /// <p>The namespace to which the option belongs.</p>
+    #[serde(rename = "Namespace")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     /// <p>The name of the option.</p>
+    #[serde(rename = "OptionName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub option_name: Option<String>,
     /// <p><p>An indication of the severity of this message:</p> <ul> <li> <p> <code>error</code>: This message indicates that this is not a valid setting for an option.</p> </li> <li> <p> <code>warning</code>: This message is providing information you should take into account.</p> </li> </ul></p>
+    #[serde(rename = "Severity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub severity: Option<String>,
 }
 

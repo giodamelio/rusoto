@@ -48,12 +48,16 @@ impl AccountDeserializer {
     }
 }
 /// <p>Structure that contains the results of the account gate function which AWS CloudFormation invokes, if present, before proceeding with a stack set operation in an account and region.</p> <p>For each account and region, AWS CloudFormation lets you specify a Lamdba function that encapsulates any requirements that must be met before CloudFormation can proceed with a stack set operation in that account and region. CloudFormation invokes the function each time a stack set operation is requested for that account and region; if the function returns <code>FAILED</code>, CloudFormation cancels the operation in that account and region, and sets the stack set operation result status for that account and region to <code>FAILED</code>. </p> <p>For more information, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-account-gating.html">Configuring a target account gate</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AccountGateResult {
     /// <p><p>The status of the account gate function.</p> <ul> <li> <p> <code>SUCCEEDED</code>: The account gate function has determined that the account and region passes any requirements for a stack set operation to occur. AWS CloudFormation proceeds with the stack operation in that account and region. </p> </li> <li> <p> <code>FAILED</code>: The account gate function has determined that the account and region does not meet the requirements for a stack set operation to occur. AWS CloudFormation cancels the stack set operation in that account and region, and sets the stack set operation result status for that account and region to <code>FAILED</code>. </p> </li> <li> <p> <code>SKIPPED</code>: AWS CloudFormation has skipped calling the account gate function for this account and region, for one of the following reasons:</p> <ul> <li> <p>An account gate function has not been specified for the account and region. AWS CloudFormation proceeds with the stack set operation in this account and region.</p> </li> <li> <p>The <code>AWSCloudFormationStackSetExecutionRole</code> of the stack set adminstration account lacks permissions to invoke the function. AWS CloudFormation proceeds with the stack set operation in this account and region.</p> </li> <li> <p>Either no action is necessary, or no action is possible, on the stack. AWS CloudFormation skips the stack set operation in this account and region.</p> </li> </ul> </li> </ul></p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>The reason for the account gate status assigned to this account and region for the stack set operation.</p>
+    #[serde(rename = "StatusReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_reason: Option<String>,
 }
 
@@ -104,12 +108,16 @@ impl AccountGateStatusReasonDeserializer {
     }
 }
 /// <p>The AccountLimit data type. </p> <p>CloudFormation has the following limits per account:</p> <ul> <li> <p>Number of concurrent resources</p> </li> <li> <p>Number of stacks</p> </li> <li> <p>Number of stack outputs</p> </li> </ul> <p>For more information about these account limits, and other CloudFormation limits, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html">AWS CloudFormation Limits</a> in the <i>AWS CloudFormation User Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AccountLimit {
     /// <p>The name of the account limit.</p> <p>Values: <code>ConcurrentResourcesLimit</code> | <code>StackLimit</code> | <code>StackOutputsLimit</code> </p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p>The value that is associated with the account limit name.</p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<i64>,
 }
 
@@ -302,12 +310,16 @@ impl CausingEntityDeserializer {
     }
 }
 /// <p>The <code>Change</code> structure describes the changes AWS CloudFormation will perform if you execute the change set.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Change {
     /// <p>A <code>ResourceChange</code> structure that describes the resource and action that AWS CloudFormation will perform.</p>
+    #[serde(rename = "ResourceChange")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_change: Option<ResourceChange>,
     /// <p>The type of entity that AWS CloudFormation changes. Currently, the only entity type is <code>Resource</code>.</p>
+    #[serde(rename = "Type")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_: Option<String>,
 }
 
@@ -405,26 +417,44 @@ impl ChangeSetSummariesDeserializer {
     }
 }
 /// <p>The <code>ChangeSetSummary</code> structure describes a change set, its status, and the stack with which it's associated.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ChangeSetSummary {
     /// <p>The ID of the change set.</p>
+    #[serde(rename = "ChangeSetId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub change_set_id: Option<String>,
     /// <p>The name of the change set.</p>
+    #[serde(rename = "ChangeSetName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub change_set_name: Option<String>,
     /// <p>The start time when the change set was created, in UTC.</p>
+    #[serde(rename = "CreationTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub creation_time: Option<String>,
     /// <p>Descriptive information about the change set.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>If the change set execution status is <code>AVAILABLE</code>, you can execute the change set. If you can’t execute the change set, the status indicates why. For example, a change set might be in an <code>UNAVAILABLE</code> state because AWS CloudFormation is still creating it or in an <code>OBSOLETE</code> state because the stack was already updated.</p>
+    #[serde(rename = "ExecutionStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub execution_status: Option<String>,
     /// <p>The ID of the stack with which the change set is associated.</p>
+    #[serde(rename = "StackId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_id: Option<String>,
     /// <p>The name of the stack with which the change set is associated.</p>
+    #[serde(rename = "StackName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_name: Option<String>,
     /// <p>The state of the change set, such as <code>CREATE_IN_PROGRESS</code>, <code>CREATE_COMPLETE</code>, or <code>FAILED</code>.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>A description of the change set's status. For example, if your change set is in the <code>FAILED</code> state, AWS CloudFormation shows the error message.</p>
+    #[serde(rename = "StatusReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_reason: Option<String>,
 }
 
@@ -575,8 +605,8 @@ impl ContinueUpdateRollbackInputSerializer {
 }
 
 /// <p>The output for a <a>ContinueUpdateRollback</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ContinueUpdateRollbackOutput {}
 
 struct ContinueUpdateRollbackOutputDeserializer;
@@ -720,12 +750,16 @@ impl CreateChangeSetInputSerializer {
 }
 
 /// <p>The output for the <a>CreateChangeSet</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateChangeSetOutput {
     /// <p>The Amazon Resource Name (ARN) of the change set.</p>
+    #[serde(rename = "Id")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// <p>The unique ID of the stack.</p>
+    #[serde(rename = "StackId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_id: Option<String>,
 }
 
@@ -930,10 +964,12 @@ impl CreateStackInstancesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateStackInstancesOutput {
     /// <p>The unique identifier for this stack set operation.</p>
+    #[serde(rename = "OperationId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub operation_id: Option<String>,
 }
 
@@ -963,10 +999,12 @@ impl CreateStackInstancesOutputDeserializer {
     }
 }
 /// <p>The output for a <a>CreateStack</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateStackOutput {
     /// <p>Unique identifier of the stack.</p>
+    #[serde(rename = "StackId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_id: Option<String>,
 }
 
@@ -1067,10 +1105,12 @@ impl CreateStackSetInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateStackSetOutput {
     /// <p>The ID of the stack set that you're creating.</p>
+    #[serde(rename = "StackSetId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_set_id: Option<String>,
 }
 
@@ -1134,8 +1174,8 @@ impl DeleteChangeSetInputSerializer {
 }
 
 /// <p>The output for the <a>DeleteChangeSet</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteChangeSetOutput {}
 
 struct DeleteChangeSetOutputDeserializer;
@@ -1244,10 +1284,12 @@ impl DeleteStackInstancesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteStackInstancesOutput {
     /// <p>The unique identifier for this stack set operation.</p>
+    #[serde(rename = "OperationId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub operation_id: Option<String>,
 }
 
@@ -1299,8 +1341,8 @@ impl DeleteStackSetInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteStackSetOutput {}
 
 struct DeleteStackSetOutputDeserializer;
@@ -1378,8 +1420,8 @@ impl DeregisterTypeInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeregisterTypeOutput {}
 
 struct DeregisterTypeOutputDeserializer;
@@ -1422,12 +1464,16 @@ impl DescribeAccountLimitsInputSerializer {
 }
 
 /// <p>The output for the <a>DescribeAccountLimits</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeAccountLimitsOutput {
     /// <p>An account limit structure that contain a list of AWS CloudFormation account limits and their values.</p>
+    #[serde(rename = "AccountLimits")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub account_limits: Option<Vec<AccountLimit>>,
     /// <p>If the output exceeds 1 MB in size, a string that identifies the next page of limits. If no additional page exists, this value is null.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -1494,40 +1540,72 @@ impl DescribeChangeSetInputSerializer {
 }
 
 /// <p>The output for the <a>DescribeChangeSet</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeChangeSetOutput {
     /// <p>If you execute the change set, the list of capabilities that were explicitly acknowledged when the change set was created.</p>
+    #[serde(rename = "Capabilities")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub capabilities: Option<Vec<String>>,
     /// <p>The ARN of the change set.</p>
+    #[serde(rename = "ChangeSetId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub change_set_id: Option<String>,
     /// <p>The name of the change set.</p>
+    #[serde(rename = "ChangeSetName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub change_set_name: Option<String>,
     /// <p>A list of <code>Change</code> structures that describes the resources AWS CloudFormation changes if you execute the change set.</p>
+    #[serde(rename = "Changes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub changes: Option<Vec<Change>>,
     /// <p>The start time when the change set was created, in UTC.</p>
+    #[serde(rename = "CreationTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub creation_time: Option<String>,
     /// <p>Information about the change set.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>If the change set execution status is <code>AVAILABLE</code>, you can execute the change set. If you can’t execute the change set, the status indicates why. For example, a change set might be in an <code>UNAVAILABLE</code> state because AWS CloudFormation is still creating it or in an <code>OBSOLETE</code> state because the stack was already updated.</p>
+    #[serde(rename = "ExecutionStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub execution_status: Option<String>,
     /// <p>If the output exceeds 1 MB, a string that identifies the next page of changes. If there is no additional page, this value is null.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>The ARNs of the Amazon Simple Notification Service (Amazon SNS) topics that will be associated with the stack if you execute the change set.</p>
+    #[serde(rename = "NotificationARNs")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub notification_ar_ns: Option<Vec<String>>,
     /// <p>A list of <code>Parameter</code> structures that describes the input parameters and their values used to create the change set. For more information, see the <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_Parameter.html">Parameter</a> data type.</p>
+    #[serde(rename = "Parameters")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<Parameter>>,
     /// <p>The rollback triggers for AWS CloudFormation to monitor during stack creation and updating operations, and for the specified monitoring period afterwards.</p>
+    #[serde(rename = "RollbackConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rollback_configuration: Option<RollbackConfiguration>,
     /// <p>The ARN of the stack that is associated with the change set.</p>
+    #[serde(rename = "StackId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_id: Option<String>,
     /// <p>The name of the stack that is associated with the change set.</p>
+    #[serde(rename = "StackName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_name: Option<String>,
     /// <p>The current status of the change set, such as <code>CREATE_IN_PROGRESS</code>, <code>CREATE_COMPLETE</code>, or <code>FAILED</code>.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>A description of the change set's status. For example, if your attempt to create a change set failed, AWS CloudFormation shows the error message.</p>
+    #[serde(rename = "StatusReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_reason: Option<String>,
     /// <p>If you execute the change set, the tags that will be associated with the stack.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
 }
 
@@ -1652,22 +1730,32 @@ impl DescribeStackDriftDetectionStatusInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeStackDriftDetectionStatusOutput {
     /// <p><p>The status of the stack drift detection operation.</p> <ul> <li> <p> <code>DETECTION<em>COMPLETE</code>: The stack drift detection operation has successfully completed for all resources in the stack that support drift detection. (Resources that do not currently support stack detection remain unchecked.)</p> <p>If you specified logical resource IDs for AWS CloudFormation to use as a filter for the stack drift detection operation, only the resources with those logical IDs are checked for drift.</p> </li> <li> <p> <code>DETECTION</em>FAILED</code>: The stack drift detection operation has failed for at least one resource in the stack. Results will be available for resources on which AWS CloudFormation successfully completed drift detection.</p> </li> <li> <p> <code>DETECTION<em>IN</em>PROGRESS</code>: The stack drift detection operation is currently in progress.</p> </li> </ul></p>
+    #[serde(rename = "DetectionStatus")]
     pub detection_status: String,
     /// <p>The reason the stack drift detection operation has its current status.</p>
+    #[serde(rename = "DetectionStatusReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub detection_status_reason: Option<String>,
     /// <p>Total number of stack resources that have drifted. This is NULL until the drift detection operation reaches a status of <code>DETECTION_COMPLETE</code>. This value will be 0 for stacks whose drift status is <code>IN_SYNC</code>.</p>
+    #[serde(rename = "DriftedStackResourceCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drifted_stack_resource_count: Option<i64>,
     /// <p>The ID of the drift detection results of this operation. </p> <p>AWS CloudFormation generates new results, with a new drift detection ID, each time this operation is run. However, the number of reports AWS CloudFormation retains for any given stack, and for how long, may vary.</p>
+    #[serde(rename = "StackDriftDetectionId")]
     pub stack_drift_detection_id: String,
     /// <p><p>Status of the stack&#39;s actual configuration compared to its expected configuration. </p> <ul> <li> <p> <code>DRIFTED</code>: The stack differs from its expected template configuration. A stack is considered to have drifted if one or more of its resources have drifted.</p> </li> <li> <p> <code>NOT<em>CHECKED</code>: AWS CloudFormation has not checked if the stack differs from its expected template configuration.</p> </li> <li> <p> <code>IN</em>SYNC</code>: The stack&#39;s actual configuration matches its expected template configuration.</p> </li> <li> <p> <code>UNKNOWN</code>: This value is reserved for future use.</p> </li> </ul></p>
+    #[serde(rename = "StackDriftStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_drift_status: Option<String>,
     /// <p>The ID of the stack.</p>
+    #[serde(rename = "StackId")]
     pub stack_id: String,
     /// <p>Time at which the stack drift detection operation was initiated.</p>
+    #[serde(rename = "Timestamp")]
     pub timestamp: String,
 }
 
@@ -1758,12 +1846,16 @@ impl DescribeStackEventsInputSerializer {
 }
 
 /// <p>The output for a <a>DescribeStackEvents</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeStackEventsOutput {
     /// <p>If the output exceeds 1 MB in size, a string that identifies the next page of events. If no additional page exists, this value is null.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of <code>StackEvents</code> structures.</p>
+    #[serde(rename = "StackEvents")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_events: Option<Vec<StackEvent>>,
 }
 
@@ -1830,10 +1922,12 @@ impl DescribeStackInstanceInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeStackInstanceOutput {
     /// <p>The stack instance that matches the specified request parameters.</p>
+    #[serde(rename = "StackInstance")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_instance: Option<StackInstance>,
 }
 
@@ -1901,12 +1995,15 @@ impl DescribeStackResourceDriftsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeStackResourceDriftsOutput {
     /// <p>If the request doesn't return all of the remaining results, <code>NextToken</code> is set to a token. To retrieve the next set of results, call <code>DescribeStackResourceDrifts</code> again and assign that token to the request object's <code>NextToken</code> parameter. If the request returns all results, <code>NextToken</code> is set to <code>null</code>.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>Drift information for the resources that have been checked for drift in the specified stack. This includes actual and expected configuration values for resources where AWS CloudFormation detects drift.</p> <p>For a given stack, there will be one <code>StackResourceDrift</code> for each stack resource that has been checked for drift. Resources that have not yet been checked for drift are not included. Resources that do not currently support drift detection are not checked, and so not included. For a list of resources that support drift detection, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift-resource-list.html">Resources that Support Drift Detection</a>.</p>
+    #[serde(rename = "StackResourceDrifts")]
     pub stack_resource_drifts: Vec<StackResourceDrift>,
 }
 
@@ -1969,10 +2066,12 @@ impl DescribeStackResourceInputSerializer {
 }
 
 /// <p>The output for a <a>DescribeStackResource</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeStackResourceOutput {
     /// <p>A <code>StackResourceDetail</code> structure containing the description of the specified resource in the specified stack.</p>
+    #[serde(rename = "StackResourceDetail")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_resource_detail: Option<StackResourceDetail>,
 }
 
@@ -2036,10 +2135,12 @@ impl DescribeStackResourcesInputSerializer {
 }
 
 /// <p>The output for a <a>DescribeStackResources</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeStackResourcesOutput {
     /// <p>A list of <code>StackResource</code> structures.</p>
+    #[serde(rename = "StackResources")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_resources: Option<Vec<StackResource>>,
 }
 
@@ -2116,10 +2217,12 @@ impl DescribeStackSetOperationInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeStackSetOperationOutput {
     /// <p>The specified stack set operation.</p>
+    #[serde(rename = "StackSetOperation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_set_operation: Option<StackSetOperation>,
 }
 
@@ -2148,10 +2251,12 @@ impl DescribeStackSetOperationOutputDeserializer {
         )
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeStackSetOutput {
     /// <p>The specified stack set.</p>
+    #[serde(rename = "StackSet")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_set: Option<StackSet>,
 }
 
@@ -2202,12 +2307,16 @@ impl DescribeStacksInputSerializer {
 }
 
 /// <p>The output for a <a>DescribeStacks</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeStacksOutput {
     /// <p>If the output exceeds 1 MB in size, a string that identifies the next page of stacks. If no additional page exists, this value is null.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of stack structures.</p>
+    #[serde(rename = "Stacks")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stacks: Option<Vec<Stack>>,
 }
 
@@ -2271,38 +2380,68 @@ impl DescribeTypeInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeTypeOutput {
     /// <p>The Amazon Resource Name (ARN) of the type.</p>
+    #[serde(rename = "Arn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arn: Option<String>,
     /// <p>The ID of the default version of the type. The default version is used when the type version is not specified.</p> <p>To set the default version of a type, use <code> <a>SetTypeDefaultVersion</a> </code>. </p>
+    #[serde(rename = "DefaultVersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_version_id: Option<String>,
     /// <p><p>The deprecation status of the type.</p> <p>Valid values include:</p> <ul> <li> <p> <code>LIVE</code>: The type is registered and can be used in CloudFormation operations, dependent on its provisioning behavior and visibility scope.</p> </li> <li> <p> <code>DEPRECATED</code>: The type has been deregistered and can no longer be used in CloudFormation operations. </p> </li> </ul></p>
+    #[serde(rename = "DeprecatedStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub deprecated_status: Option<String>,
     /// <p>The description of the registered type.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>The URL of a page providing detailed documentation for this type.</p>
+    #[serde(rename = "DocumentationUrl")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub documentation_url: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the IAM execution role used to register the type. If your resource type calls AWS APIs in any of its handlers, you must create an <i> <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html">IAM execution role</a> </i> that includes the necessary permissions to call those AWS APIs, and provision that execution role in your account. CloudFormation then assumes that execution role to provide your resource type with the appropriate credentials.</p>
+    #[serde(rename = "ExecutionRoleArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub execution_role_arn: Option<String>,
     /// <p>When the specified type version was registered.</p>
+    #[serde(rename = "LastUpdated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_updated: Option<String>,
     /// <p>Contains logging configuration information for a type.</p>
+    #[serde(rename = "LoggingConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub logging_config: Option<LoggingConfig>,
     /// <p><p>The provisioning behavior of the type. AWS CloudFormation determines the provisioning type during registration, based on the types of handlers in the schema handler package submitted.</p> <p>Valid values include:</p> <ul> <li> <p> <code>FULLY<em>MUTABLE</code>: The type includes an update handler to process updates to the type during stack update operations.</p> </li> <li> <p> <code>IMMUTABLE</code>: The type does not include an update handler, so the type cannot be updated and must instead be replaced during stack update operations.</p> </li> <li> <p> <code>NON</em>PROVISIONABLE</code>: The type does not include all of the following handlers, and therefore cannot actually be provisioned.</p> <ul> <li> <p>create</p> </li> <li> <p>read</p> </li> <li> <p>delete</p> </li> </ul> </li> </ul></p>
+    #[serde(rename = "ProvisioningType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub provisioning_type: Option<String>,
     /// <p>The schema that defines the type.</p> <p>For more information on type schemas, see <a href="https://docs.aws.amazon.com/cloudformation-cli/latest/userguide/resource-type-schema.html">Resource Provider Schema</a> in the <i>CloudFormation CLI User Guide</i>.</p>
+    #[serde(rename = "Schema")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub schema: Option<String>,
     /// <p>The URL of the source code for the type.</p>
+    #[serde(rename = "SourceUrl")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_url: Option<String>,
     /// <p>When the specified type version was registered.</p>
+    #[serde(rename = "TimeCreated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub time_created: Option<String>,
     /// <p>The kind of type. </p> <p>Currently the only valid value is <code>RESOURCE</code>.</p>
+    #[serde(rename = "Type")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_: Option<String>,
     /// <p>The name of the registered type.</p>
+    #[serde(rename = "TypeName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_name: Option<String>,
     /// <p><p>The scope at which the type is visible and usable in CloudFormation operations.</p> <p>Valid values include:</p> <ul> <li> <p> <code>PRIVATE</code>: The type is only visible and usable within the account in which it is registered. Currently, AWS CloudFormation marks any types you register as <code>PRIVATE</code>.</p> </li> <li> <p> <code>PUBLIC</code>: The type is publically visible and usable within any Amazon account.</p> </li> </ul></p>
+    #[serde(rename = "Visibility")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub visibility: Option<String>,
 }
 
@@ -2412,16 +2551,24 @@ impl DescribeTypeRegistrationInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeTypeRegistrationOutput {
     /// <p>The description of the type registration request.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>The current status of the type registration request.</p>
+    #[serde(rename = "ProgressStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub progress_status: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the type being registered.</p> <p>For registration requests with a <code>ProgressStatus</code> of other than <code>COMPLETE</code>, this will be <code>null</code>.</p>
+    #[serde(rename = "TypeArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_arn: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of this specific version of the type being registered.</p> <p>For registration requests with a <code>ProgressStatus</code> of other than <code>COMPLETE</code>, this will be <code>null</code>.</p>
+    #[serde(rename = "TypeVersionArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_version_arn: Option<String>,
 }
 
@@ -2501,10 +2648,11 @@ impl DetectStackDriftInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DetectStackDriftOutput {
     /// <p>The ID of the drift detection results of this operation. </p> <p>AWS CloudFormation generates new results, with a new drift detection ID, each time this operation is run. However, the number of drift results AWS CloudFormation retains for any given stack, and for how long, may vary. </p>
+    #[serde(rename = "StackDriftDetectionId")]
     pub stack_drift_detection_id: String,
 }
 
@@ -2555,10 +2703,11 @@ impl DetectStackResourceDriftInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DetectStackResourceDriftOutput {
     /// <p>Information about whether the resource's actual configuration has drifted from its expected template configuration, including actual and expected property values and any differences detected.</p>
+    #[serde(rename = "StackResourceDrift")]
     pub stack_resource_drift: StackResourceDrift,
 }
 
@@ -2623,10 +2772,12 @@ impl DetectStackSetDriftInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DetectStackSetDriftOutput {
     /// <p>The ID of the drift detection stack set operation. </p> <p>you can use this operation id with <code> <a>DescribeStackSetOperation</a> </code> to monitor the progress of the drift detection operation. </p>
+    #[serde(rename = "OperationId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub operation_id: Option<String>,
 }
 
@@ -2737,10 +2888,12 @@ impl EstimateTemplateCostInputSerializer {
 }
 
 /// <p>The output for a <a>EstimateTemplateCost</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EstimateTemplateCostOutput {
     /// <p>An AWS Simple Monthly Calculator URL with a query string that describes the resources required to run the template.</p>
+    #[serde(rename = "Url")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub url: Option<String>,
 }
 
@@ -2823,8 +2976,8 @@ impl ExecuteChangeSetInputSerializer {
 }
 
 /// <p>The output for the <a>ExecuteChangeSet</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ExecuteChangeSetOutput {}
 
 struct ExecuteChangeSetOutputDeserializer;
@@ -2866,14 +3019,20 @@ impl ExecutionStatusDeserializer {
     }
 }
 /// <p>The <code>Export</code> structure describes the exported output values for a stack.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Export {
     /// <p>The stack that contains the exported output name and value.</p>
+    #[serde(rename = "ExportingStackId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub exporting_stack_id: Option<String>,
     /// <p>The name of exported output value. Use this name and the <code>Fn::ImportValue</code> function to import the associated value into other stacks. The name is defined in the <code>Export</code> field in the associated stack's <code>Outputs</code> section.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p>The value of the exported output, such as a resource physical ID. This value is defined in the <code>Export</code> field in the associated stack's <code>Outputs</code> section.</p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -2993,10 +3152,12 @@ impl GetStackPolicyInputSerializer {
 }
 
 /// <p>The output for the <a>GetStackPolicy</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetStackPolicyOutput {
     /// <p>Structure containing the stack policy body. (For more information, go to <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/protect-stack-resources.html"> Prevent Updates to Stack Resources</a> in the AWS CloudFormation User Guide.)</p>
+    #[serde(rename = "StackPolicyBody")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_policy_body: Option<String>,
 }
 
@@ -3055,12 +3216,16 @@ impl GetTemplateInputSerializer {
 }
 
 /// <p>The output for <a>GetTemplate</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetTemplateOutput {
     /// <p>The stage of the template that you can retrieve. For stacks, the <code>Original</code> and <code>Processed</code> templates are always available. For change sets, the <code>Original</code> template is always available. After AWS CloudFormation finishes creating the change set, the <code>Processed</code> template becomes available.</p>
+    #[serde(rename = "StagesAvailable")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stages_available: Option<Vec<String>>,
     /// <p>Structure containing the template body. (For more information, go to <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html">Template Anatomy</a> in the AWS CloudFormation User Guide.)</p> <p>AWS CloudFormation returns the same template that was used when the stack was created.</p>
+    #[serde(rename = "TemplateBody")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub template_body: Option<String>,
 }
 
@@ -3129,26 +3294,44 @@ impl GetTemplateSummaryInputSerializer {
 }
 
 /// <p>The output for the <a>GetTemplateSummary</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetTemplateSummaryOutput {
     /// <p>The capabilities found within the template. If your template contains IAM resources, you must specify the CAPABILITY_IAM or CAPABILITY_NAMED_IAM value for this parameter when you use the <a>CreateStack</a> or <a>UpdateStack</a> actions with your template; otherwise, those actions return an InsufficientCapabilities error.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-template.html#capabilities">Acknowledging IAM Resources in AWS CloudFormation Templates</a>.</p>
+    #[serde(rename = "Capabilities")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub capabilities: Option<Vec<String>>,
     /// <p>The list of resources that generated the values in the <code>Capabilities</code> response element.</p>
+    #[serde(rename = "CapabilitiesReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub capabilities_reason: Option<String>,
     /// <p>A list of the transforms that are declared in the template.</p>
+    #[serde(rename = "DeclaredTransforms")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub declared_transforms: Option<Vec<String>>,
     /// <p>The value that is defined in the <code>Description</code> property of the template.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>The value that is defined for the <code>Metadata</code> property of the template.</p>
+    #[serde(rename = "Metadata")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metadata: Option<String>,
     /// <p>A list of parameter declarations that describe various properties for each parameter.</p>
+    #[serde(rename = "Parameters")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ParameterDeclaration>>,
     /// <p>A list of resource identifier summaries that describe the target resources of an import operation and the properties you can provide during the import to identify the target resources. For example, <code>BucketName</code> is a possible identifier property for an <code>AWS::S3::Bucket</code> resource. </p>
+    #[serde(rename = "ResourceIdentifierSummaries")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_identifier_summaries: Option<Vec<ResourceIdentifierSummary>>,
     /// <p>A list of all the template resource types that are defined in the template, such as <code>AWS::EC2::Instance</code>, <code>AWS::Dynamo::Table</code>, and <code>Custom::MyCustomInstance</code>.</p>
+    #[serde(rename = "ResourceTypes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_types: Option<Vec<String>>,
     /// <p>The AWS template format version, which identifies the capabilities of the template.</p>
+    #[serde(rename = "Version")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
 
@@ -3326,12 +3509,16 @@ impl ListChangeSetsInputSerializer {
 }
 
 /// <p>The output for the <a>ListChangeSets</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListChangeSetsOutput {
     /// <p>If the output exceeds 1 MB, a string that identifies the next page of change sets. If there is no additional page, this value is null.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of <code>ChangeSetSummary</code> structures that provides the ID and status of each change set for the specified stack.</p>
+    #[serde(rename = "Summaries")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub summaries: Option<Vec<ChangeSetSummary>>,
 }
 
@@ -3380,12 +3567,16 @@ impl ListExportsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListExportsOutput {
     /// <p>The output for the <a>ListExports</a> action.</p>
+    #[serde(rename = "Exports")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub exports: Option<Vec<Export>>,
     /// <p>If the output exceeds 100 exported output values, a string that identifies the next page of exports. If there is no additional page, this value is null.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -3437,12 +3628,16 @@ impl ListImportsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListImportsOutput {
     /// <p>A list of stack names that are importing the specified exported output value. </p>
+    #[serde(rename = "Imports")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub imports: Option<Vec<String>>,
     /// <p>A string that identifies the next page of exports. If there is no additional page, this value is null.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -3518,12 +3713,16 @@ impl ListStackInstancesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListStackInstancesOutput {
     /// <p>If the request doesn't return all of the remaining results, <code>NextToken</code> is set to a token. To retrieve the next set of results, call <code>ListStackInstances</code> again and assign that token to the request object's <code>NextToken</code> parameter. If the request returns all results, <code>NextToken</code> is set to <code>null</code>.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of <code>StackInstanceSummary</code> structures that contain information about the specified stack instances.</p>
+    #[serde(rename = "Summaries")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub summaries: Option<Vec<StackInstanceSummary>>,
 }
 
@@ -3582,12 +3781,16 @@ impl ListStackResourcesInputSerializer {
 }
 
 /// <p>The output for a <a>ListStackResources</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListStackResourcesOutput {
     /// <p>If the output exceeds 1 MB, a string that identifies the next page of stack resources. If no additional page exists, this value is null.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of <code>StackResourceSummary</code> structures.</p>
+    #[serde(rename = "StackResourceSummaries")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_resource_summaries: Option<Vec<StackResourceSummary>>,
 }
 
@@ -3658,12 +3861,16 @@ impl ListStackSetOperationResultsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListStackSetOperationResultsOutput {
     /// <p>If the request doesn't return all results, <code>NextToken</code> is set to a token. To retrieve the next set of results, call <code>ListOperationResults</code> again and assign that token to the request object's <code>NextToken</code> parameter. If there are no remaining results, <code>NextToken</code> is set to <code>null</code>.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of <code>StackSetOperationResultSummary</code> structures that contain information about the specified operation results, for accounts and regions that are included in the operation.</p>
+    #[serde(rename = "Summaries")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub summaries: Option<Vec<StackSetOperationResultSummary>>,
 }
 
@@ -3731,12 +3938,16 @@ impl ListStackSetOperationsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListStackSetOperationsOutput {
     /// <p>If the request doesn't return all results, <code>NextToken</code> is set to a token. To retrieve the next set of results, call <code>ListOperationResults</code> again and assign that token to the request object's <code>NextToken</code> parameter. If there are no remaining results, <code>NextToken</code> is set to <code>null</code>.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of <code>StackSetOperationSummary</code> structures that contain summary information about operations for the specified stack set.</p>
+    #[serde(rename = "Summaries")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub summaries: Option<Vec<StackSetOperationSummary>>,
 }
 
@@ -3803,12 +4014,16 @@ impl ListStackSetsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListStackSetsOutput {
     /// <p>If the request doesn't return all of the remaining results, <code>NextToken</code> is set to a token. To retrieve the next set of results, call <code>ListStackInstances</code> again and assign that token to the request object's <code>NextToken</code> parameter. If the request returns all results, <code>NextToken</code> is set to <code>null</code>.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of <code>StackSetSummary</code> structures that contain information about the user's stack sets.</p>
+    #[serde(rename = "Summaries")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub summaries: Option<Vec<StackSetSummary>>,
 }
 
@@ -3868,12 +4083,16 @@ impl ListStacksInputSerializer {
 }
 
 /// <p>The output for <a>ListStacks</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListStacksOutput {
     /// <p>If the output exceeds 1 MB in size, a string that identifies the next page of stacks. If no additional page exists, this value is null.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of <code>StackSummary</code> structures containing information about the specified stacks.</p>
+    #[serde(rename = "StackSummaries")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_summaries: Option<Vec<StackSummary>>,
 }
 
@@ -3950,12 +4169,16 @@ impl ListTypeRegistrationsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTypeRegistrationsOutput {
     /// <p>If the request doesn't return all of the remaining results, <code>NextToken</code> is set to a token. To retrieve the next set of results, call this action again and assign that token to the request object's <code>NextToken</code> parameter. If the request returns all results, <code>NextToken</code> is set to <code>null</code>.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p> A list of type registration tokens.</p> <p>Use <code> <a>DescribeTypeRegistration</a> </code> to return detailed information about a type registration request.</p>
+    #[serde(rename = "RegistrationTokenList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub registration_token_list: Option<Vec<String>>,
 }
 
@@ -4037,12 +4260,16 @@ impl ListTypeVersionsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTypeVersionsOutput {
     /// <p>If the request doesn't return all of the remaining results, <code>NextToken</code> is set to a token. To retrieve the next set of results, call this action again and assign that token to the request object's <code>NextToken</code> parameter. If the request returns all results, <code>NextToken</code> is set to <code>null</code>.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of <code>TypeVersionSummary</code> structures that contain information about the specified type's versions.</p>
+    #[serde(rename = "TypeVersionSummaries")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_version_summaries: Option<Vec<TypeVersionSummary>>,
 }
 
@@ -4114,12 +4341,16 @@ impl ListTypesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTypesOutput {
     /// <p>If the request doesn't return all of the remaining results, <code>NextToken</code> is set to a token. To retrieve the next set of results, call this action again and assign that token to the request object's <code>NextToken</code> parameter. If the request returns all results, <code>NextToken</code> is set to <code>null</code>.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of <code>TypeSummary</code> structures that contain information about the specified types.</p>
+    #[serde(rename = "TypeSummaries")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_summaries: Option<Vec<TypeSummary>>,
 }
 
@@ -4158,13 +4389,14 @@ impl LogGroupNameDeserializer {
     }
 }
 /// <p>Contains logging configuration information for a type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LoggingConfig {
     /// <p>The Amazon CloudWatch log group to which CloudFormation sends error logging information when invoking the type's handlers.</p>
+    #[serde(rename = "LogGroupName")]
     pub log_group_name: String,
     /// <p>The ARN of the role that CloudFormation should assume when sending log entries to CloudWatch logs.</p>
+    #[serde(rename = "LogRoleArn")]
     pub log_role_arn: String,
 }
 
@@ -4366,16 +4598,24 @@ impl OptionalSecureUrlDeserializer {
     }
 }
 /// <p>The Output data type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Output {
     /// <p>User defined description associated with the output.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>The name of the export associated with the output.</p>
+    #[serde(rename = "ExportName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub export_name: Option<String>,
     /// <p>The key associated with the output.</p>
+    #[serde(rename = "OutputKey")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub output_key: Option<String>,
     /// <p>The value associated with the output.</p>
+    #[serde(rename = "OutputValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub output_value: Option<String>,
 }
 
@@ -4446,17 +4686,24 @@ impl OutputsDeserializer {
     }
 }
 /// <p>The Parameter data type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Parameter {
     /// <p>The key associated with the parameter. If you don't specify a key and value for a particular parameter, AWS CloudFormation uses the default value that is specified in your template.</p>
+    #[serde(rename = "ParameterKey")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameter_key: Option<String>,
     /// <p>The input value associated with the parameter.</p>
+    #[serde(rename = "ParameterValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameter_value: Option<String>,
     /// <p>Read-only. The value that corresponds to a Systems Manager parameter key. This field is returned only for <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#aws-ssm-parameter-types"> <code>SSM</code> parameter types</a> in the template.</p>
+    #[serde(rename = "ResolvedValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resolved_value: Option<String>,
     /// <p>During a stack update, use the existing parameter value that the stack is using for a given parameter key. If you specify <code>true</code>, do not specify a parameter value.</p>
+    #[serde(rename = "UsePreviousValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub use_previous_value: Option<bool>,
 }
 
@@ -4525,10 +4772,12 @@ impl ParameterSerializer {
 }
 
 /// <p>A set of criteria that AWS CloudFormation uses to validate parameter values. Although other constraints might be defined in the stack template, AWS CloudFormation returns only the <code>AllowedValues</code> property.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ParameterConstraints {
     /// <p>A list of values that are permitted for a parameter.</p>
+    #[serde(rename = "AllowedValues")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub allowed_values: Option<Vec<String>>,
 }
 
@@ -4553,20 +4802,32 @@ impl ParameterConstraintsDeserializer {
     }
 }
 /// <p>The ParameterDeclaration data type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ParameterDeclaration {
     /// <p>The default value of the parameter.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<String>,
     /// <p>The description that is associate with the parameter.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>Flag that indicates whether the parameter value is shown as plain text in logs and in the AWS Management Console.</p>
+    #[serde(rename = "NoEcho")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub no_echo: Option<bool>,
     /// <p>The criteria that AWS CloudFormation uses to validate parameter values.</p>
+    #[serde(rename = "ParameterConstraints")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameter_constraints: Option<ParameterConstraints>,
     /// <p>The name that is associated with the parameter.</p>
+    #[serde(rename = "ParameterKey")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameter_key: Option<String>,
     /// <p>The type of parameter.</p>
+    #[serde(rename = "ParameterType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameter_type: Option<String>,
 }
 
@@ -4731,12 +4992,14 @@ impl PhysicalResourceIdContextDeserializer {
     }
 }
 /// <p>Context information that enables AWS CloudFormation to uniquely identify a resource. AWS CloudFormation uses context key-value pairs in cases where a resource's logical and physical IDs are not enough to uniquely identify that resource. Each context key-value pair specifies a resource that contains the targeted resource.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PhysicalResourceIdContextKeyValuePair {
     /// <p>The resource context key.</p>
+    #[serde(rename = "Key")]
     pub key: String,
     /// <p>The resource context value.</p>
+    #[serde(rename = "Value")]
     pub value: String,
 }
 
@@ -4777,16 +5040,20 @@ impl PropertiesDeserializer {
     }
 }
 /// <p>Information about a resource property whose actual value differs from its expected value, as defined in the stack template and any values specified as template parameters. These will be present only for resources whose <code>StackResourceDriftStatus</code> is <code>MODIFIED</code>. For more information, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html">Detecting Unregulated Configuration Changes to Stacks and Resources</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PropertyDifference {
     /// <p>The actual property value of the resource property.</p>
+    #[serde(rename = "ActualValue")]
     pub actual_value: String,
     /// <p><p>The type of property difference.</p> <ul> <li> <p> <code>ADD</code>: A value has been added to a resource property that is an array or list data type.</p> </li> <li> <p> <code>REMOVE</code>: The property has been removed from the current resource configuration.</p> </li> <li> <p> <code>NOT_EQUAL</code>: The current property value differs from its expected value (as defined in the stack template and any values specified as template parameters).</p> </li> </ul></p>
+    #[serde(rename = "DifferenceType")]
     pub difference_type: String,
     /// <p>The expected property value of the resource property, as defined in the stack template and any values specified as template parameters.</p>
+    #[serde(rename = "ExpectedValue")]
     pub expected_value: String,
     /// <p>The fully-qualified path to the resource property.</p>
+    #[serde(rename = "PropertyPath")]
     pub property_path: String,
 }
 
@@ -4949,8 +5216,8 @@ impl RecordHandlerProgressInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RecordHandlerProgressOutput {}
 
 struct RecordHandlerProgressOutputDeserializer;
@@ -5059,10 +5326,12 @@ impl RegisterTypeInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RegisterTypeOutput {
     /// <p>The identifier for this registration request.</p> <p>Use this registration token when calling <code> <a>DescribeTypeRegistration</a> </code>, which returns information about the status and IDs of the type registration. </p>
+    #[serde(rename = "RegistrationToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub registration_token: Option<String>,
 }
 
@@ -5171,22 +5440,36 @@ impl ResourceAttributeDeserializer {
     }
 }
 /// <p>The <code>ResourceChange</code> structure describes the resource and the action that AWS CloudFormation will perform on it if you execute this change set.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ResourceChange {
     /// <p>The action that AWS CloudFormation takes on the resource, such as <code>Add</code> (adds a new resource), <code>Modify</code> (changes a resource), or <code>Remove</code> (deletes a resource).</p>
+    #[serde(rename = "Action")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action: Option<String>,
     /// <p>For the <code>Modify</code> action, a list of <code>ResourceChangeDetail</code> structures that describes the changes that AWS CloudFormation will make to the resource. </p>
+    #[serde(rename = "Details")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub details: Option<Vec<ResourceChangeDetail>>,
     /// <p>The resource's logical ID, which is defined in the stack's template.</p>
+    #[serde(rename = "LogicalResourceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub logical_resource_id: Option<String>,
     /// <p>The resource's physical ID (resource name). Resources that you are adding don't have physical IDs because they haven't been created.</p>
+    #[serde(rename = "PhysicalResourceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub physical_resource_id: Option<String>,
     /// <p>For the <code>Modify</code> action, indicates whether AWS CloudFormation will replace the resource by creating a new one and deleting the old one. This value depends on the value of the <code>RequiresRecreation</code> property in the <code>ResourceTargetDefinition</code> structure. For example, if the <code>RequiresRecreation</code> field is <code>Always</code> and the <code>Evaluation</code> field is <code>Static</code>, <code>Replacement</code> is <code>True</code>. If the <code>RequiresRecreation</code> field is <code>Always</code> and the <code>Evaluation</code> field is <code>Dynamic</code>, <code>Replacement</code> is <code>Conditionally</code>.</p> <p>If you have multiple changes with different <code>RequiresRecreation</code> values, the <code>Replacement</code> value depends on the change with the most impact. A <code>RequiresRecreation</code> value of <code>Always</code> has the most impact, followed by <code>Conditionally</code>, and then <code>Never</code>.</p>
+    #[serde(rename = "Replacement")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub replacement: Option<String>,
     /// <p>The type of AWS CloudFormation resource, such as <code>AWS::S3::Bucket</code>.</p>
+    #[serde(rename = "ResourceType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_type: Option<String>,
     /// <p>For the <code>Modify</code> action, indicates which resource attribute is triggering this update, such as a change in the resource attribute's <code>Metadata</code>, <code>Properties</code>, or <code>Tags</code>.</p>
+    #[serde(rename = "Scope")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scope: Option<Vec<String>>,
 }
 
@@ -5241,16 +5524,24 @@ impl ResourceChangeDeserializer {
     }
 }
 /// <p>For a resource with <code>Modify</code> as the action, the <code>ResourceChange</code> structure describes the changes AWS CloudFormation will make to that resource.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ResourceChangeDetail {
     /// <p>The identity of the entity that triggered this change. This entity is a member of the group that is specified by the <code>ChangeSource</code> field. For example, if you modified the value of the <code>KeyPairName</code> parameter, the <code>CausingEntity</code> is the name of the parameter (<code>KeyPairName</code>).</p> <p>If the <code>ChangeSource</code> value is <code>DirectModification</code>, no value is given for <code>CausingEntity</code>.</p>
+    #[serde(rename = "CausingEntity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub causing_entity: Option<String>,
     /// <p><p>The group to which the <code>CausingEntity</code> value belongs. There are five entity groups:</p> <ul> <li> <p> <code>ResourceReference</code> entities are <code>Ref</code> intrinsic functions that refer to resources in the template, such as <code>{ &quot;Ref&quot; : &quot;MyEC2InstanceResource&quot; }</code>.</p> </li> <li> <p> <code>ParameterReference</code> entities are <code>Ref</code> intrinsic functions that get template parameter values, such as <code>{ &quot;Ref&quot; : &quot;MyPasswordParameter&quot; }</code>.</p> </li> <li> <p> <code>ResourceAttribute</code> entities are <code>Fn::GetAtt</code> intrinsic functions that get resource attribute values, such as <code>{ &quot;Fn::GetAtt&quot; : [ &quot;MyEC2InstanceResource&quot;, &quot;PublicDnsName&quot; ] }</code>.</p> </li> <li> <p> <code>DirectModification</code> entities are changes that are made directly to the template.</p> </li> <li> <p> <code>Automatic</code> entities are <code>AWS::CloudFormation::Stack</code> resource types, which are also known as nested stacks. If you made no changes to the <code>AWS::CloudFormation::Stack</code> resource, AWS CloudFormation sets the <code>ChangeSource</code> to <code>Automatic</code> because the nested stack&#39;s template might have changed. Changes to a nested stack&#39;s template aren&#39;t visible to AWS CloudFormation until you run an update on the parent stack.</p> </li> </ul></p>
+    #[serde(rename = "ChangeSource")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub change_source: Option<String>,
     /// <p>Indicates whether AWS CloudFormation can determine the target value, and whether the target value will change before you execute a change set.</p> <p>For <code>Static</code> evaluations, AWS CloudFormation can determine that the target value will change, and its value. For example, if you directly modify the <code>InstanceType</code> property of an EC2 instance, AWS CloudFormation knows that this property value will change, and its value, so this is a <code>Static</code> evaluation.</p> <p>For <code>Dynamic</code> evaluations, cannot determine the target value because it depends on the result of an intrinsic function, such as a <code>Ref</code> or <code>Fn::GetAtt</code> intrinsic function, when the stack is updated. For example, if your template includes a reference to a resource that is conditionally recreated, the value of the reference (the physical ID of the resource) might change, depending on if the resource is recreated. If the resource is recreated, it will have a new physical ID, so all references to that resource will also be updated.</p>
+    #[serde(rename = "Evaluation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub evaluation: Option<String>,
     /// <p>A <code>ResourceTargetDefinition</code> structure that describes the field that AWS CloudFormation will change and whether the resource will be recreated.</p>
+    #[serde(rename = "Target")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target: Option<ResourceTargetDefinition>,
 }
 
@@ -5359,14 +5650,20 @@ impl ResourceIdentifierSummariesDeserializer {
     }
 }
 /// <p>Describes the target resources of a specific type in your import template (for example, all <code>AWS::S3::Bucket</code> resources) and the properties you can provide during the import to identify resources of that type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ResourceIdentifierSummary {
     /// <p>The logical IDs of the target resources of the specified <code>ResourceType</code>, as defined in the import template.</p>
+    #[serde(rename = "LogicalResourceIds")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub logical_resource_ids: Option<Vec<String>>,
     /// <p>The resource properties you can provide during the import to identify your target resources. For example, <code>BucketName</code> is a possible identifier property for <code>AWS::S3::Bucket</code> resources.</p>
+    #[serde(rename = "ResourceIdentifiers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_identifiers: Option<Vec<String>>,
     /// <p>The template resource type of the target resources, such as <code>AWS::S3::Bucket</code>.</p>
+    #[serde(rename = "ResourceType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_type: Option<String>,
 }
 
@@ -5464,14 +5761,20 @@ impl ResourceStatusReasonDeserializer {
     }
 }
 /// <p>The field that AWS CloudFormation will change, such as the name of a resource's property, and whether the resource will be recreated.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ResourceTargetDefinition {
     /// <p>Indicates which resource attribute is triggering this update, such as a change in the resource attribute's <code>Metadata</code>, <code>Properties</code>, or <code>Tags</code>.</p>
+    #[serde(rename = "Attribute")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attribute: Option<String>,
     /// <p>If the <code>Attribute</code> value is <code>Properties</code>, the name of the property. For all other attributes, the value is null.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p>If the <code>Attribute</code> value is <code>Properties</code>, indicates whether a change to this property causes the resource to be recreated. The value can be <code>Never</code>, <code>Always</code>, or <code>Conditionally</code>. To determine the conditions for a <code>Conditionally</code> recreation, see the update behavior for that <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html">property</a> in the AWS CloudFormation User Guide.</p>
+    #[serde(rename = "RequiresRecreation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub requires_recreation: Option<String>,
 }
 
@@ -5651,13 +5954,16 @@ impl RoleArnDeserializer {
     }
 }
 /// <p>Structure containing the rollback triggers for AWS CloudFormation to monitor during stack creation and updating operations, and for the specified monitoring period afterwards.</p> <p>Rollback triggers enable you to have AWS CloudFormation monitor the state of your application during stack creation and updating, and to roll back that operation if the application breaches the threshold of any of the alarms you've specified. For more information, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-rollback-triggers.html">Monitor and Roll Back Stack Operations</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RollbackConfiguration {
     /// <p>The amount of time, in minutes, during which CloudFormation should monitor all the rollback triggers after the stack creation or update operation deploys all necessary resources.</p> <p>The default is 0 minutes.</p> <p>If you specify a monitoring period but do not specify any rollback triggers, CloudFormation still waits the specified period of time before cleaning up old resources after update operations. You can use this monitoring period to perform any manual stack validation desired, and manually cancel the stack creation or update (using <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CancelUpdateStack.html">CancelUpdateStack</a>, for example) as necessary.</p> <p>If you specify 0 for this parameter, CloudFormation still monitors the specified rollback triggers during stack creation and update operations. Then, for update operations, it begins disposing of old resources immediately once the operation completes.</p>
+    #[serde(rename = "MonitoringTimeInMinutes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub monitoring_time_in_minutes: Option<i64>,
     /// <p>The triggers to monitor during stack creation or update actions. </p> <p>By default, AWS CloudFormation saves the rollback triggers specified for a stack and applies them to any subsequent update operations for the stack, unless you specify otherwise. If you do specify rollback triggers for this parameter, those triggers replace any list of triggers previously specified for the stack. This means:</p> <ul> <li> <p>To use the rollback triggers previously specified for this stack, if any, don't specify this parameter.</p> </li> <li> <p>To specify new or updated rollback triggers, you must specify <i>all</i> the triggers that you want used for this stack, even triggers you've specifed before (for example, when creating the stack or during a previous stack update). Any triggers that you don't include in the updated list of triggers are no longer applied to the stack.</p> </li> <li> <p>To remove all currently specified triggers, specify an empty list for this parameter.</p> </li> </ul> <p>If a specified trigger is missing, the entire stack operation fails and is rolled back. </p>
+    #[serde(rename = "RollbackTriggers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rollback_triggers: Option<Vec<RollbackTrigger>>,
 }
 
@@ -5715,13 +6021,14 @@ impl RollbackConfigurationSerializer {
 }
 
 /// <p>A rollback trigger AWS CloudFormation monitors during creation and updating of stacks. If any of the alarms you specify goes to ALARM state during the stack operation or within the specified monitoring period afterwards, CloudFormation rolls back the entire stack operation. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RollbackTrigger {
     /// <p>The Amazon Resource Name (ARN) of the rollback trigger.</p> <p>If a specified trigger is missing, the entire stack operation fails and is rolled back. </p>
+    #[serde(rename = "Arn")]
     pub arn: String,
     /// <p>The resource type of the rollback trigger. Currently, <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html">AWS::CloudWatch::Alarm</a> is the only supported resource type.</p>
+    #[serde(rename = "Type")]
     pub type_: String,
 }
 
@@ -5875,8 +6182,8 @@ impl SetTypeDefaultVersionInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetTypeDefaultVersionOutput {}
 
 struct SetTypeDefaultVersionOutputDeserializer;
@@ -5929,52 +6236,93 @@ impl SignalResourceInputSerializer {
 }
 
 /// <p>The Stack data type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Stack {
     /// <p>The capabilities allowed in the stack.</p>
+    #[serde(rename = "Capabilities")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub capabilities: Option<Vec<String>>,
     /// <p>The unique ID of the change set.</p>
+    #[serde(rename = "ChangeSetId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub change_set_id: Option<String>,
     /// <p>The time at which the stack was created.</p>
+    #[serde(rename = "CreationTime")]
     pub creation_time: String,
     /// <p>The time the stack was deleted.</p>
+    #[serde(rename = "DeletionTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub deletion_time: Option<String>,
     /// <p>A user-defined description associated with the stack.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p><p>Boolean to enable or disable rollback on stack creation failures:</p> <ul> <li> <p> <code>true</code>: disable rollback</p> </li> <li> <p> <code>false</code>: enable rollback</p> </li> </ul></p>
+    #[serde(rename = "DisableRollback")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub disable_rollback: Option<bool>,
     /// <p>Information on whether a stack's actual configuration differs, or has <i>drifted</i>, from it's expected configuration, as defined in the stack template and any values specified as template parameters. For more information, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html">Detecting Unregulated Configuration Changes to Stacks and Resources</a>.</p>
+    #[serde(rename = "DriftInformation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drift_information: Option<StackDriftInformation>,
     /// <p>Whether termination protection is enabled for the stack.</p> <p> For <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-nested-stacks.html">nested stacks</a>, termination protection is set on the root stack and cannot be changed directly on the nested stack. For more information, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-protect-stacks.html">Protecting a Stack From Being Deleted</a> in the <i>AWS CloudFormation User Guide</i>.</p>
+    #[serde(rename = "EnableTerminationProtection")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enable_termination_protection: Option<bool>,
     /// <p>The time the stack was last updated. This field will only be returned if the stack has been updated at least once.</p>
+    #[serde(rename = "LastUpdatedTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_updated_time: Option<String>,
     /// <p>SNS topic ARNs to which stack related events are published.</p>
+    #[serde(rename = "NotificationARNs")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub notification_ar_ns: Option<Vec<String>>,
     /// <p>A list of output structures.</p>
+    #[serde(rename = "Outputs")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub outputs: Option<Vec<Output>>,
     /// <p>A list of <code>Parameter</code> structures.</p>
+    #[serde(rename = "Parameters")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<Parameter>>,
     /// <p>For nested stacks--stacks created as resources for another stack--the stack ID of the direct parent of this stack. For the first level of nested stacks, the root stack is also the parent stack.</p> <p>For more information, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-nested-stacks.html">Working with Nested Stacks</a> in the <i>AWS CloudFormation User Guide</i>.</p>
+    #[serde(rename = "ParentId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parent_id: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of an AWS Identity and Access Management (IAM) role that is associated with the stack. During a stack operation, AWS CloudFormation uses this role's credentials to make calls on your behalf.</p>
+    #[serde(rename = "RoleARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role_arn: Option<String>,
     /// <p>The rollback triggers for AWS CloudFormation to monitor during stack creation and updating operations, and for the specified monitoring period afterwards.</p>
+    #[serde(rename = "RollbackConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rollback_configuration: Option<RollbackConfiguration>,
     /// <p>For nested stacks--stacks created as resources for another stack--the stack ID of the top-level stack to which the nested stack ultimately belongs.</p> <p>For more information, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-nested-stacks.html">Working with Nested Stacks</a> in the <i>AWS CloudFormation User Guide</i>.</p>
+    #[serde(rename = "RootId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub root_id: Option<String>,
     /// <p>Unique identifier of the stack.</p>
+    #[serde(rename = "StackId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_id: Option<String>,
     /// <p>The name associated with the stack.</p>
+    #[serde(rename = "StackName")]
     pub stack_name: String,
     /// <p>Current status of the stack.</p>
+    #[serde(rename = "StackStatus")]
     pub stack_status: String,
     /// <p>Success/failure message associated with the stack status.</p>
+    #[serde(rename = "StackStatusReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_status_reason: Option<String>,
     /// <p>A list of <code>Tag</code>s that specify information about the stack.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
     /// <p>The amount of time within which stack creation should complete.</p>
+    #[serde(rename = "TimeoutInMinutes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub timeout_in_minutes: Option<i64>,
 }
 
@@ -6129,12 +6477,15 @@ impl StackDriftDetectionStatusReasonDeserializer {
     }
 }
 /// <p>Contains information about whether the stack's actual configuration differs, or has <i>drifted</i>, from its expected configuration, as defined in the stack template and any values specified as template parameters. A stack is considered to have drifted if one or more of its resources have drifted.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackDriftInformation {
     /// <p>Most recent time when a drift detection operation was initiated on the stack, or any of its individual resources that support drift detection.</p>
+    #[serde(rename = "LastCheckTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_check_timestamp: Option<String>,
     /// <p><p>Status of the stack&#39;s actual configuration compared to its expected template configuration. </p> <ul> <li> <p> <code>DRIFTED</code>: The stack differs from its expected template configuration. A stack is considered to have drifted if one or more of its resources have drifted.</p> </li> <li> <p> <code>NOT<em>CHECKED</code>: AWS CloudFormation has not checked if the stack differs from its expected template configuration.</p> </li> <li> <p> <code>IN</em>SYNC</code>: The stack&#39;s actual configuration matches its expected template configuration.</p> </li> <li> <p> <code>UNKNOWN</code>: This value is reserved for future use.</p> </li> </ul></p>
+    #[serde(rename = "StackDriftStatus")]
     pub stack_drift_status: String,
 }
 
@@ -6164,12 +6515,15 @@ impl StackDriftInformationDeserializer {
     }
 }
 /// <p>Contains information about whether the stack's actual configuration differs, or has <i>drifted</i>, from its expected configuration, as defined in the stack template and any values specified as template parameters. A stack is considered to have drifted if one or more of its resources have drifted.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackDriftInformationSummary {
     /// <p>Most recent time when a drift detection operation was initiated on the stack, or any of its individual resources that support drift detection.</p>
+    #[serde(rename = "LastCheckTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_check_timestamp: Option<String>,
     /// <p><p>Status of the stack&#39;s actual configuration compared to its expected template configuration. </p> <ul> <li> <p> <code>DRIFTED</code>: The stack differs from its expected template configuration. A stack is considered to have drifted if one or more of its resources have drifted.</p> </li> <li> <p> <code>NOT<em>CHECKED</code>: AWS CloudFormation has not checked if the stack differs from its expected template configuration.</p> </li> <li> <p> <code>IN</em>SYNC</code>: The stack&#39;s actual configuration matches its expected template configuration.</p> </li> <li> <p> <code>UNKNOWN</code>: This value is reserved for future use.</p> </li> </ul></p>
+    #[serde(rename = "StackDriftStatus")]
     pub stack_drift_status: String,
 }
 
@@ -6214,30 +6568,48 @@ impl StackDriftStatusDeserializer {
     }
 }
 /// <p>The StackEvent data type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackEvent {
     /// <p>The token passed to the operation that generated this event.</p> <p>All events triggered by a given stack operation are assigned the same client request token, which you can use to track operations. For example, if you execute a <code>CreateStack</code> operation with the token <code>token1</code>, then all the <code>StackEvents</code> generated by that operation will have <code>ClientRequestToken</code> set as <code>token1</code>.</p> <p>In the console, stack operations display the client request token on the Events tab. Stack operations that are initiated from the console use the token format <i>Console-StackOperation-ID</i>, which helps you easily identify the stack operation . For example, if you create a stack using the console, each stack event would be assigned the same token in the following format: <code>Console-CreateStack-7f59c3cf-00d2-40c7-b2ff-e75db0987002</code>. </p>
+    #[serde(rename = "ClientRequestToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub client_request_token: Option<String>,
     /// <p>The unique ID of this event.</p>
+    #[serde(rename = "EventId")]
     pub event_id: String,
     /// <p>The logical name of the resource specified in the template.</p>
+    #[serde(rename = "LogicalResourceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub logical_resource_id: Option<String>,
     /// <p>The name or unique identifier associated with the physical instance of the resource.</p>
+    #[serde(rename = "PhysicalResourceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub physical_resource_id: Option<String>,
     /// <p>BLOB of the properties used to create the resource.</p>
+    #[serde(rename = "ResourceProperties")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_properties: Option<String>,
     /// <p>Current status of the resource.</p>
+    #[serde(rename = "ResourceStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_status: Option<String>,
     /// <p>Success/failure message associated with the resource.</p>
+    #[serde(rename = "ResourceStatusReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_status_reason: Option<String>,
     /// <p>Type of resource. (For more information, go to <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html"> AWS Resource Types Reference</a> in the AWS CloudFormation User Guide.)</p>
+    #[serde(rename = "ResourceType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_type: Option<String>,
     /// <p>The unique ID name of the instance of the stack.</p>
+    #[serde(rename = "StackId")]
     pub stack_id: String,
     /// <p>The name associated with a stack.</p>
+    #[serde(rename = "StackName")]
     pub stack_name: String,
     /// <p>Time the status was updated.</p>
+    #[serde(rename = "Timestamp")]
     pub timestamp: String,
 }
 
@@ -6340,26 +6712,44 @@ impl StackIdDeserializer {
     }
 }
 /// <p>An AWS CloudFormation stack, in a specific account and region, that's part of a stack set operation. A stack instance is a reference to an attempted or actual stack in a given account within a given region. A stack instance can exist without a stack—for example, if the stack couldn't be created for some reason. A stack instance is associated with only one stack set. Each stack instance contains the ID of its associated stack set, as well as the ID of the actual stack and the stack status.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackInstance {
     /// <p>The name of the AWS account that the stack instance is associated with.</p>
+    #[serde(rename = "Account")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub account: Option<String>,
     /// <p><p>Status of the stack instance&#39;s actual configuration compared to the expected template and parameter configuration of the stack set to which it belongs. </p> <ul> <li> <p> <code>DRIFTED</code>: The stack differs from the expected template and parameter configuration of the stack set to which it belongs. A stack instance is considered to have drifted if one or more of the resources in the associated stack have drifted.</p> </li> <li> <p> <code>NOT<em>CHECKED</code>: AWS CloudFormation has not checked if the stack instance differs from its expected stack set configuration.</p> </li> <li> <p> <code>IN</em>SYNC</code>: The stack instance&#39;s actual configuration matches its expected stack set configuration.</p> </li> <li> <p> <code>UNKNOWN</code>: This value is reserved for future use.</p> </li> </ul></p>
+    #[serde(rename = "DriftStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drift_status: Option<String>,
     /// <p>Most recent time when CloudFormation performed a drift detection operation on the stack instance. This value will be <code>NULL</code> for any stack instance on which drift detection has not yet been performed.</p>
+    #[serde(rename = "LastDriftCheckTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_drift_check_timestamp: Option<String>,
     /// <p>A list of parameters from the stack set template whose values have been overridden in this stack instance.</p>
+    #[serde(rename = "ParameterOverrides")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameter_overrides: Option<Vec<Parameter>>,
     /// <p>The name of the AWS region that the stack instance is associated with.</p>
+    #[serde(rename = "Region")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
     /// <p>The ID of the stack instance.</p>
+    #[serde(rename = "StackId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_id: Option<String>,
     /// <p>The name or unique ID of the stack set that the stack instance is associated with.</p>
+    #[serde(rename = "StackSetId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_set_id: Option<String>,
     /// <p><p>The status of the stack instance, in terms of its synchronization with its associated stack set.</p> <ul> <li> <p> <code>INOPERABLE</code>: A <code>DeleteStackInstances</code> operation has failed and left the stack in an unstable state. Stacks in this state are excluded from further <code>UpdateStackSet</code> operations. You might need to perform a <code>DeleteStackInstances</code> operation, with <code>RetainStacks</code> set to <code>true</code>, to delete the stack instance, and then delete the stack manually.</p> </li> <li> <p> <code>OUTDATED</code>: The stack isn&#39;t currently up to date with the stack set because:</p> <ul> <li> <p>The associated stack failed during a <code>CreateStackSet</code> or <code>UpdateStackSet</code> operation. </p> </li> <li> <p>The stack was part of a <code>CreateStackSet</code> or <code>UpdateStackSet</code> operation that failed or was stopped before the stack was created or updated. </p> </li> </ul> </li> <li> <p> <code>CURRENT</code>: The stack is currently up to date with the stack set.</p> </li> </ul></p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>The explanation for the specific status code that is assigned to this stack instance.</p>
+    #[serde(rename = "StatusReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_reason: Option<String>,
 }
 
@@ -6448,24 +6838,40 @@ impl StackInstanceSummariesDeserializer {
     }
 }
 /// <p>The structure that contains summary information about a stack instance.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackInstanceSummary {
     /// <p>The name of the AWS account that the stack instance is associated with.</p>
+    #[serde(rename = "Account")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub account: Option<String>,
     /// <p><p>Status of the stack instance&#39;s actual configuration compared to the expected template and parameter configuration of the stack set to which it belongs. </p> <ul> <li> <p> <code>DRIFTED</code>: The stack differs from the expected template and parameter configuration of the stack set to which it belongs. A stack instance is considered to have drifted if one or more of the resources in the associated stack have drifted.</p> </li> <li> <p> <code>NOT<em>CHECKED</code>: AWS CloudFormation has not checked if the stack instance differs from its expected stack set configuration.</p> </li> <li> <p> <code>IN</em>SYNC</code>: The stack instance&#39;s actual configuration matches its expected stack set configuration.</p> </li> <li> <p> <code>UNKNOWN</code>: This value is reserved for future use.</p> </li> </ul></p>
+    #[serde(rename = "DriftStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drift_status: Option<String>,
     /// <p>Most recent time when CloudFormation performed a drift detection operation on the stack instance. This value will be <code>NULL</code> for any stack instance on which drift detection has not yet been performed.</p>
+    #[serde(rename = "LastDriftCheckTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_drift_check_timestamp: Option<String>,
     /// <p>The name of the AWS region that the stack instance is associated with.</p>
+    #[serde(rename = "Region")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
     /// <p>The ID of the stack instance.</p>
+    #[serde(rename = "StackId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_id: Option<String>,
     /// <p>The name or unique ID of the stack set that the stack instance is associated with.</p>
+    #[serde(rename = "StackSetId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_set_id: Option<String>,
     /// <p><p>The status of the stack instance, in terms of its synchronization with its associated stack set.</p> <ul> <li> <p> <code>INOPERABLE</code>: A <code>DeleteStackInstances</code> operation has failed and left the stack in an unstable state. Stacks in this state are excluded from further <code>UpdateStackSet</code> operations. You might need to perform a <code>DeleteStackInstances</code> operation, with <code>RetainStacks</code> set to <code>true</code>, to delete the stack instance, and then delete the stack manually.</p> </li> <li> <p> <code>OUTDATED</code>: The stack isn&#39;t currently up to date with the stack set because:</p> <ul> <li> <p>The associated stack failed during a <code>CreateStackSet</code> or <code>UpdateStackSet</code> operation. </p> </li> <li> <p>The stack was part of a <code>CreateStackSet</code> or <code>UpdateStackSet</code> operation that failed or was stopped before the stack was created or updated. </p> </li> </ul> </li> <li> <p> <code>CURRENT</code>: The stack is currently up to date with the stack set.</p> </li> </ul></p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>The explanation for the specific status code assigned to this stack instance.</p>
+    #[serde(rename = "StatusReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_reason: Option<String>,
 }
 
@@ -6541,28 +6947,44 @@ impl StackPolicyBodyDeserializer {
     }
 }
 /// <p>The StackResource data type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackResource {
     /// <p>User defined description associated with the resource.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>Information about whether the resource's actual configuration differs, or has <i>drifted</i>, from its expected configuration, as defined in the stack template and any values specified as template parameters. For more information, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html">Detecting Unregulated Configuration Changes to Stacks and Resources</a>.</p>
+    #[serde(rename = "DriftInformation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drift_information: Option<StackResourceDriftInformation>,
     /// <p>The logical name of the resource specified in the template.</p>
+    #[serde(rename = "LogicalResourceId")]
     pub logical_resource_id: String,
     /// <p>The name or unique identifier that corresponds to a physical instance ID of a resource supported by AWS CloudFormation.</p>
+    #[serde(rename = "PhysicalResourceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub physical_resource_id: Option<String>,
     /// <p>Current status of the resource.</p>
+    #[serde(rename = "ResourceStatus")]
     pub resource_status: String,
     /// <p>Success/failure message associated with the resource.</p>
+    #[serde(rename = "ResourceStatusReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_status_reason: Option<String>,
     /// <p>Type of resource. (For more information, go to <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html"> AWS Resource Types Reference</a> in the AWS CloudFormation User Guide.)</p>
+    #[serde(rename = "ResourceType")]
     pub resource_type: String,
     /// <p>Unique identifier of the stack.</p>
+    #[serde(rename = "StackId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_id: Option<String>,
     /// <p>The name associated with the stack.</p>
+    #[serde(rename = "StackName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_name: Option<String>,
     /// <p>Time the status was updated.</p>
+    #[serde(rename = "Timestamp")]
     pub timestamp: String,
 }
 
@@ -6627,30 +7049,48 @@ impl StackResourceDeserializer {
     }
 }
 /// <p>Contains detailed information about the specified stack resource.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackResourceDetail {
     /// <p>User defined description associated with the resource.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>Information about whether the resource's actual configuration differs, or has <i>drifted</i>, from its expected configuration, as defined in the stack template and any values specified as template parameters. For more information, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html">Detecting Unregulated Configuration Changes to Stacks and Resources</a>.</p>
+    #[serde(rename = "DriftInformation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drift_information: Option<StackResourceDriftInformation>,
     /// <p>Time the status was updated.</p>
+    #[serde(rename = "LastUpdatedTimestamp")]
     pub last_updated_timestamp: String,
     /// <p>The logical name of the resource specified in the template.</p>
+    #[serde(rename = "LogicalResourceId")]
     pub logical_resource_id: String,
     /// <p>The content of the <code>Metadata</code> attribute declared for the resource. For more information, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-metadata.html">Metadata Attribute</a> in the AWS CloudFormation User Guide.</p>
+    #[serde(rename = "Metadata")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metadata: Option<String>,
     /// <p>The name or unique identifier that corresponds to a physical instance ID of a resource supported by AWS CloudFormation.</p>
+    #[serde(rename = "PhysicalResourceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub physical_resource_id: Option<String>,
     /// <p>Current status of the resource.</p>
+    #[serde(rename = "ResourceStatus")]
     pub resource_status: String,
     /// <p>Success/failure message associated with the resource.</p>
+    #[serde(rename = "ResourceStatusReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_status_reason: Option<String>,
     /// <p>Type of resource. ((For more information, go to <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html"> AWS Resource Types Reference</a> in the AWS CloudFormation User Guide.)</p>
+    #[serde(rename = "ResourceType")]
     pub resource_type: String,
     /// <p>Unique identifier of the stack.</p>
+    #[serde(rename = "StackId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_id: Option<String>,
     /// <p>The name associated with the stack.</p>
+    #[serde(rename = "StackName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_name: Option<String>,
 }
 
@@ -6719,28 +7159,43 @@ impl StackResourceDetailDeserializer {
     }
 }
 /// <p>Contains the drift information for a resource that has been checked for drift. This includes actual and expected property values for resources in which AWS CloudFormation has detected drift. Only resource properties explicitly defined in the stack template are checked for drift. For more information, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html">Detecting Unregulated Configuration Changes to Stacks and Resources</a>.</p> <p>Resources that do not currently support drift detection cannot be checked. For a list of resources that support drift detection, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift-resource-list.html">Resources that Support Drift Detection</a>.</p> <p>Use <a>DetectStackResourceDrift</a> to detect drift on individual resources, or <a>DetectStackDrift</a> to detect drift on all resources in a given stack that support drift detection.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackResourceDrift {
     /// <p>A JSON structure containing the actual property values of the stack resource.</p> <p>For resources whose <code>StackResourceDriftStatus</code> is <code>DELETED</code>, this structure will not be present. </p>
+    #[serde(rename = "ActualProperties")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub actual_properties: Option<String>,
     /// <p>A JSON structure containing the expected property values of the stack resource, as defined in the stack template and any values specified as template parameters. </p> <p>For resources whose <code>StackResourceDriftStatus</code> is <code>DELETED</code>, this structure will not be present. </p>
+    #[serde(rename = "ExpectedProperties")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expected_properties: Option<String>,
     /// <p>The logical name of the resource specified in the template.</p>
+    #[serde(rename = "LogicalResourceId")]
     pub logical_resource_id: String,
     /// <p>The name or unique identifier that corresponds to a physical instance ID of a resource supported by AWS CloudFormation. </p>
+    #[serde(rename = "PhysicalResourceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub physical_resource_id: Option<String>,
     /// <p>Context information that enables AWS CloudFormation to uniquely identify a resource. AWS CloudFormation uses context key-value pairs in cases where a resource's logical and physical IDs are not enough to uniquely identify that resource. Each context key-value pair specifies a unique resource that contains the targeted resource.</p>
+    #[serde(rename = "PhysicalResourceIdContext")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub physical_resource_id_context: Option<Vec<PhysicalResourceIdContextKeyValuePair>>,
     /// <p>A collection of the resource properties whose actual values differ from their expected values. These will be present only for resources whose <code>StackResourceDriftStatus</code> is <code>MODIFIED</code>. </p>
+    #[serde(rename = "PropertyDifferences")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub property_differences: Option<Vec<PropertyDifference>>,
     /// <p>The type of the resource.</p>
+    #[serde(rename = "ResourceType")]
     pub resource_type: String,
     /// <p>The ID of the stack.</p>
+    #[serde(rename = "StackId")]
     pub stack_id: String,
     /// <p><p>Status of the resource&#39;s actual configuration compared to its expected configuration</p> <ul> <li> <p> <code>DELETED</code>: The resource differs from its expected template configuration because the resource has been deleted.</p> </li> <li> <p> <code>MODIFIED</code>: One or more resource properties differ from their expected values (as defined in the stack template and any values specified as template parameters).</p> </li> <li> <p> <code>IN<em>SYNC</code>: The resources&#39;s actual configuration matches its expected template configuration.</p> </li> <li> <p> <code>NOT</em>CHECKED</code>: AWS CloudFormation does not currently return this value.</p> </li> </ul></p>
+    #[serde(rename = "StackResourceDriftStatus")]
     pub stack_resource_drift_status: String,
     /// <p>Time at which AWS CloudFormation performed drift detection on the stack resource.</p>
+    #[serde(rename = "Timestamp")]
     pub timestamp: String,
 }
 
@@ -6812,12 +7267,15 @@ impl StackResourceDriftDeserializer {
     }
 }
 /// <p>Contains information about whether the resource's actual configuration differs, or has <i>drifted</i>, from its expected configuration.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackResourceDriftInformation {
     /// <p>When AWS CloudFormation last checked if the resource had drifted from its expected configuration.</p>
+    #[serde(rename = "LastCheckTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_check_timestamp: Option<String>,
     /// <p><p>Status of the resource&#39;s actual configuration compared to its expected configuration</p> <ul> <li> <p> <code>DELETED</code>: The resource differs from its expected configuration in that it has been deleted.</p> </li> <li> <p> <code>MODIFIED</code>: The resource differs from its expected configuration.</p> </li> <li> <p> <code>NOT<em>CHECKED</code>: AWS CloudFormation has not checked if the resource differs from its expected configuration.</p> <p>Any resources that do not currently support drift detection have a status of <code>NOT</em>CHECKED</code>. For more information, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift-resource-list.html">Resources that Support Drift Detection</a>. </p> </li> <li> <p> <code>IN_SYNC</code>: The resources&#39;s actual configuration matches its expected configuration.</p> </li> </ul></p>
+    #[serde(rename = "StackResourceDriftStatus")]
     pub stack_resource_drift_status: String,
 }
 
@@ -6854,12 +7312,15 @@ impl StackResourceDriftInformationDeserializer {
     }
 }
 /// <p>Summarizes information about whether the resource's actual configuration differs, or has <i>drifted</i>, from its expected configuration.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackResourceDriftInformationSummary {
     /// <p>When AWS CloudFormation last checked if the resource had drifted from its expected configuration.</p>
+    #[serde(rename = "LastCheckTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_check_timestamp: Option<String>,
     /// <p><p>Status of the resource&#39;s actual configuration compared to its expected configuration</p> <ul> <li> <p> <code>DELETED</code>: The resource differs from its expected configuration in that it has been deleted.</p> </li> <li> <p> <code>MODIFIED</code>: The resource differs from its expected configuration.</p> </li> <li> <p> <code>NOT<em>CHECKED</code>: AWS CloudFormation has not checked if the resource differs from its expected configuration.</p> <p>Any resources that do not currently support drift detection have a status of <code>NOT</em>CHECKED</code>. For more information, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift-resource-list.html">Resources that Support Drift Detection</a>. If you performed an <a>ContinueUpdateRollback</a> operation on a stack, any resources included in <code>ResourcesToSkip</code> will also have a status of <code>NOT<em>CHECKED</code>. For more information on skipping resources during rollback operations, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-continueupdaterollback.html">Continue Rolling Back an Update</a> in the AWS CloudFormation User Guide.</p> </li> <li> <p> <code>IN</em>SYNC</code>: The resources&#39;s actual configuration matches its expected configuration.</p> </li> </ul></p>
+    #[serde(rename = "StackResourceDriftStatus")]
     pub stack_resource_drift_status: String,
 }
 
@@ -6957,22 +7418,32 @@ impl StackResourceSummariesDeserializer {
     }
 }
 /// <p>Contains high-level information about the specified stack resource.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackResourceSummary {
     /// <p>Information about whether the resource's actual configuration differs, or has <i>drifted</i>, from its expected configuration, as defined in the stack template and any values specified as template parameters. For more information, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html">Detecting Unregulated Configuration Changes to Stacks and Resources</a>.</p>
+    #[serde(rename = "DriftInformation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drift_information: Option<StackResourceDriftInformationSummary>,
     /// <p>Time the status was updated.</p>
+    #[serde(rename = "LastUpdatedTimestamp")]
     pub last_updated_timestamp: String,
     /// <p>The logical name of the resource specified in the template.</p>
+    #[serde(rename = "LogicalResourceId")]
     pub logical_resource_id: String,
     /// <p>The name or unique identifier that corresponds to a physical instance ID of the resource.</p>
+    #[serde(rename = "PhysicalResourceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub physical_resource_id: Option<String>,
     /// <p>Current status of the resource.</p>
+    #[serde(rename = "ResourceStatus")]
     pub resource_status: String,
     /// <p>Success/failure message associated with the resource.</p>
+    #[serde(rename = "ResourceStatusReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_status_reason: Option<String>,
     /// <p>Type of resource. (For more information, go to <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html"> AWS Resource Types Reference</a> in the AWS CloudFormation User Guide.)</p>
+    #[serde(rename = "ResourceType")]
     pub resource_type: String,
 }
 
@@ -7046,32 +7517,56 @@ impl StackResourcesDeserializer {
     }
 }
 /// <p>A structure that contains information about a stack set. A stack set enables you to provision stacks into AWS accounts and across regions by using a single CloudFormation template. In the stack set, you specify the template to use, as well as any parameters and capabilities that the template requires. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackSet {
     /// <p>The Amazon Resource Number (ARN) of the IAM role used to create or update the stack set.</p> <p>Use customized administrator roles to control which users or groups can manage specific stack sets within the same administrator account. For more information, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-prereqs.html">Prerequisites: Granting Permissions for Stack Set Operations</a> in the <i>AWS CloudFormation User Guide</i>.</p>
+    #[serde(rename = "AdministrationRoleARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub administration_role_arn: Option<String>,
     /// <p>The capabilities that are allowed in the stack set. Some stack set templates might include resources that can affect permissions in your AWS account—for example, by creating new AWS Identity and Access Management (IAM) users. For more information, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-template.html#capabilities">Acknowledging IAM Resources in AWS CloudFormation Templates.</a> </p>
+    #[serde(rename = "Capabilities")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub capabilities: Option<Vec<String>>,
     /// <p>A description of the stack set that you specify when the stack set is created or updated.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>The name of the IAM execution role used to create or update the stack set. </p> <p>Use customized execution roles to control which stack resources users and groups can include in their stack sets. </p>
+    #[serde(rename = "ExecutionRoleName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub execution_role_name: Option<String>,
     /// <p>A list of input parameters for a stack set.</p>
+    #[serde(rename = "Parameters")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<Parameter>>,
     /// <p>The Amazon Resource Number (ARN) of the stack set.</p>
+    #[serde(rename = "StackSetARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_set_arn: Option<String>,
     /// <p>Detailed information about the drift status of the stack set.</p> <p>For stack sets, contains information about the last <i>completed</i> drift operation performed on the stack set. Information about drift operations currently in progress is not included.</p>
+    #[serde(rename = "StackSetDriftDetectionDetails")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_set_drift_detection_details: Option<StackSetDriftDetectionDetails>,
     /// <p>The ID of the stack set.</p>
+    #[serde(rename = "StackSetId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_set_id: Option<String>,
     /// <p>The name that's associated with the stack set.</p>
+    #[serde(rename = "StackSetName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_set_name: Option<String>,
     /// <p>The status of the stack set.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>A list of tags that specify information about the stack set. A maximum number of 50 tags can be specified.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
     /// <p>The structure that contains the body of the template that was used to create or update the stack set.</p>
+    #[serde(rename = "TemplateBody")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub template_body: Option<String>,
 }
 
@@ -7163,24 +7658,40 @@ impl StackSetARNDeserializer {
     }
 }
 /// <p>Detailed information about the drift status of the stack set.</p> <p>For stack sets, contains information about the last <i>completed</i> drift operation performed on the stack set. Information about drift operations in-progress is not included. </p> <p>For stack set operations, includes information about drift operations currently being performed on the stack set.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-drift.html">Detecting Unmanaged Changes in Stack Sets</a> in the <i>AWS CloudFormation User Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackSetDriftDetectionDetails {
     /// <p><p>The status of the stack set drift detection operation.</p> <ul> <li> <p> <code>COMPLETED</code>: The drift detection operation completed without failing on any stack instances.</p> </li> <li> <p> <code>FAILED</code>: The drift detection operation exceeded the specified failure tolerance. </p> </li> <li> <p> <code>PARTIAL<em>SUCCESS</code>: The drift detection operation completed without exceeding the failure tolerance for the operation.</p> </li> <li> <p> <code>IN</em>PROGRESS</code>: The drift detection operation is currently being performed.</p> </li> <li> <p> <code>STOPPED</code>: The user has cancelled the drift detection operation.</p> </li> </ul></p>
+    #[serde(rename = "DriftDetectionStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drift_detection_status: Option<String>,
     /// <p><p>Status of the stack set&#39;s actual configuration compared to its expected template and parameter configuration. A stack set is considered to have drifted if one or more of its stack instances have drifted from their expected template and parameter configuration.</p> <ul> <li> <p> <code>DRIFTED</code>: One or more of the stack instances belonging to the stack set stack differs from the expected template and parameter configuration. A stack instance is considered to have drifted if one or more of the resources in the associated stack have drifted.</p> </li> <li> <p> <code>NOT<em>CHECKED</code>: AWS CloudFormation has not checked the stack set for drift.</p> </li> <li> <p> <code>IN</em>SYNC</code>: All of the stack instances belonging to the stack set stack match from the expected template and parameter configuration.</p> </li> </ul></p>
+    #[serde(rename = "DriftStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drift_status: Option<String>,
     /// <p>The number of stack instances that have drifted from the expected template and parameter configuration of the stack set. A stack instance is considered to have drifted if one or more of the resources in the associated stack do not match their expected configuration.</p>
+    #[serde(rename = "DriftedStackInstancesCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drifted_stack_instances_count: Option<i64>,
     /// <p>The number of stack instances for which the drift detection operation failed.</p>
+    #[serde(rename = "FailedStackInstancesCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failed_stack_instances_count: Option<i64>,
     /// <p>The number of stack instances that are currently being checked for drift.</p>
+    #[serde(rename = "InProgressStackInstancesCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub in_progress_stack_instances_count: Option<i64>,
     /// <p>The number of stack instances which match the expected template and parameter configuration of the stack set.</p>
+    #[serde(rename = "InSyncStackInstancesCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub in_sync_stack_instances_count: Option<i64>,
     /// <p>Most recent time when CloudFormation performed a drift detection operation on the stack set. This value will be <code>NULL</code> for any stack set on which drift detection has not yet been performed.</p>
+    #[serde(rename = "LastDriftCheckTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_drift_check_timestamp: Option<String>,
     /// <p><p>The total number of stack instances belonging to this stack set. </p> <p>The total number of stack instances is equal to the total of:</p> <ul> <li> <p>Stack instances that match the stack set configuration. </p> </li> <li> <p>Stack instances that have drifted from the stack set configuration. </p> </li> <li> <p>Stack instances where the drift detection operation has failed.</p> </li> <li> <p>Stack instances currently being checked for drift.</p> </li> </ul></p>
+    #[serde(rename = "TotalStackInstancesCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub total_stack_instances_count: Option<i64>,
 }
 
@@ -7302,30 +7813,52 @@ impl StackSetNameDeserializer {
     }
 }
 /// <p>The structure that contains information about a stack set operation. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackSetOperation {
     /// <p>The type of stack set operation: <code>CREATE</code>, <code>UPDATE</code>, or <code>DELETE</code>. Create and delete operations affect only the specified stack set instances that are associated with the specified stack set. Update operations affect both the stack set itself, as well as <i>all</i> associated stack set instances.</p>
+    #[serde(rename = "Action")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action: Option<String>,
     /// <p>The Amazon Resource Number (ARN) of the IAM role used to perform this stack set operation. </p> <p>Use customized administrator roles to control which users or groups can manage specific stack sets within the same administrator account. For more information, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-prereqs.html">Define Permissions for Multiple Administrators</a> in the <i>AWS CloudFormation User Guide</i>.</p>
+    #[serde(rename = "AdministrationRoleARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub administration_role_arn: Option<String>,
     /// <p>The time at which the operation was initiated. Note that the creation times for the stack set operation might differ from the creation time of the individual stacks themselves. This is because AWS CloudFormation needs to perform preparatory work for the operation, such as dispatching the work to the requested regions, before actually creating the first stacks.</p>
+    #[serde(rename = "CreationTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub creation_timestamp: Option<String>,
     /// <p>The time at which the stack set operation ended, across all accounts and regions specified. Note that this doesn't necessarily mean that the stack set operation was successful, or even attempted, in each account or region.</p>
+    #[serde(rename = "EndTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub end_timestamp: Option<String>,
     /// <p>The name of the IAM execution role used to create or update the stack set.</p> <p>Use customized execution roles to control which stack resources users and groups can include in their stack sets. </p>
+    #[serde(rename = "ExecutionRoleName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub execution_role_name: Option<String>,
     /// <p>The unique ID of a stack set operation.</p>
+    #[serde(rename = "OperationId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub operation_id: Option<String>,
     /// <p>The preferences for how AWS CloudFormation performs this stack set operation.</p>
+    #[serde(rename = "OperationPreferences")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub operation_preferences: Option<StackSetOperationPreferences>,
     /// <p>For stack set operations of action type <code>DELETE</code>, specifies whether to remove the stack instances from the specified stack set, but doesn't delete the stacks. You can't reassociate a retained stack, or add an existing, saved stack to a new stack set.</p>
+    #[serde(rename = "RetainStacks")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub retain_stacks: Option<bool>,
     /// <p>Detailed information about the drift status of the stack set. This includes information about drift operations currently being performed on the stack set.</p> <p>this information will only be present for stack set operations whose <code>Action</code> type is <code>DETECT_DRIFT</code>.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-drift.html">Detecting Unmanaged Changes in Stack Sets</a> in the AWS CloudFormation User Guide.</p>
+    #[serde(rename = "StackSetDriftDetectionDetails")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_set_drift_detection_details: Option<StackSetDriftDetectionDetails>,
     /// <p>The ID of the stack set.</p>
+    #[serde(rename = "StackSetId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_set_id: Option<String>,
     /// <p><p>The status of the operation. </p> <ul> <li> <p> <code>FAILED</code>: The operation exceeded the specified failure tolerance. The failure tolerance value that you&#39;ve set for an operation is applied for each region during stack create and update operations. If the number of failed stacks within a region exceeds the failure tolerance, the status of the operation in the region is set to <code>FAILED</code>. This in turn sets the status of the operation as a whole to <code>FAILED</code>, and AWS CloudFormation cancels the operation in any remaining regions.</p> </li> <li> <p> <code>RUNNING</code>: The operation is currently being performed.</p> </li> <li> <p> <code>STOPPED</code>: The user has cancelled the operation.</p> </li> <li> <p> <code>STOPPING</code>: The operation is in the process of stopping, at user request. </p> </li> <li> <p> <code>SUCCEEDED</code>: The operation completed creating or updating all the specified stacks without exceeding the failure tolerance for the operation.</p> </li> </ul></p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -7418,19 +7951,28 @@ impl StackSetOperationActionDeserializer {
     }
 }
 /// <p>The user-specified preferences for how AWS CloudFormation performs a stack set operation. </p> <p>For more information on maximum concurrent accounts and failure tolerance, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-concepts.html#stackset-ops-options">Stack set operation options</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackSetOperationPreferences {
     /// <p>The number of accounts, per region, for which this operation can fail before AWS CloudFormation stops the operation in that region. If the operation is stopped in a region, AWS CloudFormation doesn't attempt the operation in any subsequent regions.</p> <p>Conditional: You must specify either <code>FailureToleranceCount</code> or <code>FailureTolerancePercentage</code> (but not both).</p>
+    #[serde(rename = "FailureToleranceCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failure_tolerance_count: Option<i64>,
     /// <p>The percentage of accounts, per region, for which this stack operation can fail before AWS CloudFormation stops the operation in that region. If the operation is stopped in a region, AWS CloudFormation doesn't attempt the operation in any subsequent regions.</p> <p>When calculating the number of accounts based on the specified percentage, AWS CloudFormation rounds <i>down</i> to the next whole number.</p> <p>Conditional: You must specify either <code>FailureToleranceCount</code> or <code>FailureTolerancePercentage</code>, but not both.</p>
+    #[serde(rename = "FailureTolerancePercentage")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failure_tolerance_percentage: Option<i64>,
     /// <p>The maximum number of accounts in which to perform this operation at one time. This is dependent on the value of <code>FailureToleranceCount</code>—<code>MaxConcurrentCount</code> is at most one more than the <code>FailureToleranceCount</code> .</p> <p>Note that this setting lets you specify the <i>maximum</i> for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.</p> <p>Conditional: You must specify either <code>MaxConcurrentCount</code> or <code>MaxConcurrentPercentage</code>, but not both.</p>
+    #[serde(rename = "MaxConcurrentCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_concurrent_count: Option<i64>,
     /// <p>The maximum percentage of accounts in which to perform this operation at one time.</p> <p>When calculating the number of accounts based on the specified percentage, AWS CloudFormation rounds down to the next whole number. This is true except in cases where rounding down would result is zero. In this case, CloudFormation sets the number as one instead.</p> <p>Note that this setting lets you specify the <i>maximum</i> for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.</p> <p>Conditional: You must specify either <code>MaxConcurrentCount</code> or <code>MaxConcurrentPercentage</code>, but not both.</p>
+    #[serde(rename = "MaxConcurrentPercentage")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_concurrent_percentage: Option<i64>,
     /// <p>The order of the regions in where you want to perform the stack operation.</p>
+    #[serde(rename = "RegionOrder")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub region_order: Option<Vec<String>>,
 }
 
@@ -7558,18 +8100,28 @@ impl StackSetOperationResultSummariesDeserializer {
     }
 }
 /// <p>The structure that contains information about a specified operation's results for a given account in a given region.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackSetOperationResultSummary {
     /// <p>The name of the AWS account for this operation result.</p>
+    #[serde(rename = "Account")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub account: Option<String>,
     /// <p>The results of the account gate function AWS CloudFormation invokes, if present, before proceeding with stack set operations in an account</p>
+    #[serde(rename = "AccountGateResult")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub account_gate_result: Option<AccountGateResult>,
     /// <p>The name of the AWS region for this operation result.</p>
+    #[serde(rename = "Region")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
     /// <p><p>The result status of the stack set operation for the given account in the given region.</p> <ul> <li> <p> <code>CANCELLED</code>: The operation in the specified account and region has been cancelled. This is either because a user has stopped the stack set operation, or because the failure tolerance of the stack set operation has been exceeded.</p> </li> <li> <p> <code>FAILED</code>: The operation in the specified account and region failed. </p> <p>If the stack set operation fails in enough accounts within a region, the failure tolerance for the stack set operation as a whole might be exceeded. </p> </li> <li> <p> <code>RUNNING</code>: The operation in the specified account and region is currently in progress.</p> </li> <li> <p> <code>PENDING</code>: The operation in the specified account and region has yet to start. </p> </li> <li> <p> <code>SUCCEEDED</code>: The operation in the specified account and region completed successfully.</p> </li> </ul></p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>The reason for the assigned result status.</p>
+    #[serde(rename = "StatusReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_reason: Option<String>,
 }
 
@@ -7644,18 +8196,28 @@ impl StackSetOperationSummariesDeserializer {
     }
 }
 /// <p>The structures that contain summary information about the specified operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackSetOperationSummary {
     /// <p>The type of operation: <code>CREATE</code>, <code>UPDATE</code>, or <code>DELETE</code>. Create and delete operations affect only the specified stack instances that are associated with the specified stack set. Update operations affect both the stack set itself as well as <i>all</i> associated stack set instances.</p>
+    #[serde(rename = "Action")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action: Option<String>,
     /// <p>The time at which the operation was initiated. Note that the creation times for the stack set operation might differ from the creation time of the individual stacks themselves. This is because AWS CloudFormation needs to perform preparatory work for the operation, such as dispatching the work to the requested regions, before actually creating the first stacks.</p>
+    #[serde(rename = "CreationTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub creation_timestamp: Option<String>,
     /// <p>The time at which the stack set operation ended, across all accounts and regions specified. Note that this doesn't necessarily mean that the stack set operation was successful, or even attempted, in each account or region.</p>
+    #[serde(rename = "EndTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub end_timestamp: Option<String>,
     /// <p>The unique ID of the stack set operation.</p>
+    #[serde(rename = "OperationId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub operation_id: Option<String>,
     /// <p><p>The overall status of the operation.</p> <ul> <li> <p> <code>FAILED</code>: The operation exceeded the specified failure tolerance. The failure tolerance value that you&#39;ve set for an operation is applied for each region during stack create and update operations. If the number of failed stacks within a region exceeds the failure tolerance, the status of the operation in the region is set to <code>FAILED</code>. This in turn sets the status of the operation as a whole to <code>FAILED</code>, and AWS CloudFormation cancels the operation in any remaining regions.</p> </li> <li> <p> <code>RUNNING</code>: The operation is currently being performed.</p> </li> <li> <p> <code>STOPPED</code>: The user has cancelled the operation.</p> </li> <li> <p> <code>STOPPING</code>: The operation is in the process of stopping, at user request. </p> </li> <li> <p> <code>SUCCEEDED</code>: The operation completed creating or updating all the specified stacks without exceeding the failure tolerance for the operation.</p> </li> </ul></p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -7733,20 +8295,32 @@ impl StackSetSummariesDeserializer {
     }
 }
 /// <p>The structures that contain summary information about the specified stack set.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackSetSummary {
     /// <p>A description of the stack set that you specify when the stack set is created or updated.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p><p>Status of the stack set&#39;s actual configuration compared to its expected template and parameter configuration. A stack set is considered to have drifted if one or more of its stack instances have drifted from their expected template and parameter configuration.</p> <ul> <li> <p> <code>DRIFTED</code>: One or more of the stack instances belonging to the stack set stack differs from the expected template and parameter configuration. A stack instance is considered to have drifted if one or more of the resources in the associated stack have drifted.</p> </li> <li> <p> <code>NOT<em>CHECKED</code>: AWS CloudFormation has not checked the stack set for drift.</p> </li> <li> <p> <code>IN</em>SYNC</code>: All of the stack instances belonging to the stack set stack match from the expected template and parameter configuration.</p> </li> <li> <p> <code>UNKNOWN</code>: This value is reserved for future use.</p> </li> </ul></p>
+    #[serde(rename = "DriftStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drift_status: Option<String>,
     /// <p>Most recent time when CloudFormation performed a drift detection operation on the stack set. This value will be <code>NULL</code> for any stack set on which drift detection has not yet been performed.</p>
+    #[serde(rename = "LastDriftCheckTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_drift_check_timestamp: Option<String>,
     /// <p>The ID of the stack set.</p>
+    #[serde(rename = "StackSetId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_set_id: Option<String>,
     /// <p>The name of the stack set.</p>
+    #[serde(rename = "StackSetName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_set_name: Option<String>,
     /// <p>The status of the stack set.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -7846,30 +8420,49 @@ impl StackSummariesDeserializer {
     }
 }
 /// <p>The StackSummary Data Type</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StackSummary {
     /// <p>The time the stack was created.</p>
+    #[serde(rename = "CreationTime")]
     pub creation_time: String,
     /// <p>The time the stack was deleted.</p>
+    #[serde(rename = "DeletionTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub deletion_time: Option<String>,
     /// <p>Summarizes information on whether a stack's actual configuration differs, or has <i>drifted</i>, from it's expected configuration, as defined in the stack template and any values specified as template parameters. For more information, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html">Detecting Unregulated Configuration Changes to Stacks and Resources</a>.</p>
+    #[serde(rename = "DriftInformation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drift_information: Option<StackDriftInformationSummary>,
     /// <p>The time the stack was last updated. This field will only be returned if the stack has been updated at least once.</p>
+    #[serde(rename = "LastUpdatedTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_updated_time: Option<String>,
     /// <p>For nested stacks--stacks created as resources for another stack--the stack ID of the direct parent of this stack. For the first level of nested stacks, the root stack is also the parent stack.</p> <p>For more information, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-nested-stacks.html">Working with Nested Stacks</a> in the <i>AWS CloudFormation User Guide</i>.</p>
+    #[serde(rename = "ParentId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parent_id: Option<String>,
     /// <p>For nested stacks--stacks created as resources for another stack--the stack ID of the top-level stack to which the nested stack ultimately belongs.</p> <p>For more information, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-nested-stacks.html">Working with Nested Stacks</a> in the <i>AWS CloudFormation User Guide</i>.</p>
+    #[serde(rename = "RootId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub root_id: Option<String>,
     /// <p>Unique stack identifier.</p>
+    #[serde(rename = "StackId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_id: Option<String>,
     /// <p>The name associated with the stack.</p>
+    #[serde(rename = "StackName")]
     pub stack_name: String,
     /// <p>The current status of the stack.</p>
+    #[serde(rename = "StackStatus")]
     pub stack_status: String,
     /// <p>Success/Failure message associated with the stack status.</p>
+    #[serde(rename = "StackStatusReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_status_reason: Option<String>,
     /// <p>The template description of the template used to create the stack.</p>
+    #[serde(rename = "TemplateDescription")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub template_description: Option<String>,
 }
 
@@ -7998,8 +8591,8 @@ impl StopStackSetOperationInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StopStackSetOperationOutput {}
 
 struct StopStackSetOperationOutputDeserializer;
@@ -8019,13 +8612,14 @@ impl StopStackSetOperationOutputDeserializer {
     }
 }
 /// <p>The Tag type enables you to specify a key-value pair that can be used to store information about an AWS CloudFormation stack.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Tag {
     /// <p> <i>Required</i>. A string used to identify this tag. You can specify a maximum of 128 characters for a tag key. Tags owned by Amazon Web Services (AWS) have the reserved prefix: <code>aws:</code>.</p>
+    #[serde(rename = "Key")]
     pub key: String,
     /// <p> <i>Required</i>. A string containing the value for this tag. You can specify a maximum of 256 characters for a tag value.</p>
+    #[serde(rename = "Value")]
     pub value: String,
 }
 
@@ -8136,16 +8730,24 @@ impl TemplateDescriptionDeserializer {
     }
 }
 /// <p>The TemplateParameter data type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TemplateParameter {
     /// <p>The default value associated with the parameter.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<String>,
     /// <p>User defined description associated with the parameter.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>Flag indicating whether the parameter should be displayed as plain text in logs and UIs.</p>
+    #[serde(rename = "NoEcho")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub no_echo: Option<bool>,
     /// <p>The name associated with the parameter.</p>
+    #[serde(rename = "ParameterKey")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameter_key: Option<String>,
 }
 
@@ -8334,20 +8936,32 @@ impl TypeSummariesDeserializer {
     }
 }
 /// <p>Contains summary information about the specified CloudFormation type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TypeSummary {
     /// <p>The ID of the default version of the type. The default version is used when the type version is not specified.</p> <p>To set the default version of a type, use <code> <a>SetTypeDefaultVersion</a> </code>. </p>
+    #[serde(rename = "DefaultVersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_version_id: Option<String>,
     /// <p>The description of the type.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>When the current default version of the type was registered.</p>
+    #[serde(rename = "LastUpdated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_updated: Option<String>,
     /// <p>The kind of type.</p>
+    #[serde(rename = "Type")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the type.</p>
+    #[serde(rename = "TypeArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_arn: Option<String>,
     /// <p>The name of the type.</p>
+    #[serde(rename = "TypeName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_name: Option<String>,
 }
 
@@ -8420,20 +9034,32 @@ impl TypeVersionSummariesDeserializer {
     }
 }
 /// <p>Contains summary information about a specific version of a CloudFormation type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TypeVersionSummary {
     /// <p>The Amazon Resource Name (ARN) of the type version.</p>
+    #[serde(rename = "Arn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arn: Option<String>,
     /// <p>The description of the type version.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>When the version was registered.</p>
+    #[serde(rename = "TimeCreated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub time_created: Option<String>,
     /// <p>The kind of type.</p>
+    #[serde(rename = "Type")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_: Option<String>,
     /// <p>The name of the type.</p>
+    #[serde(rename = "TypeName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub type_name: Option<String>,
     /// <p>The ID of a specific version of the type. The version ID is the value at the end of the Amazon Resource Name (ARN) assigned to the type version when it is registered.</p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -8654,10 +9280,12 @@ impl UpdateStackInstancesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateStackInstancesOutput {
     /// <p>The unique identifier for this stack set operation. </p>
+    #[serde(rename = "OperationId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub operation_id: Option<String>,
 }
 
@@ -8687,10 +9315,12 @@ impl UpdateStackInstancesOutputDeserializer {
     }
 }
 /// <p>The output for an <a>UpdateStack</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateStackOutput {
     /// <p>Unique identifier of the stack.</p>
+    #[serde(rename = "StackId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_id: Option<String>,
 }
 
@@ -8826,10 +9456,12 @@ impl UpdateStackSetInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateStackSetOutput {
     /// <p>The unique ID for this stack set operation.</p>
+    #[serde(rename = "OperationId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub operation_id: Option<String>,
 }
 
@@ -8880,10 +9512,12 @@ impl UpdateTerminationProtectionInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateTerminationProtectionOutput {
     /// <p>The unique ID of the stack.</p>
+    #[serde(rename = "StackId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stack_id: Option<String>,
 }
 
@@ -8960,18 +9594,28 @@ impl ValidateTemplateInputSerializer {
 }
 
 /// <p>The output for <a>ValidateTemplate</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ValidateTemplateOutput {
     /// <p>The capabilities found within the template. If your template contains IAM resources, you must specify the CAPABILITY_IAM or CAPABILITY_NAMED_IAM value for this parameter when you use the <a>CreateStack</a> or <a>UpdateStack</a> actions with your template; otherwise, those actions return an InsufficientCapabilities error.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-template.html#capabilities">Acknowledging IAM Resources in AWS CloudFormation Templates</a>.</p>
+    #[serde(rename = "Capabilities")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub capabilities: Option<Vec<String>>,
     /// <p>The list of resources that generated the values in the <code>Capabilities</code> response element.</p>
+    #[serde(rename = "CapabilitiesReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub capabilities_reason: Option<String>,
     /// <p>A list of the transforms that are declared in the template.</p>
+    #[serde(rename = "DeclaredTransforms")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub declared_transforms: Option<Vec<String>>,
     /// <p>The description found within the template.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>A list of <code>TemplateParameter</code> structures.</p>
+    #[serde(rename = "Parameters")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<TemplateParameter>>,
 }
 

@@ -59,10 +59,12 @@ impl ARNDeserializer {
     }
 }
 /// <p>The configured access rules for the domain's document and search endpoints, and the current status of those rules.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AccessPoliciesStatus {
+    #[serde(rename = "Options")]
     pub options: String,
+    #[serde(rename = "Status")]
     pub status: OptionStatus,
 }
 
@@ -99,19 +101,28 @@ impl AlgorithmicStemmingDeserializer {
     }
 }
 /// <p>Synonyms, stopwords, and stemming options for an analysis scheme. Includes tokenization dictionary for Japanese.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AnalysisOptions {
     /// <p>The level of algorithmic stemming to perform: <code>none</code>, <code>minimal</code>, <code>light</code>, or <code>full</code>. The available levels vary depending on the language. For more information, see <a href="http://docs.aws.amazon.com/cloudsearch/latest/developerguide/text-processing.html#text-processing-settings" target="_blank">Language Specific Text Processing Settings</a> in the <i>Amazon CloudSearch Developer Guide</i> </p>
+    #[serde(rename = "AlgorithmicStemming")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub algorithmic_stemming: Option<String>,
     /// <p>A JSON array that contains a collection of terms, tokens, readings and part of speech for Japanese Tokenizaiton. The Japanese tokenization dictionary enables you to override the default tokenization for selected terms. This is only valid for Japanese language fields.</p>
+    #[serde(rename = "JapaneseTokenizationDictionary")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub japanese_tokenization_dictionary: Option<String>,
     /// <p>A JSON object that contains a collection of string:value pairs that each map a term to its stem. For example, <code>{"term1": "stem1", "term2": "stem2", "term3": "stem3"}</code>. The stemming dictionary is applied in addition to any algorithmic stemming. This enables you to override the results of the algorithmic stemming to correct specific cases of overstemming or understemming. The maximum size of a stemming dictionary is 500 KB.</p>
+    #[serde(rename = "StemmingDictionary")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stemming_dictionary: Option<String>,
     /// <p>A JSON array of terms to ignore during indexing and searching. For example, <code>["a", "an", "the", "of"]</code>. The stopwords dictionary must explicitly list each word you want to ignore. Wildcards and regular expressions are not supported. </p>
+    #[serde(rename = "Stopwords")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stopwords: Option<String>,
     /// <p>A JSON object that defines synonym groups and aliases. A synonym group is an array of arrays, where each sub-array is a group of terms where each term in the group is considered a synonym of every other term in the group. The aliases value is an object that contains a collection of string:value pairs where the string specifies a term and the array of values specifies each of the aliases for that term. An alias is considered a synonym of the specified term, but the term is not considered a synonym of the alias. For more information about specifying synonyms, see <a href="http://docs.aws.amazon.com/cloudsearch/latest/developerguide/configuring-analysis-schemes.html#synonyms">Synonyms</a> in the <i>Amazon CloudSearch Developer Guide</i>.</p>
+    #[serde(rename = "Synonyms")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub synonyms: Option<String>,
 }
 
@@ -189,12 +200,15 @@ impl AnalysisOptionsSerializer {
 }
 
 /// <p>Configuration information for an analysis scheme. Each analysis scheme has a unique name and specifies the language of the text to be processed. The following options can be configured for an analysis scheme: <code>Synonyms</code>, <code>Stopwords</code>, <code>StemmingDictionary</code>, <code>JapaneseTokenizationDictionary</code> and <code>AlgorithmicStemming</code>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AnalysisScheme {
+    #[serde(rename = "AnalysisOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub analysis_options: Option<AnalysisOptions>,
+    #[serde(rename = "AnalysisSchemeLanguage")]
     pub analysis_scheme_language: String,
+    #[serde(rename = "AnalysisSchemeName")]
     pub analysis_scheme_name: String,
 }
 
@@ -269,10 +283,12 @@ impl AnalysisSchemeLanguageDeserializer {
     }
 }
 /// <p>The status and configuration of an <code>AnalysisScheme</code>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AnalysisSchemeStatus {
+    #[serde(rename = "Options")]
     pub options: AnalysisScheme,
+    #[serde(rename = "Status")]
     pub status: OptionStatus,
 }
 
@@ -317,11 +333,13 @@ impl AnalysisSchemeStatusListDeserializer {
     }
 }
 /// <p>The status and configuration of the domain's availability options.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AvailabilityOptionsStatus {
     /// <p>The availability options configured for the domain.</p>
+    #[serde(rename = "Options")]
     pub options: bool,
+    #[serde(rename = "Status")]
     pub status: OptionStatus,
 }
 
@@ -382,9 +400,11 @@ impl BuildSuggestersRequestSerializer {
 }
 
 /// <p>The result of a <code>BuildSuggester</code> request. Contains a list of the fields used for suggestions.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct BuildSuggestersResponse {
+    #[serde(rename = "FieldNames")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_names: Option<Vec<String>>,
 }
 
@@ -434,9 +454,11 @@ impl CreateDomainRequestSerializer {
 }
 
 /// <p>The result of a <code>CreateDomainRequest</code>. Contains the status of a newly created domain.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateDomainResponse {
+    #[serde(rename = "DomainStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub domain_status: Option<DomainStatus>,
 }
 
@@ -462,19 +484,28 @@ impl CreateDomainResponseDeserializer {
     }
 }
 /// <p>Options for a field that contains an array of dates. Present if <code>IndexFieldType</code> specifies the field is of type <code>date-array</code>. All options are enabled by default.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DateArrayOptions {
     /// <p>A value to use for the field if the field isn&#39;t specified for a document.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<String>,
     /// <p>Whether facet information can be returned for the field.</p>
+    #[serde(rename = "FacetEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub facet_enabled: Option<bool>,
     /// <p>Whether the contents of the field can be returned in the search results.</p>
+    #[serde(rename = "ReturnEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub return_enabled: Option<bool>,
     /// <p>Whether the contents of the field are searchable.</p>
+    #[serde(rename = "SearchEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_enabled: Option<bool>,
     /// <p>A list of source fields to map to the field. </p>
+    #[serde(rename = "SourceFields")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_fields: Option<String>,
 }
 
@@ -544,20 +575,31 @@ impl DateArrayOptionsSerializer {
 }
 
 /// <p>Options for a date field. Dates and times are specified in UTC (Coordinated Universal Time) according to IETF RFC3339: yyyy-mm-ddT00:00:00Z. Present if <code>IndexFieldType</code> specifies the field is of type <code>date</code>. All options are enabled by default.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DateOptions {
     /// <p>A value to use for the field if the field isn&#39;t specified for a document.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<String>,
     /// <p>Whether facet information can be returned for the field.</p>
+    #[serde(rename = "FacetEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub facet_enabled: Option<bool>,
     /// <p>Whether the contents of the field can be returned in the search results.</p>
+    #[serde(rename = "ReturnEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub return_enabled: Option<bool>,
     /// <p>Whether the contents of the field are searchable.</p>
+    #[serde(rename = "SearchEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_enabled: Option<bool>,
     /// <p>Whether the field can be used to sort the search results.</p>
+    #[serde(rename = "SortEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sort_enabled: Option<bool>,
+    #[serde(rename = "SourceField")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_field: Option<String>,
 }
 
@@ -658,9 +700,10 @@ impl DefineAnalysisSchemeRequestSerializer {
 }
 
 /// <p>The result of a <code><a>DefineAnalysisScheme</a></code> request. Contains the status of the newly-configured analysis scheme.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DefineAnalysisSchemeResponse {
+    #[serde(rename = "AnalysisScheme")]
     pub analysis_scheme: AnalysisSchemeStatus,
 }
 
@@ -714,9 +757,10 @@ impl DefineExpressionRequestSerializer {
 }
 
 /// <p>The result of a <code>DefineExpression</code> request. Contains the status of the newly-configured expression.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DefineExpressionResponse {
+    #[serde(rename = "Expression")]
     pub expression: ExpressionStatus,
 }
 
@@ -771,9 +815,10 @@ impl DefineIndexFieldRequestSerializer {
 }
 
 /// <p>The result of a <code><a>DefineIndexField</a></code> request. Contains the status of the newly-configured index field.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DefineIndexFieldResponse {
+    #[serde(rename = "IndexField")]
     pub index_field: IndexFieldStatus,
 }
 
@@ -827,9 +872,10 @@ impl DefineSuggesterRequestSerializer {
 }
 
 /// <p>The result of a <code>DefineSuggester</code> request. Contains the status of the newly-configured suggester.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DefineSuggesterResponse {
+    #[serde(rename = "Suggester")]
     pub suggester: SuggesterStatus,
 }
 
@@ -883,10 +929,11 @@ impl DeleteAnalysisSchemeRequestSerializer {
 }
 
 /// <p>The result of a <code>DeleteAnalysisScheme</code> request. Contains the status of the deleted analysis scheme.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteAnalysisSchemeResponse {
     /// <p>The status of the analysis scheme being deleted.</p>
+    #[serde(rename = "AnalysisScheme")]
     pub analysis_scheme: AnalysisSchemeStatus,
 }
 
@@ -935,9 +982,11 @@ impl DeleteDomainRequestSerializer {
 }
 
 /// <p>The result of a <code>DeleteDomain</code> request. Contains the status of a newly deleted domain, or no status if the domain has already been completely deleted.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteDomainResponse {
+    #[serde(rename = "DomainStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub domain_status: Option<DomainStatus>,
 }
 
@@ -989,10 +1038,11 @@ impl DeleteExpressionRequestSerializer {
 }
 
 /// <p>The result of a <code><a>DeleteExpression</a></code> request. Specifies the expression being deleted.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteExpressionResponse {
     /// <p>The status of the expression being deleted.</p>
+    #[serde(rename = "Expression")]
     pub expression: ExpressionStatus,
 }
 
@@ -1046,10 +1096,11 @@ impl DeleteIndexFieldRequestSerializer {
 }
 
 /// <p>The result of a <code><a>DeleteIndexField</a></code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteIndexFieldResponse {
     /// <p>The status of the index field being deleted.</p>
+    #[serde(rename = "IndexField")]
     pub index_field: IndexFieldStatus,
 }
 
@@ -1103,10 +1154,11 @@ impl DeleteSuggesterRequestSerializer {
 }
 
 /// <p>The result of a <code>DeleteSuggester</code> request. Contains the status of the deleted suggester.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteSuggesterResponse {
     /// <p>The status of the suggester being deleted.</p>
+    #[serde(rename = "Suggester")]
     pub suggester: SuggesterStatus,
 }
 
@@ -1169,10 +1221,11 @@ impl DescribeAnalysisSchemesRequestSerializer {
 }
 
 /// <p>The result of a <code>DescribeAnalysisSchemes</code> request. Contains the analysis schemes configured for the domain specified in the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeAnalysisSchemesResponse {
     /// <p>The analysis scheme descriptions.</p>
+    #[serde(rename = "AnalysisSchemes")]
     pub analysis_schemes: Vec<AnalysisSchemeStatus>,
 }
 
@@ -1230,10 +1283,12 @@ impl DescribeAvailabilityOptionsRequestSerializer {
 }
 
 /// <p>The result of a <code>DescribeAvailabilityOptions</code> request. Indicates whether or not the Multi-AZ option is enabled for the domain specified in the request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeAvailabilityOptionsResponse {
     /// <p>The availability options configured for the domain. Indicates whether Multi-AZ is enabled for the domain. </p>
+    #[serde(rename = "AvailabilityOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub availability_options: Option<AvailabilityOptionsStatus>,
 }
 
@@ -1290,10 +1345,12 @@ impl DescribeDomainEndpointOptionsRequestSerializer {
 }
 
 /// <p>The result of a <code>DescribeDomainEndpointOptions</code> request. Contains the status and configuration of a search domain's endpoint options. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeDomainEndpointOptionsResponse {
     /// <p>The status and configuration of a search domain's endpoint options.</p>
+    #[serde(rename = "DomainEndpointOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub domain_endpoint_options: Option<DomainEndpointOptionsStatus>,
 }
 
@@ -1351,9 +1408,10 @@ impl DescribeDomainsRequestSerializer {
 }
 
 /// <p>The result of a <code>DescribeDomains</code> request. Contains the status of the domains specified in the request or all domains owned by the account.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeDomainsResponse {
+    #[serde(rename = "DomainStatusList")]
     pub domain_status_list: Vec<DomainStatus>,
 }
 
@@ -1419,10 +1477,11 @@ impl DescribeExpressionsRequestSerializer {
 }
 
 /// <p>The result of a <code>DescribeExpressions</code> request. Contains the expressions configured for the domain specified in the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeExpressionsResponse {
     /// <p>The expressions configured for the domain.</p>
+    #[serde(rename = "Expressions")]
     pub expressions: Vec<ExpressionStatus>,
 }
 
@@ -1488,10 +1547,11 @@ impl DescribeIndexFieldsRequestSerializer {
 }
 
 /// <p>The result of a <code>DescribeIndexFields</code> request. Contains the index fields configured for the domain specified in the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeIndexFieldsResponse {
     /// <p>The index fields configured for the domain.</p>
+    #[serde(rename = "IndexFields")]
     pub index_fields: Vec<IndexFieldStatus>,
 }
 
@@ -1542,9 +1602,10 @@ impl DescribeScalingParametersRequestSerializer {
 }
 
 /// <p>The result of a <code>DescribeScalingParameters</code> request. Contains the scaling parameters configured for the domain specified in the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeScalingParametersResponse {
+    #[serde(rename = "ScalingParameters")]
     pub scaling_parameters: ScalingParametersStatus,
 }
 
@@ -1600,10 +1661,11 @@ impl DescribeServiceAccessPoliciesRequestSerializer {
 }
 
 /// <p>The result of a <code>DescribeServiceAccessPolicies</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeServiceAccessPoliciesResponse {
     /// <p>The access rules configured for the domain specified in the request.</p>
+    #[serde(rename = "AccessPolicies")]
     pub access_policies: AccessPoliciesStatus,
 }
 
@@ -1666,10 +1728,11 @@ impl DescribeSuggestersRequestSerializer {
 }
 
 /// <p>The result of a <code>DescribeSuggesters</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeSuggestersResponse {
     /// <p>The suggesters configured for the domain specified in the request.</p>
+    #[serde(rename = "Suggesters")]
     pub suggesters: Vec<SuggesterStatus>,
 }
 
@@ -1700,15 +1763,19 @@ impl DescribeSuggestersResponseDeserializer {
     }
 }
 /// <p>Options for a search suggester.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DocumentSuggesterOptions {
     /// <p>The level of fuzziness allowed when suggesting matches for a string: <code>none</code>, <code>low</code>, or <code>high</code>. With none, the specified string is treated as an exact prefix. With low, suggestions must differ from the specified string by no more than one character. With high, suggestions can differ by up to two characters. The default is none. </p>
+    #[serde(rename = "FuzzyMatching")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub fuzzy_matching: Option<String>,
     /// <p>An expression that computes a score for each suggestion to control how they are sorted. The scores are rounded to the nearest integer, with a floor of 0 and a ceiling of 2^31-1. A document's relevance score is not computed for suggestions, so sort expressions cannot reference the <code>_score</code> value. To sort suggestions using a numeric field or existing expression, simply specify the name of the field or expression. If no expression is configured for the suggester, the suggestions are sorted with the closest matches listed first.</p>
+    #[serde(rename = "SortExpression")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sort_expression: Option<String>,
     /// <p>The name of the index field you want to use for suggestions. </p>
+    #[serde(rename = "SourceField")]
     pub source_field: String,
 }
 
@@ -1766,13 +1833,16 @@ impl DocumentSuggesterOptionsSerializer {
 }
 
 /// <p>The domain's endpoint options.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DomainEndpointOptions {
     /// <p>Whether the domain is HTTPS only enabled.</p>
+    #[serde(rename = "EnforceHTTPS")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enforce_https: Option<bool>,
     /// <p>The minimum required TLS version</p>
+    #[serde(rename = "TLSSecurityPolicy")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tls_security_policy: Option<String>,
 }
 
@@ -1821,12 +1891,14 @@ impl DomainEndpointOptionsSerializer {
 }
 
 /// <p>The configuration and status of the domain's endpoint options.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DomainEndpointOptionsStatus {
     /// <p>The domain endpoint options configured for the domain.</p>
+    #[serde(rename = "Options")]
     pub options: DomainEndpointOptions,
     /// <p>The status of the configured domain endpoint options.</p>
+    #[serde(rename = "Status")]
     pub status: OptionStatus,
 }
 
@@ -1914,30 +1986,53 @@ impl DomainNameMapDeserializer {
     }
 }
 /// <p>The current status of the search domain.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DomainStatus {
+    #[serde(rename = "ARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arn: Option<String>,
     /// <p>True if the search domain is created. It can take several minutes to initialize a domain when <a>CreateDomain</a> is called. Newly created search domains are returned from <a>DescribeDomains</a> with a false value for Created until domain creation is complete.</p>
+    #[serde(rename = "Created")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub created: Option<bool>,
     /// <p>True if the search domain has been deleted. The system must clean up resources dedicated to the search domain when <a>DeleteDomain</a> is called. Newly deleted search domains are returned from <a>DescribeDomains</a> with a true value for IsDeleted for several minutes until resource cleanup is complete.</p>
+    #[serde(rename = "Deleted")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub deleted: Option<bool>,
     /// <p>The service endpoint for updating documents in a search domain.</p>
+    #[serde(rename = "DocService")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub doc_service: Option<ServiceEndpoint>,
+    #[serde(rename = "DomainId")]
     pub domain_id: String,
+    #[serde(rename = "DomainName")]
     pub domain_name: String,
+    #[serde(rename = "Limits")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub limits: Option<Limits>,
     /// <p>True if processing is being done to activate the current domain configuration.</p>
+    #[serde(rename = "Processing")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub processing: Option<bool>,
     /// <p>True if <a>IndexDocuments</a> needs to be called to activate the current domain configuration.</p>
+    #[serde(rename = "RequiresIndexDocuments")]
     pub requires_index_documents: bool,
     /// <p>The number of search instances that are available to process search requests.</p>
+    #[serde(rename = "SearchInstanceCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_instance_count: Option<i64>,
     /// <p>The instance type that is being used to process search requests.</p>
+    #[serde(rename = "SearchInstanceType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_instance_type: Option<String>,
     /// <p>The number of partitions across which the search index is spread.</p>
+    #[serde(rename = "SearchPartitionCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_partition_count: Option<i64>,
     /// <p>The service endpoint for requesting search results from a search domain.</p>
+    #[serde(rename = "SearchService")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_service: Option<ServiceEndpoint>,
 }
 
@@ -2040,19 +2135,28 @@ impl DoubleDeserializer {
     }
 }
 /// <p>Options for a field that contains an array of double-precision 64-bit floating point values. Present if <code>IndexFieldType</code> specifies the field is of type <code>double-array</code>. All options are enabled by default.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DoubleArrayOptions {
     /// <p>A value to use for the field if the field isn&#39;t specified for a document.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<f64>,
     /// <p>Whether facet information can be returned for the field.</p>
+    #[serde(rename = "FacetEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub facet_enabled: Option<bool>,
     /// <p>Whether the contents of the field can be returned in the search results.</p>
+    #[serde(rename = "ReturnEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub return_enabled: Option<bool>,
     /// <p>Whether the contents of the field are searchable.</p>
+    #[serde(rename = "SearchEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_enabled: Option<bool>,
     /// <p>A list of source fields to map to the field. </p>
+    #[serde(rename = "SourceFields")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_fields: Option<String>,
 }
 
@@ -2122,21 +2226,32 @@ impl DoubleArrayOptionsSerializer {
 }
 
 /// <p>Options for a double-precision 64-bit floating point field. Present if <code>IndexFieldType</code> specifies the field is of type <code>double</code>. All options are enabled by default.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DoubleOptions {
     /// <p>A value to use for the field if the field isn't specified for a document. This can be important if you are using the field in an expression and that field is not present in every document.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<f64>,
     /// <p>Whether facet information can be returned for the field.</p>
+    #[serde(rename = "FacetEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub facet_enabled: Option<bool>,
     /// <p>Whether the contents of the field can be returned in the search results.</p>
+    #[serde(rename = "ReturnEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub return_enabled: Option<bool>,
     /// <p>Whether the contents of the field are searchable.</p>
+    #[serde(rename = "SearchEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_enabled: Option<bool>,
     /// <p>Whether the field can be used to sort the search results.</p>
+    #[serde(rename = "SortEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sort_enabled: Option<bool>,
     /// <p>The name of the source field to map to the field. </p>
+    #[serde(rename = "SourceField")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_field: Option<String>,
 }
 
@@ -2234,11 +2349,12 @@ impl DynamicFieldNameListSerializer {
 }
 
 /// <p>A named expression that can be evaluated at search time. Can be used to sort the search results, define other expressions, or return computed information in the search results. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Expression {
+    #[serde(rename = "ExpressionName")]
     pub expression_name: String,
+    #[serde(rename = "ExpressionValue")]
     pub expression_value: String,
 }
 
@@ -2287,11 +2403,13 @@ impl ExpressionSerializer {
 }
 
 /// <p>The value of an <code>Expression</code> and its current status.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ExpressionStatus {
     /// <p>The expression that is evaluated for sorting while processing a search request.</p>
+    #[serde(rename = "Options")]
     pub options: Expression,
+    #[serde(rename = "Status")]
     pub status: OptionStatus,
 }
 
@@ -2415,10 +2533,12 @@ impl IndexDocumentsRequestSerializer {
 }
 
 /// <p>The result of an <code>IndexDocuments</code> request. Contains the status of the indexing operation, including the fields being indexed.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct IndexDocumentsResponse {
     /// <p>The names of the fields that are currently being indexed.</p>
+    #[serde(rename = "FieldNames")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_names: Option<Vec<String>>,
 }
 
@@ -2443,23 +2563,46 @@ impl IndexDocumentsResponseDeserializer {
     }
 }
 /// <p>Configuration information for a field in the index, including its name, type, and options. The supported options depend on the <code><a>IndexFieldType</a></code>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct IndexField {
+    #[serde(rename = "DateArrayOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date_array_options: Option<DateArrayOptions>,
+    #[serde(rename = "DateOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date_options: Option<DateOptions>,
+    #[serde(rename = "DoubleArrayOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub double_array_options: Option<DoubleArrayOptions>,
+    #[serde(rename = "DoubleOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub double_options: Option<DoubleOptions>,
     /// <p>A string that represents the name of an index field. CloudSearch supports regular index fields as well as dynamic fields. A dynamic field's name defines a pattern that begins or ends with a wildcard. Any document fields that don't map to a regular index field but do match a dynamic field's pattern are configured with the dynamic field's indexing options. </p> <p>Regular field names begin with a letter and can contain the following characters: a-z (lowercase), 0-9, and _ (underscore). Dynamic field names must begin or end with a wildcard (*). The wildcard can also be the only character in a dynamic field name. Multiple wildcards, and wildcards embedded within a string are not supported. </p> <p>The name <code>score</code> is reserved and cannot be used as a field name. To reference a document's ID, you can use the name <code>_id</code>. </p>
+    #[serde(rename = "IndexFieldName")]
     pub index_field_name: String,
+    #[serde(rename = "IndexFieldType")]
     pub index_field_type: String,
+    #[serde(rename = "IntArrayOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub int_array_options: Option<IntArrayOptions>,
+    #[serde(rename = "IntOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub int_options: Option<IntOptions>,
+    #[serde(rename = "LatLonOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lat_lon_options: Option<LatLonOptions>,
+    #[serde(rename = "LiteralArrayOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub literal_array_options: Option<LiteralArrayOptions>,
+    #[serde(rename = "LiteralOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub literal_options: Option<LiteralOptions>,
+    #[serde(rename = "TextArrayOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub text_array_options: Option<TextArrayOptions>,
+    #[serde(rename = "TextOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub text_options: Option<TextOptions>,
 }
 
@@ -2645,10 +2788,12 @@ impl IndexFieldSerializer {
 }
 
 /// <p>The value of an <code>IndexField</code> and its current status.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct IndexFieldStatus {
+    #[serde(rename = "Options")]
     pub options: IndexField,
+    #[serde(rename = "Status")]
     pub status: OptionStatus,
 }
 
@@ -2713,19 +2858,28 @@ impl InstanceCountDeserializer {
     }
 }
 /// <p>Options for a field that contains an array of 64-bit signed integers. Present if <code>IndexFieldType</code> specifies the field is of type <code>int-array</code>. All options are enabled by default.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct IntArrayOptions {
     /// <p>A value to use for the field if the field isn&#39;t specified for a document.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<i64>,
     /// <p>Whether facet information can be returned for the field.</p>
+    #[serde(rename = "FacetEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub facet_enabled: Option<bool>,
     /// <p>Whether the contents of the field can be returned in the search results.</p>
+    #[serde(rename = "ReturnEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub return_enabled: Option<bool>,
     /// <p>Whether the contents of the field are searchable.</p>
+    #[serde(rename = "SearchEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_enabled: Option<bool>,
     /// <p>A list of source fields to map to the field. </p>
+    #[serde(rename = "SourceFields")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_fields: Option<String>,
 }
 
@@ -2794,21 +2948,32 @@ impl IntArrayOptionsSerializer {
 }
 
 /// <p>Options for a 64-bit signed integer field. Present if <code>IndexFieldType</code> specifies the field is of type <code>int</code>. All options are enabled by default.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct IntOptions {
     /// <p>A value to use for the field if the field isn&#39;t specified for a document. This can be important if you are using the field in an expression and that field is not present in every document.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<i64>,
     /// <p>Whether facet information can be returned for the field.</p>
+    #[serde(rename = "FacetEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub facet_enabled: Option<bool>,
     /// <p>Whether the contents of the field can be returned in the search results.</p>
+    #[serde(rename = "ReturnEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub return_enabled: Option<bool>,
     /// <p>Whether the contents of the field are searchable.</p>
+    #[serde(rename = "SearchEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_enabled: Option<bool>,
     /// <p>Whether the field can be used to sort the search results.</p>
+    #[serde(rename = "SortEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sort_enabled: Option<bool>,
     /// <p>The name of the source field to map to the field. </p>
+    #[serde(rename = "SourceField")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_field: Option<String>,
 }
 
@@ -2882,20 +3047,31 @@ impl IntOptionsSerializer {
 }
 
 /// <p>Options for a latlon field. A latlon field contains a location stored as a latitude and longitude value pair. Present if <code>IndexFieldType</code> specifies the field is of type <code>latlon</code>. All options are enabled by default.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LatLonOptions {
     /// <p>A value to use for the field if the field isn&#39;t specified for a document.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<String>,
     /// <p>Whether facet information can be returned for the field.</p>
+    #[serde(rename = "FacetEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub facet_enabled: Option<bool>,
     /// <p>Whether the contents of the field can be returned in the search results.</p>
+    #[serde(rename = "ReturnEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub return_enabled: Option<bool>,
     /// <p>Whether the contents of the field are searchable.</p>
+    #[serde(rename = "SearchEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_enabled: Option<bool>,
     /// <p>Whether the field can be used to sort the search results.</p>
+    #[serde(rename = "SortEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sort_enabled: Option<bool>,
+    #[serde(rename = "SourceField")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_field: Option<String>,
 }
 
@@ -2969,10 +3145,12 @@ impl LatLonOptionsSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Limits {
+    #[serde(rename = "MaximumPartitionCount")]
     pub maximum_partition_count: i64,
+    #[serde(rename = "MaximumReplicationCount")]
     pub maximum_replication_count: i64,
 }
 
@@ -3002,10 +3180,12 @@ impl LimitsDeserializer {
     }
 }
 /// <p>The result of a <code>ListDomainNames</code> request. Contains a list of the domains owned by an account.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListDomainNamesResponse {
     /// <p>The names of the search domains owned by an account.</p>
+    #[serde(rename = "DomainNames")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub domain_names: Option<::std::collections::HashMap<String, String>>,
 }
 
@@ -3035,19 +3215,28 @@ impl ListDomainNamesResponseDeserializer {
     }
 }
 /// <p>Options for a field that contains an array of literal strings. Present if <code>IndexFieldType</code> specifies the field is of type <code>literal-array</code>. All options are enabled by default.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LiteralArrayOptions {
     /// <p>A value to use for the field if the field isn&#39;t specified for a document.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<String>,
     /// <p>Whether facet information can be returned for the field.</p>
+    #[serde(rename = "FacetEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub facet_enabled: Option<bool>,
     /// <p>Whether the contents of the field can be returned in the search results.</p>
+    #[serde(rename = "ReturnEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub return_enabled: Option<bool>,
     /// <p>Whether the contents of the field are searchable.</p>
+    #[serde(rename = "SearchEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_enabled: Option<bool>,
     /// <p>A list of source fields to map to the field. </p>
+    #[serde(rename = "SourceFields")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_fields: Option<String>,
 }
 
@@ -3117,20 +3306,31 @@ impl LiteralArrayOptionsSerializer {
 }
 
 /// <p>Options for literal field. Present if <code>IndexFieldType</code> specifies the field is of type <code>literal</code>. All options are enabled by default.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LiteralOptions {
     /// <p>A value to use for the field if the field isn&#39;t specified for a document.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<String>,
     /// <p>Whether facet information can be returned for the field.</p>
+    #[serde(rename = "FacetEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub facet_enabled: Option<bool>,
     /// <p>Whether the contents of the field can be returned in the search results.</p>
+    #[serde(rename = "ReturnEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub return_enabled: Option<bool>,
     /// <p>Whether the contents of the field are searchable.</p>
+    #[serde(rename = "SearchEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_enabled: Option<bool>,
     /// <p>Whether the field can be used to sort the search results.</p>
+    #[serde(rename = "SortEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sort_enabled: Option<bool>,
+    #[serde(rename = "SourceField")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_field: Option<String>,
 }
 
@@ -3260,18 +3460,25 @@ impl OptionStateDeserializer {
     }
 }
 /// <p>The status of domain configuration option.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OptionStatus {
     /// <p>A timestamp for when this option was created.</p>
+    #[serde(rename = "CreationDate")]
     pub creation_date: String,
     /// <p>Indicates that the option will be deleted once processing is complete.</p>
+    #[serde(rename = "PendingDeletion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pending_deletion: Option<bool>,
     /// <p><p>The state of processing a change to an option. Possible values:</p><ul> <li><code>RequiresIndexDocuments</code>: the option&#39;s latest value will not be deployed until <a>IndexDocuments</a> has been called and indexing is complete.</li> <li><code>Processing</code>: the option&#39;s latest value is in the process of being activated. </li> <li><code>Active</code>: the option&#39;s latest value is completely deployed.</li> <li><code>FailedToValidate</code>: the option value is not compatible with the domain&#39;s data and cannot be used to index the data. You must either modify the option value or update or remove the incompatible documents.</li> </ul></p>
+    #[serde(rename = "State")]
     pub state: String,
     /// <p>A timestamp for when this option was last updated.</p>
+    #[serde(rename = "UpdateDate")]
     pub update_date: String,
     /// <p>A unique integer that indicates when this option was last updated.</p>
+    #[serde(rename = "UpdateVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub update_version: Option<i64>,
 }
 
@@ -3343,15 +3550,20 @@ impl PolicyDocumentDeserializer {
     }
 }
 /// <p>The desired instance type and desired number of replicas of each index partition.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ScalingParameters {
     /// <p>The instance type that you want to preconfigure for your domain. For example, <code>search.m1.small</code>.</p>
+    #[serde(rename = "DesiredInstanceType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub desired_instance_type: Option<String>,
     /// <p>The number of partitions you want to preconfigure for your domain. Only valid when you select <code>m2.2xlarge</code> as the desired instance type.</p>
+    #[serde(rename = "DesiredPartitionCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub desired_partition_count: Option<i64>,
     /// <p>The number of replicas you want to preconfigure for each index partition.</p>
+    #[serde(rename = "DesiredReplicationCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub desired_replication_count: Option<i64>,
 }
 
@@ -3421,10 +3633,12 @@ impl ScalingParametersSerializer {
 }
 
 /// <p>The status and configuration of a search domain's scaling parameters. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ScalingParametersStatus {
+    #[serde(rename = "Options")]
     pub options: ScalingParameters,
+    #[serde(rename = "Status")]
     pub status: OptionStatus,
 }
 
@@ -3465,9 +3679,11 @@ impl SearchInstanceTypeDeserializer {
     }
 }
 /// <p>The endpoint to which service requests can be submitted.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ServiceEndpoint {
+    #[serde(rename = "Endpoint")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub endpoint: Option<String>,
 }
 
@@ -3535,11 +3751,12 @@ impl StringDeserializer {
     }
 }
 /// <p>Configuration information for a search suggester. Each suggester has a unique name and specifies the text field you want to use for suggestions. The following options can be configured for a suggester: <code>FuzzyMatching</code>, <code>SortExpression</code>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Suggester {
+    #[serde(rename = "DocumentSuggesterOptions")]
     pub document_suggester_options: DocumentSuggesterOptions,
+    #[serde(rename = "SuggesterName")]
     pub suggester_name: String,
 }
 
@@ -3603,10 +3820,12 @@ impl SuggesterFuzzyMatchingDeserializer {
     }
 }
 /// <p>The value of a <code>Suggester</code> and its current status.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SuggesterStatus {
+    #[serde(rename = "Options")]
     pub options: Suggester,
+    #[serde(rename = "Status")]
     pub status: OptionStatus,
 }
 
@@ -3660,19 +3879,28 @@ impl TLSSecurityPolicyDeserializer {
     }
 }
 /// <p>Options for a field that contains an array of text strings. Present if <code>IndexFieldType</code> specifies the field is of type <code>text-array</code>. A <code>text-array</code> field is always searchable. All options are enabled by default.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TextArrayOptions {
     /// <p>The name of an analysis scheme for a <code>text-array</code> field.</p>
+    #[serde(rename = "AnalysisScheme")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub analysis_scheme: Option<String>,
     /// <p>A value to use for the field if the field isn&#39;t specified for a document.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<String>,
     /// <p>Whether highlights can be returned for the field.</p>
+    #[serde(rename = "HighlightEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub highlight_enabled: Option<bool>,
     /// <p>Whether the contents of the field can be returned in the search results.</p>
+    #[serde(rename = "ReturnEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub return_enabled: Option<bool>,
     /// <p>A list of source fields to map to the field. </p>
+    #[serde(rename = "SourceFields")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_fields: Option<String>,
 }
 
@@ -3742,20 +3970,31 @@ impl TextArrayOptionsSerializer {
 }
 
 /// <p>Options for text field. Present if <code>IndexFieldType</code> specifies the field is of type <code>text</code>. A <code>text</code> field is always searchable. All options are enabled by default.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TextOptions {
     /// <p>The name of an analysis scheme for a <code>text</code> field.</p>
+    #[serde(rename = "AnalysisScheme")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub analysis_scheme: Option<String>,
     /// <p>A value to use for the field if the field isn&#39;t specified for a document.</p>
+    #[serde(rename = "DefaultValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_value: Option<String>,
     /// <p>Whether highlights can be returned for the field.</p>
+    #[serde(rename = "HighlightEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub highlight_enabled: Option<bool>,
     /// <p>Whether the contents of the field can be returned in the search results.</p>
+    #[serde(rename = "ReturnEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub return_enabled: Option<bool>,
     /// <p>Whether the field can be used to sort the search results.</p>
+    #[serde(rename = "SortEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sort_enabled: Option<bool>,
+    #[serde(rename = "SourceField")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_field: Option<String>,
 }
 
@@ -3864,10 +4103,12 @@ impl UpdateAvailabilityOptionsRequestSerializer {
 }
 
 /// <p>The result of a <code>UpdateAvailabilityOptions</code> request. Contains the status of the domain's availability options. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateAvailabilityOptionsResponse {
     /// <p>The newly-configured availability options. Indicates whether Multi-AZ is enabled for the domain. </p>
+    #[serde(rename = "AvailabilityOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub availability_options: Option<AvailabilityOptionsStatus>,
 }
 
@@ -3926,10 +4167,12 @@ impl UpdateDomainEndpointOptionsRequestSerializer {
 }
 
 /// <p>The result of a <code>UpdateDomainEndpointOptions</code> request. Contains the configuration and status of the domain's endpoint options. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateDomainEndpointOptionsResponse {
     /// <p>The newly-configured domain endpoint options.</p>
+    #[serde(rename = "DomainEndpointOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub domain_endpoint_options: Option<DomainEndpointOptionsStatus>,
 }
 
@@ -3986,9 +4229,10 @@ impl UpdateScalingParametersRequestSerializer {
 }
 
 /// <p>The result of a <code>UpdateScalingParameters</code> request. Contains the status of the newly-configured scaling parameters.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateScalingParametersResponse {
+    #[serde(rename = "ScalingParameters")]
     pub scaling_parameters: ScalingParametersStatus,
 }
 
@@ -4044,10 +4288,11 @@ impl UpdateServiceAccessPoliciesRequestSerializer {
 }
 
 /// <p>The result of an <code>UpdateServiceAccessPolicies</code> request. Contains the new access policies.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateServiceAccessPoliciesResponse {
     /// <p>The access rules configured for the domain.</p>
+    #[serde(rename = "AccessPolicies")]
     pub access_policies: AccessPoliciesStatus,
 }
 

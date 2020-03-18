@@ -70,18 +70,28 @@ impl AlarmDescriptionDeserializer {
     }
 }
 /// <p>Represents the history of a specific alarm.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AlarmHistoryItem {
     /// <p>The descriptive name for the alarm.</p>
+    #[serde(rename = "AlarmName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alarm_name: Option<String>,
     /// <p>Data about the alarm, in JSON format.</p>
+    #[serde(rename = "HistoryData")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub history_data: Option<String>,
     /// <p>The type of alarm history item.</p>
+    #[serde(rename = "HistoryItemType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub history_item_type: Option<String>,
     /// <p>A summary of the alarm history, in text format.</p>
+    #[serde(rename = "HistorySummary")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub history_summary: Option<String>,
     /// <p>The time stamp for the alarm history item.</p>
+    #[serde(rename = "Timestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<String>,
 }
 
@@ -163,20 +173,32 @@ impl AlarmNamesSerializer {
 }
 
 /// <p>An anomaly detection model associated with a particular CloudWatch metric and statistic. You can use the model to display a band of expected normal values when the metric is graphed.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AnomalyDetector {
     /// <p>The configuration specifies details about how the anomaly detection model is to be trained, including time ranges to exclude from use for training the model, and the time zone to use for the metric.</p>
+    #[serde(rename = "Configuration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub configuration: Option<AnomalyDetectorConfiguration>,
     /// <p>The metric dimensions associated with the anomaly detection model.</p>
+    #[serde(rename = "Dimensions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dimensions: Option<Vec<Dimension>>,
     /// <p>The name of the metric associated with the anomaly detection model.</p>
+    #[serde(rename = "MetricName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric_name: Option<String>,
     /// <p>The namespace of the metric associated with the anomaly detection model.</p>
+    #[serde(rename = "Namespace")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     /// <p>The statistic associated with the anomaly detection model.</p>
+    #[serde(rename = "Stat")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stat: Option<String>,
     /// <p>The current status of the anomaly detector's training. The possible values are <code>TRAINED | PENDING_TRAINING | TRAINED_INSUFFICIENT_DATA</code> </p>
+    #[serde(rename = "StateValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub state_value: Option<String>,
 }
 
@@ -224,13 +246,16 @@ impl AnomalyDetectorDeserializer {
     }
 }
 /// <p>The configuration specifies details about how the anomaly detection model is to be trained, including time ranges to exclude from use for training the model and the time zone to use for the metric.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AnomalyDetectorConfiguration {
     /// <p>An array of time ranges to exclude from use when the anomaly detection model is trained. Use this to make sure that events that could cause unusual values for the metric, such as deployments, aren't used when CloudWatch creates the model.</p>
+    #[serde(rename = "ExcludedTimeRanges")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub excluded_time_ranges: Option<Vec<Range>>,
     /// <p>The time zone to use for the metric. This is useful to enable the model to automatically account for daylight savings time changes if the metric is sensitive to such time changes.</p> <p>To specify a time zone, use the name of the time zone as specified in the standard tz database. For more information, see <a href="https://en.wikipedia.org/wiki/Tz_database">tz database</a>.</p>
+    #[serde(rename = "MetricTimezone")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric_timezone: Option<String>,
 }
 
@@ -439,16 +464,24 @@ impl DashboardEntriesDeserializer {
     }
 }
 /// <p>Represents a specific dashboard.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DashboardEntry {
     /// <p>The Amazon Resource Name (ARN) of the dashboard.</p>
+    #[serde(rename = "DashboardArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dashboard_arn: Option<String>,
     /// <p>The name of the dashboard.</p>
+    #[serde(rename = "DashboardName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dashboard_name: Option<String>,
     /// <p>The time stamp of when the dashboard was last modified, either by an API call or through the console. This number is expressed as the number of milliseconds since Jan 1, 1970 00:00:00 UTC.</p>
+    #[serde(rename = "LastModified")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_modified: Option<String>,
     /// <p>The size of the dashboard, in bytes.</p>
+    #[serde(rename = "Size")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<i64>,
 }
 
@@ -512,12 +545,16 @@ impl DashboardNamesSerializer {
 }
 
 /// <p>An error or warning for the operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DashboardValidationMessage {
     /// <p>The data path related to the message.</p>
+    #[serde(rename = "DataPath")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub data_path: Option<String>,
     /// <p>A message describing the error or warning.</p>
+    #[serde(rename = "Message")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
 }
 
@@ -577,24 +614,40 @@ impl DataPathDeserializer {
     }
 }
 /// <p>Encapsulates the statistical data that CloudWatch computes from metric data.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Datapoint {
     /// <p>The average of the metric values that correspond to the data point.</p>
+    #[serde(rename = "Average")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub average: Option<f64>,
     /// <p>The percentile statistic for the data point.</p>
+    #[serde(rename = "ExtendedStatistics")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub extended_statistics: Option<::std::collections::HashMap<String, f64>>,
     /// <p>The maximum metric value for the data point.</p>
+    #[serde(rename = "Maximum")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub maximum: Option<f64>,
     /// <p>The minimum metric value for the data point.</p>
+    #[serde(rename = "Minimum")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub minimum: Option<f64>,
     /// <p>The number of metric values that contributed to the aggregate value of this data point.</p>
+    #[serde(rename = "SampleCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sample_count: Option<f64>,
     /// <p>The sum of the metric values for the data point.</p>
+    #[serde(rename = "Sum")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sum: Option<f64>,
     /// <p>The time stamp used for the data point.</p>
+    #[serde(rename = "Timestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<String>,
     /// <p>The standard unit for the data point.</p>
+    #[serde(rename = "Unit")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub unit: Option<String>,
 }
 
@@ -781,8 +834,8 @@ impl DeleteAnomalyDetectorInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteAnomalyDetectorOutput {}
 
 struct DeleteAnomalyDetectorOutputDeserializer;
@@ -825,8 +878,8 @@ impl DeleteDashboardsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteDashboardsOutput {}
 
 struct DeleteDashboardsOutputDeserializer;
@@ -869,10 +922,12 @@ impl DeleteInsightRulesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteInsightRulesOutput {
     /// <p>An array listing the rules that could not be deleted. You cannot delete built-in rules.</p>
+    #[serde(rename = "Failures")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failures: Option<Vec<PartialFailure>>,
 }
 
@@ -947,12 +1002,16 @@ impl DescribeAlarmHistoryInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeAlarmHistoryOutput {
     /// <p>The alarm histories, in JSON format.</p>
+    #[serde(rename = "AlarmHistoryItems")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alarm_history_items: Option<Vec<AlarmHistoryItem>>,
     /// <p>The token that marks the start of the next batch of returned results.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -1036,10 +1095,12 @@ impl DescribeAlarmsForMetricInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeAlarmsForMetricOutput {
     /// <p>The information for each alarm with the specified metric.</p>
+    #[serde(rename = "MetricAlarms")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric_alarms: Option<Vec<MetricAlarm>>,
 }
 
@@ -1118,12 +1179,16 @@ impl DescribeAlarmsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeAlarmsOutput {
     /// <p>The information for the specified alarms.</p>
+    #[serde(rename = "MetricAlarms")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric_alarms: Option<Vec<MetricAlarm>>,
     /// <p>The token that marks the start of the next batch of returned results.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -1196,12 +1261,16 @@ impl DescribeAnomalyDetectorsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeAnomalyDetectorsOutput {
     /// <p>The list of anomaly detection models returned by the operation.</p>
+    #[serde(rename = "AnomalyDetectors")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub anomaly_detectors: Option<Vec<AnomalyDetector>>,
     /// <p>A token that you can use in a subsequent operation to retrieve the next set of results.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -1260,12 +1329,16 @@ impl DescribeInsightRulesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeInsightRulesOutput {
     /// <p>The rules returned by the operation.</p>
+    #[serde(rename = "InsightRules")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub insight_rules: Option<Vec<InsightRule>>,
     /// <p>Reserved for future use.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -1298,13 +1371,14 @@ impl DescribeInsightRulesOutputDeserializer {
     }
 }
 /// <p>Expands the identity of a metric.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Dimension {
     /// <p>The name of the dimension.</p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p>The value representing the dimension measurement.</p>
+    #[serde(rename = "Value")]
     pub value: String,
 }
 
@@ -1480,10 +1554,12 @@ impl DisableInsightRulesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DisableInsightRulesOutput {
     /// <p>An array listing the rules that could not be disabled. You cannot disable built-in rules.</p>
+    #[serde(rename = "Failures")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failures: Option<Vec<PartialFailure>>,
 }
 
@@ -1559,10 +1635,12 @@ impl EnableInsightRulesInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EnableInsightRulesOutput {
     /// <p>An array listing the rules that could not be enabled. You cannot disable or enable built-in rules.</p>
+    #[serde(rename = "Failures")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failures: Option<Vec<PartialFailure>>,
 }
 
@@ -1702,14 +1780,20 @@ impl GetDashboardInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetDashboardOutput {
     /// <p>The Amazon Resource Name (ARN) of the dashboard.</p>
+    #[serde(rename = "DashboardArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dashboard_arn: Option<String>,
     /// <p>The detailed information about the dashboard, including what widgets are included and their location on the dashboard. For more information about the <code>DashboardBody</code> syntax, see <a>CloudWatch-Dashboard-Body-Structure</a>. </p>
+    #[serde(rename = "DashboardBody")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dashboard_body: Option<String>,
     /// <p>The name of the dashboard.</p>
+    #[serde(rename = "DashboardName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dashboard_name: Option<String>,
 }
 
@@ -1797,20 +1881,32 @@ impl GetInsightRuleReportInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetInsightRuleReportOutput {
     /// <p>The sum of the values from all individual contributors that match the rule.</p>
+    #[serde(rename = "AggregateValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub aggregate_value: Option<f64>,
     /// <p>Specifies whether this rule aggregates contributor data by COUNT or SUM.</p>
+    #[serde(rename = "AggregationStatistic")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub aggregation_statistic: Option<String>,
     /// <p>An approximate count of the unique contributors found by this rule in this time period.</p>
+    #[serde(rename = "ApproximateUniqueCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub approximate_unique_count: Option<i64>,
     /// <p>An array of the unique contributors found by this rule in this time period. If the rule contains multiple keys, each combination of values for the keys counts as a unique contributor.</p>
+    #[serde(rename = "Contributors")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contributors: Option<Vec<InsightRuleContributor>>,
     /// <p>An array of the strings used as the keys for this rule. The keys are the dimensions used to classify contributors. If the rule contains more than one key, then each unique combination of values for the keys is counted as a unique contributor.</p>
+    #[serde(rename = "KeyLabels")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key_labels: Option<Vec<String>>,
     /// <p>A time series of metric data points that matches the time period in the rule request.</p>
+    #[serde(rename = "MetricDatapoints")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric_datapoints: Option<Vec<InsightRuleMetricDatapoint>>,
 }
 
@@ -1923,14 +2019,20 @@ impl GetMetricDataInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetMetricDataOutput {
     /// <p>Contains a message about this <code>GetMetricData</code> operation, if the operation results in such a message. An example of a message that may be returned is <code>Maximum number of allowed metrics exceeded</code>. If there is a message, as much of the operation as possible is still executed.</p> <p>A message appears here only if it is related to the global <code>GetMetricData</code> operation. Any message about a specific metric returned by the operation appears in the <code>MetricDataResult</code> object returned for that metric.</p>
+    #[serde(rename = "Messages")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub messages: Option<Vec<MessageData>>,
     /// <p>The metrics that are returned, including the metric name, namespace, and dimensions.</p>
+    #[serde(rename = "MetricDataResults")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric_data_results: Option<Vec<MetricDataResult>>,
     /// <p>A token that marks the next batch of returned results.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -2026,12 +2128,16 @@ impl GetMetricStatisticsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetMetricStatisticsOutput {
     /// <p>The data points for the specified metric.</p>
+    #[serde(rename = "Datapoints")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub datapoints: Option<Vec<Datapoint>>,
     /// <p>A label for the specified metric.</p>
+    #[serde(rename = "Label")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
 }
 
@@ -2087,10 +2193,17 @@ impl GetMetricWidgetImageInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetMetricWidgetImageOutput {
     /// <p>The image of the graph, in the output format specified.</p>
+    #[serde(rename = "MetricWidgetImage")]
+    #[serde(
+        deserialize_with = "::rusoto_core::serialization::SerdeBlob::deserialize_blob",
+        serialize_with = "::rusoto_core::serialization::SerdeBlob::serialize_blob",
+        default
+    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric_widget_image: Option<bytes::Bytes>,
 }
 
@@ -2153,16 +2266,20 @@ impl HistorySummaryDeserializer {
     }
 }
 /// <p>This structure contains the definition for a Contributor Insights rule.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InsightRule {
     /// <p>The definition of the rule, as a JSON object. The definition contains the keywords used to define contributors, the value to aggregate on if this rule returns a sum instead of a count, and the filters. For details on the valid syntax, see <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContributorInsights-RuleSyntax.html">Contributor Insights Rule Syntax</a>.</p>
+    #[serde(rename = "Definition")]
     pub definition: String,
     /// <p>The name of the rule.</p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p>For rules that you create, this is always <code>{"Name": "CloudWatchLogRule", "Version": 1}</code>. For built-in rules, this is <code>{"Name": "ServiceLogRule", "Version": 1}</code> </p>
+    #[serde(rename = "Schema")]
     pub schema: String,
     /// <p>Indicates whether the rule is enabled or disabled.</p>
+    #[serde(rename = "State")]
     pub state: String,
 }
 
@@ -2206,14 +2323,17 @@ impl InsightRuleAggregationStatisticDeserializer {
     }
 }
 /// <p>One of the unique contributors found by a Contributor Insights rule. If the rule contains multiple keys, then a unique contributor is a unique combination of values from all the keys in the rule.</p> <p>If the rule contains a single key, then each unique contributor is each unique value for this key.</p> <p>For more information, see <a>GetInsightRuleReport</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InsightRuleContributor {
     /// <p>An approximation of the aggregate value that comes from this contributor.</p>
+    #[serde(rename = "ApproximateAggregateValue")]
     pub approximate_aggregate_value: f64,
     /// <p>An array of the data points where this contributor is present. Only the data points when this contributor appeared are included in the array.</p>
+    #[serde(rename = "Datapoints")]
     pub datapoints: Vec<InsightRuleContributorDatapoint>,
     /// <p>One of the log entry field keywords that is used to define contributors for this rule.</p>
+    #[serde(rename = "Keys")]
     pub keys: Vec<String>,
 }
 
@@ -2254,12 +2374,14 @@ impl InsightRuleContributorDeserializer {
     }
 }
 /// <p>One data point related to one contributor.</p> <p>For more information, see <a>GetInsightRuleReport</a> and <a>InsightRuleContributor</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InsightRuleContributorDatapoint {
     /// <p>The approximate value that this contributor added during this timestamp.</p>
+    #[serde(rename = "ApproximateValue")]
     pub approximate_value: f64,
     /// <p>The timestamp of the data point.</p>
+    #[serde(rename = "Timestamp")]
     pub timestamp: String,
 }
 
@@ -2401,24 +2523,39 @@ impl InsightRuleDefinitionDeserializer {
     }
 }
 /// <p>One data point from the metric time series returned in a Contributor Insights rule report.</p> <p>For more information, see <a>GetInsightRuleReport</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InsightRuleMetricDatapoint {
     /// <p>The average value from all contributors during the time period represented by that data point.</p> <p>This statistic is returned only if you included it in the <code>Metrics</code> array in your request.</p>
+    #[serde(rename = "Average")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub average: Option<f64>,
     /// <p>The maximum value provided by one contributor during this timestamp. Each timestamp is evaluated separately, so the identity of the max contributor could be different for each timestamp.</p> <p>This statistic is returned only if you included it in the <code>Metrics</code> array in your request.</p>
+    #[serde(rename = "MaxContributorValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_contributor_value: Option<f64>,
     /// <p>The maximum value from a single occurence from a single contributor during the time period represented by that data point.</p> <p>This statistic is returned only if you included it in the <code>Metrics</code> array in your request.</p>
+    #[serde(rename = "Maximum")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub maximum: Option<f64>,
     /// <p>The minimum value from a single contributor during the time period represented by that data point.</p> <p>This statistic is returned only if you included it in the <code>Metrics</code> array in your request.</p>
+    #[serde(rename = "Minimum")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub minimum: Option<f64>,
     /// <p>The number of occurrences that matched the rule during this data point.</p> <p>This statistic is returned only if you included it in the <code>Metrics</code> array in your request.</p>
+    #[serde(rename = "SampleCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sample_count: Option<f64>,
     /// <p>The sum of the values from all contributors during the time period represented by that data point.</p> <p>This statistic is returned only if you included it in the <code>Metrics</code> array in your request.</p>
+    #[serde(rename = "Sum")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sum: Option<f64>,
     /// <p>The timestamp of the data point.</p>
+    #[serde(rename = "Timestamp")]
     pub timestamp: String,
     /// <p>The number of unique contributors who published data during this timestamp.</p> <p>This statistic is returned only if you included it in the <code>Metrics</code> array in your request.</p>
+    #[serde(rename = "UniqueContributors")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub unique_contributors: Option<f64>,
 }
 
@@ -2640,12 +2777,16 @@ impl ListDashboardsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListDashboardsOutput {
     /// <p>The list of matching dashboards.</p>
+    #[serde(rename = "DashboardEntries")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dashboard_entries: Option<Vec<DashboardEntry>>,
     /// <p>The token that marks the start of the next batch of returned results.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -2713,12 +2854,16 @@ impl ListMetricsInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListMetricsOutput {
     /// <p>The metrics.</p>
+    #[serde(rename = "Metrics")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metrics: Option<Vec<Metric>>,
     /// <p>The token that marks the start of the next batch of returned results.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -2765,10 +2910,12 @@ impl ListTagsForResourceInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTagsForResourceOutput {
     /// <p>The list of tag keys and values associated with the resource you specified.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
 }
 
@@ -2808,12 +2955,16 @@ impl MessageDeserializer {
     }
 }
 /// <p>A message returned by the <code>GetMetricData</code>API, including a code and a description.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MessageData {
     /// <p>The error code or status code associated with the message.</p>
+    #[serde(rename = "Code")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
     /// <p>The message text.</p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -2861,15 +3012,20 @@ impl MessageDataValueDeserializer {
     }
 }
 /// <p>Represents a specific metric.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Metric {
     /// <p>The dimensions for the metric.</p>
+    #[serde(rename = "Dimensions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dimensions: Option<Vec<Dimension>>,
     /// <p>The name of the metric. This is a required field.</p>
+    #[serde(rename = "MetricName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric_name: Option<String>,
     /// <p>The namespace of the metric.</p>
+    #[serde(rename = "Namespace")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
 }
 
@@ -2924,62 +3080,116 @@ impl MetricSerializer {
 }
 
 /// <p>Represents an alarm.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MetricAlarm {
     /// <p>Indicates whether actions should be executed during any changes to the alarm state.</p>
+    #[serde(rename = "ActionsEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub actions_enabled: Option<bool>,
     /// <p>The actions to execute when this alarm transitions to the <code>ALARM</code> state from any other state. Each action is specified as an Amazon Resource Name (ARN).</p>
+    #[serde(rename = "AlarmActions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alarm_actions: Option<Vec<String>>,
     /// <p>The Amazon Resource Name (ARN) of the alarm.</p>
+    #[serde(rename = "AlarmArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alarm_arn: Option<String>,
     /// <p>The time stamp of the last update to the alarm configuration.</p>
+    #[serde(rename = "AlarmConfigurationUpdatedTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alarm_configuration_updated_timestamp: Option<String>,
     /// <p>The description of the alarm.</p>
+    #[serde(rename = "AlarmDescription")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alarm_description: Option<String>,
     /// <p>The name of the alarm.</p>
+    #[serde(rename = "AlarmName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alarm_name: Option<String>,
     /// <p>The arithmetic operation to use when comparing the specified statistic and threshold. The specified statistic value is used as the first operand.</p>
+    #[serde(rename = "ComparisonOperator")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub comparison_operator: Option<String>,
     /// <p>The number of data points that must be breaching to trigger the alarm.</p>
+    #[serde(rename = "DatapointsToAlarm")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub datapoints_to_alarm: Option<i64>,
     /// <p>The dimensions for the metric associated with the alarm.</p>
+    #[serde(rename = "Dimensions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dimensions: Option<Vec<Dimension>>,
     /// <p>Used only for alarms based on percentiles. If <code>ignore</code>, the alarm state does not change during periods with too few data points to be statistically significant. If <code>evaluate</code> or this parameter is not used, the alarm is always evaluated and possibly changes state no matter how many data points are available.</p>
+    #[serde(rename = "EvaluateLowSampleCountPercentile")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub evaluate_low_sample_count_percentile: Option<String>,
     /// <p>The number of periods over which data is compared to the specified threshold.</p>
+    #[serde(rename = "EvaluationPeriods")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub evaluation_periods: Option<i64>,
     /// <p>The percentile statistic for the metric associated with the alarm. Specify a value between p0.0 and p100.</p>
+    #[serde(rename = "ExtendedStatistic")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub extended_statistic: Option<String>,
     /// <p>The actions to execute when this alarm transitions to the <code>INSUFFICIENT_DATA</code> state from any other state. Each action is specified as an Amazon Resource Name (ARN).</p>
+    #[serde(rename = "InsufficientDataActions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub insufficient_data_actions: Option<Vec<String>>,
     /// <p>The name of the metric associated with the alarm, if this is an alarm based on a single metric.</p>
+    #[serde(rename = "MetricName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric_name: Option<String>,
     /// <p>An array of MetricDataQuery structures, used in an alarm based on a metric math expression. Each structure either retrieves a metric or performs a math expression. One item in the Metrics array is the math expression that the alarm watches. This expression by designated by having <code>ReturnValue</code> set to true.</p>
+    #[serde(rename = "Metrics")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metrics: Option<Vec<MetricDataQuery>>,
     /// <p>The namespace of the metric associated with the alarm.</p>
+    #[serde(rename = "Namespace")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     /// <p>The actions to execute when this alarm transitions to the <code>OK</code> state from any other state. Each action is specified as an Amazon Resource Name (ARN).</p>
+    #[serde(rename = "OKActions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ok_actions: Option<Vec<String>>,
     /// <p>The period, in seconds, over which the statistic is applied.</p>
+    #[serde(rename = "Period")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub period: Option<i64>,
     /// <p>An explanation for the alarm state, in text format.</p>
+    #[serde(rename = "StateReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub state_reason: Option<String>,
     /// <p>An explanation for the alarm state, in JSON format.</p>
+    #[serde(rename = "StateReasonData")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub state_reason_data: Option<String>,
     /// <p>The time stamp of the last update to the alarm state.</p>
+    #[serde(rename = "StateUpdatedTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub state_updated_timestamp: Option<String>,
     /// <p>The state value for the alarm.</p>
+    #[serde(rename = "StateValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub state_value: Option<String>,
     /// <p>The statistic for the metric associated with the alarm, other than percentile. For percentile statistics, use <code>ExtendedStatistic</code>.</p>
+    #[serde(rename = "Statistic")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub statistic: Option<String>,
     /// <p>The value to compare with the specified statistic.</p>
+    #[serde(rename = "Threshold")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub threshold: Option<f64>,
     /// <p>In an alarm based on an anomaly detection model, this is the ID of the <code>ANOMALY_DETECTION_BAND</code> function used as the threshold for the alarm.</p>
+    #[serde(rename = "ThresholdMetricId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub threshold_metric_id: Option<String>,
     /// <p>Sets how this alarm is to handle missing data points. If this parameter is omitted, the default behavior of <code>missing</code> is used.</p>
+    #[serde(rename = "TreatMissingData")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub treat_missing_data: Option<String>,
     /// <p>The unit of the metric associated with the alarm.</p>
+    #[serde(rename = "Unit")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub unit: Option<String>,
 }
 
@@ -3189,21 +3399,31 @@ impl MetricDataQueriesSerializer {
 }
 
 /// <p>This structure is used in both <code>GetMetricData</code> and <code>PutMetricAlarm</code>. The supported use of this structure is different for those two operations.</p> <p>When used in <code>GetMetricData</code>, it indicates the metric data to return, and whether this call is just retrieving a batch set of data for one metric, or is performing a math expression on metric data. A single <code>GetMetricData</code> call can include up to 100 <code>MetricDataQuery</code> structures.</p> <p>When used in <code>PutMetricAlarm</code>, it enables you to create an alarm based on a metric math expression. Each <code>MetricDataQuery</code> in the array specifies either a metric to retrieve, or a math expression to be performed on retrieved metrics. A single <code>PutMetricAlarm</code> call can include up to 20 <code>MetricDataQuery</code> structures in the array. The 20 structures can include as many as 10 structures that contain a <code>MetricStat</code> parameter to retrieve a metric, and as many as 10 structures that contain the <code>Expression</code> parameter to perform a math expression. Of those <code>Expression</code> structures, one must have <code>True</code> as the value for <code>ReturnData</code>. The result of this expression is the value the alarm watches.</p> <p>Any expression used in a <code>PutMetricAlarm</code> operation must return a single time series. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html#metric-math-syntax">Metric Math Syntax and Functions</a> in the <i>Amazon CloudWatch User Guide</i>.</p> <p>Some of the parameters of this structure also have different uses whether you are using this structure in a <code>GetMetricData</code> operation or a <code>PutMetricAlarm</code> operation. These differences are explained in the following parameter list.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MetricDataQuery {
     /// <p>The math expression to be performed on the returned data, if this object is performing a math expression. This expression can use the <code>Id</code> of the other metrics to refer to those metrics, and can also use the <code>Id</code> of other expressions to use the result of those expressions. For more information about metric math expressions, see <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html#metric-math-syntax">Metric Math Syntax and Functions</a> in the <i>Amazon CloudWatch User Guide</i>.</p> <p>Within each MetricDataQuery object, you must specify either <code>Expression</code> or <code>MetricStat</code> but not both.</p>
+    #[serde(rename = "Expression")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expression: Option<String>,
     /// <p>A short name used to tie this object to the results in the response. This name must be unique within a single call to <code>GetMetricData</code>. If you are performing math expressions on this set of data, this name represents that data and can serve as a variable in the mathematical expression. The valid characters are letters, numbers, and underscore. The first character must be a lowercase letter.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>A human-readable label for this metric or expression. This is especially useful if this is an expression, so that you know what the value represents. If the metric or expression is shown in a CloudWatch dashboard widget, the label is shown. If Label is omitted, CloudWatch generates a default.</p>
+    #[serde(rename = "Label")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
     /// <p>The metric to be returned, along with statistics, period, and units. Use this parameter only if this object is retrieving a metric and not performing a math expression on returned data.</p> <p>Within one MetricDataQuery object, you must specify either <code>Expression</code> or <code>MetricStat</code> but not both.</p>
+    #[serde(rename = "MetricStat")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric_stat: Option<MetricStat>,
     /// <p>The granularity, in seconds, of the returned data points. For metrics with regular resolution, a period can be as short as one minute (60 seconds) and must be a multiple of 60. For high-resolution metrics that are collected at intervals of less than one minute, the period can be 1, 5, 10, 30, 60, or any multiple of 60. High-resolution metrics are those metrics stored by a <code>PutMetricData</code> operation that includes a <code>StorageResolution of 1 second</code>.</p> <p>If you are performing a <code>GetMetricData</code> operation, use this field only if you are specifying an <code>Expression</code>. Do not use this field when you are specifying a <code>MetricStat</code> in a <code>GetMetricData</code> operation.</p>
+    #[serde(rename = "Period")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub period: Option<i64>,
     /// <p>When used in <code>GetMetricData</code>, this option indicates whether to return the timestamps and raw data values of this metric. If you are performing this call just to do math expressions and do not also need the raw data returned, you can specify <code>False</code>. If you omit this, the default of <code>True</code> is used.</p> <p>When used in <code>PutMetricAlarm</code>, specify <code>True</code> for the one expression result to use as the alarm. For all other metrics and expressions in the same <code>PutMetricAlarm</code> operation, specify <code>ReturnData</code> as False.</p>
+    #[serde(rename = "ReturnData")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub return_data: Option<bool>,
 }
 
@@ -3279,20 +3499,32 @@ impl MetricDataQuerySerializer {
 }
 
 /// <p>A <code>GetMetricData</code> call returns an array of <code>MetricDataResult</code> structures. Each of these structures includes the data points for that metric, along with the timestamps of those data points and other identifying information.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MetricDataResult {
     /// <p>The short name you specified to represent this metric.</p>
+    #[serde(rename = "Id")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// <p>The human-readable label associated with the data.</p>
+    #[serde(rename = "Label")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
     /// <p>A list of messages with additional information about the data returned.</p>
+    #[serde(rename = "Messages")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub messages: Option<Vec<MessageData>>,
     /// <p>The status of the returned data. <code>Complete</code> indicates that all data points in the requested time range were returned. <code>PartialData</code> means that an incomplete set of data points were returned. You can use the <code>NextToken</code> value that was returned and repeat your request to get more data points. <code>NextToken</code> is not returned if you are performing a math expression. <code>InternalError</code> indicates that an error occurred. Retry your request using <code>NextToken</code>, if present.</p>
+    #[serde(rename = "StatusCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_code: Option<String>,
     /// <p>The timestamps for the data points, formatted in Unix timestamp format. The number of timestamps always matches the number of values and the value for Timestamps[x] is Values[x].</p>
+    #[serde(rename = "Timestamps")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub timestamps: Option<Vec<String>>,
     /// <p>The data points for the metric corresponding to <code>Timestamps</code>. The number of values always matches the number of timestamps and the timestamp for Values[x] is Timestamps[x].</p>
+    #[serde(rename = "Values")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub values: Option<Vec<f64>>,
 }
 
@@ -3484,17 +3716,21 @@ impl MetricNameDeserializer {
     }
 }
 /// <p>This structure defines the metric to be returned, along with the statistics, period, and units.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MetricStat {
     /// <p>The metric to return, including the metric name, namespace, and dimensions.</p>
+    #[serde(rename = "Metric")]
     pub metric: Metric,
     /// <p><p>The granularity, in seconds, of the returned data points. For metrics with regular resolution, a period can be as short as one minute (60 seconds) and must be a multiple of 60. For high-resolution metrics that are collected at intervals of less than one minute, the period can be 1, 5, 10, 30, 60, or any multiple of 60. High-resolution metrics are those metrics stored by a <code>PutMetricData</code> call that includes a <code>StorageResolution</code> of 1 second.</p> <p>If the <code>StartTime</code> parameter specifies a time stamp that is greater than 3 hours ago, you must specify the period as follows or no data points in that time range is returned:</p> <ul> <li> <p>Start time between 3 hours and 15 days ago - Use a multiple of 60 seconds (1 minute).</p> </li> <li> <p>Start time between 15 and 63 days ago - Use a multiple of 300 seconds (5 minutes).</p> </li> <li> <p>Start time greater than 63 days ago - Use a multiple of 3600 seconds (1 hour).</p> </li> </ul></p>
+    #[serde(rename = "Period")]
     pub period: i64,
     /// <p>The statistic to return. It can include any CloudWatch statistic or extended statistic.</p>
+    #[serde(rename = "Stat")]
     pub stat: String,
     /// <p>When you are using a <code>Put</code> operation, this defines what unit you want to use when storing the metric.</p> <p>In a <code>Get</code> operation, if you omit <code>Unit</code> then all data that was collected with any unit is returned, along with the corresponding units that were specified when the data was reported to CloudWatch. If you specify a unit, the operation returns only data data that was collected with that unit specified. If you specify a unit that does not match the data collected, the results of the operation are null. CloudWatch does not perform unit conversions.</p>
+    #[serde(rename = "Unit")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub unit: Option<String>,
 }
 
@@ -3598,16 +3834,24 @@ impl NextTokenDeserializer {
     }
 }
 /// <p>This array is empty if the API operation was successful for all the rules specified in the request. If the operation could not process one of the rules, the following data is returned for each of those rules.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PartialFailure {
     /// <p>The type of error.</p>
+    #[serde(rename = "ExceptionType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub exception_type: Option<String>,
     /// <p>The code of the error.</p>
+    #[serde(rename = "FailureCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failure_code: Option<String>,
     /// <p>A description of the error.</p>
+    #[serde(rename = "FailureDescription")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failure_description: Option<String>,
     /// <p>The specified rule that could not be deleted.</p>
+    #[serde(rename = "FailureResource")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failure_resource: Option<String>,
 }
 
@@ -3703,8 +3947,8 @@ impl PutAnomalyDetectorInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PutAnomalyDetectorOutput {}
 
 struct PutAnomalyDetectorOutputDeserializer;
@@ -3752,10 +3996,12 @@ impl PutDashboardInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PutDashboardOutput {
     /// <p>If the input for <code>PutDashboard</code> was correct and the dashboard was successfully created or modified, this result is empty.</p> <p>If this result includes only warning messages, then the input was valid enough for the dashboard to be created or modified, but some elements of the dashboard may not render.</p> <p>If this result includes error messages, the input was not valid and the operation failed.</p>
+    #[serde(rename = "DashboardValidationMessages")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dashboard_validation_messages: Option<Vec<DashboardValidationMessage>>,
 }
 
@@ -3813,8 +4059,8 @@ impl PutInsightRuleInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PutInsightRuleOutput {}
 
 struct PutInsightRuleOutputDeserializer;
@@ -4011,13 +4257,14 @@ impl PutMetricDataInputSerializer {
 }
 
 /// <p>Specifies one range of days or times to exclude from use for training an anomaly detection model.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Range {
     /// <p>The end time of the range to exclude. The format is <code>yyyy-MM-dd'T'HH:mm:ss</code>. For example, <code>2019-07-01T23:59:59</code>.</p>
+    #[serde(rename = "EndTime")]
     pub end_time: String,
     /// <p>The start time of the range to exclude. The format is <code>yyyy-MM-dd'T'HH:mm:ss</code>. For example, <code>2019-07-01T23:59:59</code>.</p>
+    #[serde(rename = "StartTime")]
     pub start_time: String,
 }
 
@@ -4266,13 +4513,14 @@ impl StatusCodeDeserializer {
     }
 }
 /// <p>A key-value pair associated with a CloudWatch resource.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Tag {
     /// <p>A string that you can use to assign a value. The combination of tag keys and values can help you organize and categorize your resources.</p>
+    #[serde(rename = "Key")]
     pub key: String,
     /// <p>The value for the specified tag key.</p>
+    #[serde(rename = "Value")]
     pub value: String,
 }
 
@@ -4384,8 +4632,8 @@ impl TagResourceInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TagResourceOutput {}
 
 struct TagResourceOutputDeserializer;
@@ -4488,8 +4736,8 @@ impl UntagResourceInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UntagResourceOutput {}
 
 struct UntagResourceOutputDeserializer;

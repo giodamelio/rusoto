@@ -151,10 +151,12 @@ impl CheckIfPhoneNumberIsOptedOutInputSerializer {
 }
 
 /// <p>The response from the <code>CheckIfPhoneNumberIsOptedOut</code> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CheckIfPhoneNumberIsOptedOutResponse {
     /// <p><p>Indicates whether the phone number is opted out:</p> <ul> <li> <p> <code>true</code> – The phone number is opted out, meaning you cannot publish SMS messages to it.</p> </li> <li> <p> <code>false</code> – The phone number is opted in, meaning you can publish SMS messages to it.</p> </li> </ul></p>
+    #[serde(rename = "isOptedOut")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_opted_out: Option<bool>,
 }
 
@@ -214,10 +216,12 @@ impl ConfirmSubscriptionInputSerializer {
 }
 
 /// <p>Response for ConfirmSubscriptions action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ConfirmSubscriptionResponse {
     /// <p>The ARN of the created subscription.</p>
+    #[serde(rename = "SubscriptionArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subscription_arn: Option<String>,
 }
 
@@ -247,10 +251,12 @@ impl ConfirmSubscriptionResponseDeserializer {
     }
 }
 /// <p>Response from CreateEndpoint action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateEndpointResponse {
     /// <p>EndpointArn returned from CreateEndpoint action.</p>
+    #[serde(rename = "EndpointArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub endpoint_arn: Option<String>,
 }
 
@@ -304,10 +310,12 @@ impl CreatePlatformApplicationInputSerializer {
 }
 
 /// <p>Response from CreatePlatformApplication action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreatePlatformApplicationResponse {
     /// <p>PlatformApplicationArn is returned.</p>
+    #[serde(rename = "PlatformApplicationArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_application_arn: Option<String>,
 }
 
@@ -413,10 +421,12 @@ impl CreateTopicInputSerializer {
 }
 
 /// <p>Response from CreateTopic action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateTopicResponse {
     /// <p>The Amazon Resource Name (ARN) assigned to the created topic.</p>
+    #[serde(rename = "TopicArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub topic_arn: Option<String>,
 }
 
@@ -548,10 +558,12 @@ impl GetEndpointAttributesInputSerializer {
 }
 
 /// <p>Response from GetEndpointAttributes of the EndpointArn.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetEndpointAttributesResponse {
     /// <p><p>Attributes include the following:</p> <ul> <li> <p> <code>CustomUserData</code> – arbitrary user data to associate with the endpoint. Amazon SNS does not use this data. The data must be in UTF-8 format and less than 2KB.</p> </li> <li> <p> <code>Enabled</code> – flag that enables/disables delivery to the endpoint. Amazon SNS will set this to false when a notification service indicates to Amazon SNS that the endpoint is invalid. Users can set it back to true, typically after updating Token.</p> </li> <li> <p> <code>Token</code> – device token, also referred to as a registration id, for an app and mobile device. This is returned from the notification service when an app and mobile device are registered with the notification service.</p> <note> <p>The device token for the iOS platform is returned in lowercase.</p> </note> </li> </ul></p>
+    #[serde(rename = "Attributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<::std::collections::HashMap<String, String>>,
 }
 
@@ -605,10 +617,12 @@ impl GetPlatformApplicationAttributesInputSerializer {
 }
 
 /// <p>Response for GetPlatformApplicationAttributes action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetPlatformApplicationAttributesResponse {
     /// <p><p>Attributes include the following:</p> <ul> <li> <p> <code>EventEndpointCreated</code> – Topic ARN to which EndpointCreated event notifications should be sent.</p> </li> <li> <p> <code>EventEndpointDeleted</code> – Topic ARN to which EndpointDeleted event notifications should be sent.</p> </li> <li> <p> <code>EventEndpointUpdated</code> – Topic ARN to which EndpointUpdate event notifications should be sent.</p> </li> <li> <p> <code>EventDeliveryFailure</code> – Topic ARN to which DeliveryFailure event notifications should be sent upon Direct Publish delivery failure (permanent) to one of the application&#39;s endpoints.</p> </li> </ul></p>
+    #[serde(rename = "Attributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<::std::collections::HashMap<String, String>>,
 }
 
@@ -665,10 +679,12 @@ impl GetSMSAttributesInputSerializer {
 }
 
 /// <p>The response from the <code>GetSMSAttributes</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetSMSAttributesResponse {
     /// <p>The SMS attribute names and their values.</p>
+    #[serde(rename = "attributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<::std::collections::HashMap<String, String>>,
 }
 
@@ -722,10 +738,12 @@ impl GetSubscriptionAttributesInputSerializer {
 }
 
 /// <p>Response for GetSubscriptionAttributes action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetSubscriptionAttributesResponse {
     /// <p><p>A map of the subscription&#39;s attributes. Attributes in this map include the following:</p> <ul> <li> <p> <code>ConfirmationWasAuthenticated</code> – <code>true</code> if the subscription confirmation request was authenticated.</p> </li> <li> <p> <code>DeliveryPolicy</code> – The JSON serialization of the subscription&#39;s delivery policy.</p> </li> <li> <p> <code>EffectiveDeliveryPolicy</code> – The JSON serialization of the effective delivery policy that takes into account the topic delivery policy and account system defaults.</p> </li> <li> <p> <code>FilterPolicy</code> – The filter policy JSON that is assigned to the subscription.</p> </li> <li> <p> <code>Owner</code> – The AWS account ID of the subscription&#39;s owner.</p> </li> <li> <p> <code>PendingConfirmation</code> – <code>true</code> if the subscription hasn&#39;t been confirmed. To confirm a pending subscription, call the <code>ConfirmSubscription</code> action with a confirmation token.</p> </li> <li> <p> <code>RawMessageDelivery</code> – <code>true</code> if raw message delivery is enabled for the subscription. Raw messages are free of JSON formatting and can be sent to HTTP/S and Amazon SQS endpoints.</p> </li> <li> <p> <code>RedrivePolicy</code> – When specified, sends undeliverable messages to the specified Amazon SQS dead-letter queue. Messages that can&#39;t be delivered due to client errors (for example, when the subscribed endpoint is unreachable) or server errors (for example, when the service that powers the subscribed endpoint becomes unavailable) are held in the dead-letter queue for further analysis or reprocessing.</p> </li> <li> <p> <code>SubscriptionArn</code> – The subscription&#39;s ARN.</p> </li> <li> <p> <code>TopicArn</code> – The topic ARN that the subscription is associated with.</p> </li> </ul></p>
+    #[serde(rename = "Attributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<::std::collections::HashMap<String, String>>,
 }
 
@@ -776,10 +794,12 @@ impl GetTopicAttributesInputSerializer {
 }
 
 /// <p>Response for GetTopicAttributes action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetTopicAttributesResponse {
     /// <p><p>A map of the topic&#39;s attributes. Attributes in this map include the following:</p> <ul> <li> <p> <code>DeliveryPolicy</code> – The JSON serialization of the topic&#39;s delivery policy.</p> </li> <li> <p> <code>DisplayName</code> – The human-readable name used in the <code>From</code> field for notifications to <code>email</code> and <code>email-json</code> endpoints.</p> </li> <li> <p> <code>Owner</code> – The AWS account ID of the topic&#39;s owner.</p> </li> <li> <p> <code>Policy</code> – The JSON serialization of the topic&#39;s access control policy.</p> </li> <li> <p> <code>SubscriptionsConfirmed</code> – The number of confirmed subscriptions for the topic.</p> </li> <li> <p> <code>SubscriptionsDeleted</code> – The number of deleted subscriptions for the topic.</p> </li> <li> <p> <code>SubscriptionsPending</code> – The number of subscriptions pending confirmation for the topic.</p> </li> <li> <p> <code>TopicArn</code> – The topic&#39;s ARN.</p> </li> <li> <p> <code>EffectiveDeliveryPolicy</code> – Yhe JSON serialization of the effective delivery policy, taking system defaults into account.</p> </li> </ul> <p>The following attribute applies only to <a href="https://docs.aws.amazon.com/sns/latest/dg/sns-server-side-encryption.html">server-side-encryption</a>:</p> <ul> <li> <p> <code>KmsMasterKeyId</code> - The ID of an AWS-managed customer master key (CMK) for Amazon SNS or a custom CMK. For more information, see <a href="https://docs.aws.amazon.com/sns/latest/dg/sns-server-side-encryption.html#sse-key-terms">Key Terms</a>. For more examples, see <a href="https://docs.aws.amazon.com/kms/latest/APIReference/API_DescribeKey.html#API_DescribeKey_RequestParameters">KeyId</a> in the <i>AWS Key Management Service API Reference</i>.</p> </li> </ul></p>
+    #[serde(rename = "Attributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<::std::collections::HashMap<String, String>>,
 }
 
@@ -838,12 +858,16 @@ impl ListEndpointsByPlatformApplicationInputSerializer {
 }
 
 /// <p>Response for ListEndpointsByPlatformApplication action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListEndpointsByPlatformApplicationResponse {
     /// <p>Endpoints returned for ListEndpointsByPlatformApplication action.</p>
+    #[serde(rename = "Endpoints")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub endpoints: Option<Vec<String>>,
     /// <p>NextToken string is returned when calling ListEndpointsByPlatformApplication action if additional records are available after the first page results.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -934,12 +958,16 @@ impl ListPhoneNumbersOptedOutInputSerializer {
 }
 
 /// <p>The response from the <code>ListPhoneNumbersOptedOut</code> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListPhoneNumbersOptedOutResponse {
     /// <p>A <code>NextToken</code> string is returned when you call the <code>ListPhoneNumbersOptedOut</code> action if additional records are available after the first page of results.</p>
+    #[serde(rename = "nextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of phone numbers that are opted out of receiving SMS messages. The list is paginated, and each page can contain up to 100 phone numbers.</p>
+    #[serde(rename = "phoneNumbers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub phone_numbers: Option<Vec<String>>,
 }
 
@@ -994,12 +1022,16 @@ impl ListPlatformApplicationsInputSerializer {
 }
 
 /// <p>Response for ListPlatformApplications action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListPlatformApplicationsResponse {
     /// <p>NextToken string is returned when calling ListPlatformApplications action if additional records are available after the first page results.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>Platform applications returned when calling ListPlatformApplications action.</p>
+    #[serde(rename = "PlatformApplications")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_applications: Option<Vec<PlatformApplication>>,
 }
 
@@ -1072,12 +1104,16 @@ impl ListSubscriptionsByTopicInputSerializer {
 }
 
 /// <p>Response for ListSubscriptionsByTopic action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListSubscriptionsByTopicResponse {
     /// <p>Token to pass along to the next <code>ListSubscriptionsByTopic</code> request. This element is returned if there are more subscriptions to retrieve.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of subscriptions.</p>
+    #[serde(rename = "Subscriptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subscriptions: Option<Vec<Subscription>>,
 }
 
@@ -1133,12 +1169,16 @@ impl ListSubscriptionsInputSerializer {
 }
 
 /// <p>Response for ListSubscriptions action</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListSubscriptionsResponse {
     /// <p>Token to pass along to the next <code>ListSubscriptions</code> request. This element is returned if there are more subscriptions to retrieve.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of subscriptions.</p>
+    #[serde(rename = "Subscriptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subscriptions: Option<Vec<Subscription>>,
 }
 
@@ -1190,10 +1230,12 @@ impl ListTagsForResourceRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTagsForResourceResponse {
     /// <p>The tags associated with the specified topic.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
 }
 
@@ -1244,12 +1286,16 @@ impl ListTopicsInputSerializer {
 }
 
 /// <p>Response for ListTopics action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTopicsResponse {
     /// <p>Token to pass along to the next <code>ListTopics</code> request. This element is returned if there are additional topics to retrieve.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>A list of topic ARNs.</p>
+    #[serde(rename = "Topics")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub topics: Option<Vec<Topic>>,
 }
 
@@ -1414,8 +1460,8 @@ impl OptInPhoneNumberInputSerializer {
 }
 
 /// <p>The response for the OptInPhoneNumber action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OptInPhoneNumberResponse {}
 
 struct OptInPhoneNumberResponseDeserializer;
@@ -1463,12 +1509,16 @@ impl PhoneNumberListDeserializer {
     }
 }
 /// <p>Platform application object.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PlatformApplication {
     /// <p>Attributes for platform application object.</p>
+    #[serde(rename = "Attributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<::std::collections::HashMap<String, String>>,
     /// <p>PlatformApplicationArn for platform application object.</p>
+    #[serde(rename = "PlatformApplicationArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform_application_arn: Option<String>,
 }
 
@@ -1566,10 +1616,12 @@ impl PublishInputSerializer {
 }
 
 /// <p>Response for Publish action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PublishResponse {
     /// <p>Unique identifier assigned to the published message.</p> <p>Length Constraint: Maximum 100 characters</p>
+    #[serde(rename = "MessageId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message_id: Option<String>,
 }
 
@@ -1700,8 +1752,8 @@ impl SetSMSAttributesInputSerializer {
 }
 
 /// <p>The response for the SetSMSAttributes action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetSMSAttributesResponse {}
 
 struct SetSMSAttributesResponseDeserializer;
@@ -1845,10 +1897,12 @@ impl SubscribeInputSerializer {
 }
 
 /// <p>Response for Subscribe action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SubscribeResponse {
     /// <p>The ARN of the subscription if it is confirmed, or the string "pending confirmation" if the subscription requires confirmation. However, if the API request parameter <code>ReturnSubscriptionArn</code> is true, then the value is always the subscription ARN, even if the subscription requires confirmation.</p>
+    #[serde(rename = "SubscriptionArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subscription_arn: Option<String>,
 }
 
@@ -1874,18 +1928,28 @@ impl SubscribeResponseDeserializer {
     }
 }
 /// <p>A wrapper type for the attributes of an Amazon SNS subscription.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Subscription {
     /// <p>The subscription's endpoint (format depends on the protocol).</p>
+    #[serde(rename = "Endpoint")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub endpoint: Option<String>,
     /// <p>The subscription's owner.</p>
+    #[serde(rename = "Owner")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub owner: Option<String>,
     /// <p>The subscription's protocol.</p>
+    #[serde(rename = "Protocol")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
     /// <p>The subscription's ARN.</p>
+    #[serde(rename = "SubscriptionArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subscription_arn: Option<String>,
     /// <p>The ARN of the subscription's topic.</p>
+    #[serde(rename = "TopicArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub topic_arn: Option<String>,
 }
 
@@ -1991,13 +2055,14 @@ impl SubscriptionsListDeserializer {
     }
 }
 /// <p>The list of tags to be added to the specified topic.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Tag {
     /// <p>The required key portion of the tag.</p>
+    #[serde(rename = "Key")]
     pub key: String,
     /// <p>The optional value portion of the tag.</p>
+    #[serde(rename = "Value")]
     pub value: String,
 }
 
@@ -2109,8 +2174,8 @@ impl TagResourceRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TagResourceResponse {}
 
 struct TagResourceResponseDeserializer;
@@ -2141,10 +2206,12 @@ impl TagValueDeserializer {
     }
 }
 /// <p>A wrapper type for the topic's Amazon Resource Name (ARN). To retrieve a topic's attributes, use <code>GetTopicAttributes</code>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Topic {
     /// <p>The topic's ARN.</p>
+    #[serde(rename = "TopicArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub topic_arn: Option<String>,
 }
 
@@ -2278,8 +2345,8 @@ impl UntagResourceRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UntagResourceResponse {}
 
 struct UntagResourceResponseDeserializer;

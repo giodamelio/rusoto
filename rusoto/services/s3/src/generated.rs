@@ -39,11 +39,12 @@ use xml::EventReader;
 use xml::EventWriter;
 
 /// <p>Specifies the days since the initiation of an incomplete multipart upload that Amazon S3 will wait before permanently removing all parts of the upload. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/mpuoverview.html#mpu-abort-incomplete-mpu-lifecycle-config"> Aborting Incomplete Multipart Uploads Using a Bucket Lifecycle Policy</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AbortIncompleteMultipartUpload {
     /// <p>Specifies the number of days after which Amazon S3 aborts an incomplete multipart upload.</p>
+    #[serde(rename = "DaysAfterInitiation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub days_after_initiation: Option<i64>,
 }
 
@@ -98,9 +99,11 @@ impl AbortIncompleteMultipartUploadSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AbortMultipartUploadOutput {
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
 }
 
@@ -197,11 +200,11 @@ impl AccessControlPolicySerializer {
 }
 
 /// <p>A container for information about access control for replicas.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AccessControlTranslation {
     /// <p>Specifies the replica ownership. For default and valid values, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketPUTreplication.html">PUT bucket replication</a> in the <i>Amazon Simple Storage Service API Reference</i>.</p>
+    #[serde(rename = "Owner")]
     pub owner: String,
 }
 
@@ -537,13 +540,16 @@ impl AllowedOriginsSerializer {
 }
 
 /// <p>A conjunction (logical AND) of predicates, which is used in evaluating a metrics filter. The operator must have at least two predicates in any combination, and an object must match all of the predicates for the filter to apply.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AnalyticsAndOperator {
     /// <p>The prefix to use when evaluating an AND predicate: The prefix that an object must have to be included in the metrics results.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
     /// <p>The list of tags to use when evaluating an AND predicate.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
 }
 
@@ -599,15 +605,18 @@ impl AnalyticsAndOperatorSerializer {
 }
 
 /// <p> Specifies the configuration and any analyses for the analytics filter of an Amazon S3 bucket.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AnalyticsConfiguration {
     /// <p>The filter used to describe a set of objects for analyses. A filter must have exactly one prefix, one tag, or one conjunction (AnalyticsAndOperator). If no filter is provided, all objects will be considered in any analysis.</p>
+    #[serde(rename = "Filter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub filter: Option<AnalyticsFilter>,
     /// <p>The ID that identifies the analytics configuration.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p> Contains data related to access patterns to be collected and made available to analyze the tradeoffs between different storage classes. </p>
+    #[serde(rename = "StorageClassAnalysis")]
     pub storage_class_analysis: StorageClassAnalysis,
 }
 
@@ -699,11 +708,11 @@ impl AnalyticsConfigurationListDeserializer {
     }
 }
 /// <p>Where to publish the analytics results.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AnalyticsExportDestination {
     /// <p>A destination signifying output to an S3 bucket.</p>
+    #[serde(rename = "S3BucketDestination")]
     pub s3_bucket_destination: AnalyticsS3BucketDestination,
 }
 
@@ -756,15 +765,20 @@ impl AnalyticsExportDestinationSerializer {
 }
 
 /// <p>The filter used to describe a set of objects for analyses. A filter must have exactly one prefix, one tag, or one conjunction (AnalyticsAndOperator). If no filter is provided, all objects will be considered in any analysis.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AnalyticsFilter {
     /// <p>A conjunction (logical AND) of predicates, which is used in evaluating an analytics filter. The operator must have at least two predicates.</p>
+    #[serde(rename = "And")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub and: Option<AnalyticsAndOperator>,
     /// <p>The prefix to use when evaluating an analytics filter.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
     /// <p>The tag to use when evaluating an analytics filter.</p>
+    #[serde(rename = "Tag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tag: Option<Tag>,
 }
 
@@ -856,17 +870,22 @@ impl AnalyticsIdSerializer {
 }
 
 /// <p>Contains information about where to publish the analytics results.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AnalyticsS3BucketDestination {
     /// <p>The Amazon Resource Name (ARN) of the bucket to which data is exported.</p>
+    #[serde(rename = "Bucket")]
     pub bucket: String,
     /// <p>The account ID that owns the destination bucket. If no account ID is provided, the owner will not be validated prior to exporting data.</p>
+    #[serde(rename = "BucketAccountId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bucket_account_id: Option<String>,
     /// <p>Specifies the file format used when exporting data to Amazon S3.</p>
+    #[serde(rename = "Format")]
     pub format: String,
     /// <p>The prefix to use when exporting data. The prefix is prepended to all results.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
 }
 
@@ -1019,12 +1038,16 @@ impl BodySerializer {
 }
 
 /// <p> In terms of implementation, a Bucket is a resource. An Amazon S3 bucket name is globally unique, and the namespace is shared by all AWS accounts. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Bucket {
     /// <p>Date the bucket was created.</p>
+    #[serde(rename = "CreationDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub creation_date: Option<String>,
     /// <p>The name of the bucket.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
@@ -1336,19 +1359,26 @@ impl CORSConfigurationSerializer {
 }
 
 /// <p>Specifies a cross-origin access rule for an Amazon S3 bucket.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CORSRule {
     /// <p>Headers that are specified in the <code>Access-Control-Request-Headers</code> header. These headers are allowed in a preflight OPTIONS request. In response to any preflight OPTIONS request, Amazon S3 returns any requested headers that are allowed.</p>
+    #[serde(rename = "AllowedHeaders")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub allowed_headers: Option<Vec<String>>,
     /// <p>An HTTP method that you allow the origin to execute. Valid values are <code>GET</code>, <code>PUT</code>, <code>HEAD</code>, <code>POST</code>, and <code>DELETE</code>.</p>
+    #[serde(rename = "AllowedMethods")]
     pub allowed_methods: Vec<String>,
     /// <p>One or more origins you want customers to be able to access the bucket from.</p>
+    #[serde(rename = "AllowedOrigins")]
     pub allowed_origins: Vec<String>,
     /// <p>One or more headers in the response that you want customers to be able to access from their applications (for example, from a JavaScript <code>XMLHttpRequest</code> object).</p>
+    #[serde(rename = "ExposeHeaders")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expose_headers: Option<Vec<String>>,
     /// <p>The time in seconds that your browser is to cache the preflight response for the specified resource.</p>
+    #[serde(rename = "MaxAgeSeconds")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_age_seconds: Option<i64>,
 }
 
@@ -1675,16 +1705,23 @@ impl CloudFunctionSerializer {
 }
 
 /// <p>Container for specifying the AWS Lambda notification configuration.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CloudFunctionConfiguration {
     /// <p>Lambda cloud function ARN that Amazon S3 can invoke when it detects events of the specified type.</p>
+    #[serde(rename = "CloudFunction")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cloud_function: Option<String>,
     /// <p>Bucket events for which to send notifications.</p>
+    #[serde(rename = "Events")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub events: Option<Vec<String>>,
+    #[serde(rename = "Id")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// <p>The role supporting the invocation of the Lambda function</p>
+    #[serde(rename = "InvocationRole")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub invocation_role: Option<String>,
 }
 
@@ -1837,10 +1874,12 @@ impl CommentsSerializer {
 }
 
 /// <p>Container for all (if there are any) keys between Prefix and the next occurrence of the string specified by a delimiter. CommonPrefixes lists keys that act like subdirectories in the directory specified by Prefix. For example, if the prefix is notes/ and the delimiter is a slash (/) as in notes/summer/july, the common prefix is notes/summer/. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CommonPrefix {
     /// <p>Container for the specified common prefix.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
 }
 
@@ -1889,25 +1928,43 @@ impl CommonPrefixListDeserializer {
         Ok(obj)
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CompleteMultipartUploadOutput {
     /// <p>The name of the bucket that contains the newly created object.</p>
+    #[serde(rename = "Bucket")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bucket: Option<String>,
     /// <p>Entity tag that identifies the newly created object's data. Objects with different object data will have different entity tags. The entity tag is an opaque string. The entity tag may or may not be an MD5 digest of the object data. If the entity tag is not an MD5 digest of the object data, it will contain one or more nonhexadecimal characters and/or will consist of less than 32 or more than 32 hexadecimal digits.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>If the object expiration is configured, this will contain the expiration date (expiry-date) and rule ID (rule-id). The value of rule-id is URL encoded.</p>
+    #[serde(rename = "Expiration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expiration: Option<String>,
     /// <p>The object key of the newly created object.</p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>The URI that identifies the newly created object.</p>
+    #[serde(rename = "Location")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
     /// <p>If present, specifies the ID of the AWS Key Management Service (AWS KMS) symmetric customer managed customer master key (CMK) that was used for the object.</p>
+    #[serde(rename = "SSEKMSKeyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssekms_key_id: Option<String>,
     /// <p>If you specified server-side encryption either with an Amazon S3-managed encryption key or an AWS KMS customer master key (CMK) in your initiate multipart upload request, the response includes this header. It confirms the encryption algorithm that Amazon S3 used to encrypt the object.</p>
+    #[serde(rename = "ServerSideEncryption")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub server_side_encryption: Option<String>,
     /// <p>Version ID of the newly created object, in case the bucket has versioning turned on.</p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -2064,13 +2121,16 @@ impl CompressionTypeSerializer {
 }
 
 /// <p>A container for describing a condition that must be met for the specified redirect to apply. For example, 1. If request is for pages in the <code>/docs</code> folder, redirect to the <code>/documents</code> folder. 2. If request results in HTTP error 4xx, redirect request to another host where you might process the error.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Condition {
     /// <p>The HTTP error code when the redirect is applied. In the event of an error, if the error code equals this value, then the specified redirect is applied. Required when parent element <code>Condition</code> is specified and sibling <code>KeyPrefixEquals</code> is not specified. If both are specified, then both must be true for the redirect to be applied.</p>
+    #[serde(rename = "HttpErrorCodeReturnedEquals")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub http_error_code_returned_equals: Option<String>,
     /// <p>The object key name prefix when the redirect is applied. For example, to redirect requests for <code>ExamplePage.html</code>, the key prefix will be <code>ExamplePage.html</code>. To redirect request for all pages with the prefix <code>docs/</code>, the key prefix will be <code>/docs</code>, which identifies all objects in the <code>docs/</code> folder. Required when the parent element <code>Condition</code> is specified and sibling <code>HttpErrorCodeReturnedEquals</code> is not specified. If both conditions are specified, both must be true for the redirect to be applied.</p>
+    #[serde(rename = "KeyPrefixEquals")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key_prefix_equals: Option<String>,
 }
 
@@ -2138,8 +2198,8 @@ impl ConditionSerializer {
 }
 
 /// <p><p/></p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ContinuationEvent {}
 
 struct ContinuationEventDeserializer;
@@ -2158,27 +2218,47 @@ impl ContinuationEventDeserializer {
         Ok(obj)
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CopyObjectOutput {
     /// <p>Container for all response elements.</p>
+    #[serde(rename = "CopyObjectResult")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub copy_object_result: Option<CopyObjectResult>,
     /// <p>Version of the copied object in the destination bucket.</p>
+    #[serde(rename = "CopySourceVersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub copy_source_version_id: Option<String>,
     /// <p>If the object expiration is configured, the response includes this header.</p>
+    #[serde(rename = "Expiration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expiration: Option<String>,
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
     /// <p>If server-side encryption with a customer-provided encryption key was requested, the response will include this header confirming the encryption algorithm used.</p>
+    #[serde(rename = "SSECustomerAlgorithm")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sse_customer_algorithm: Option<String>,
     /// <p>If server-side encryption with a customer-provided encryption key was requested, the response will include this header to provide round-trip message integrity verification of the customer-provided encryption key.</p>
+    #[serde(rename = "SSECustomerKeyMD5")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sse_customer_key_md5: Option<String>,
     /// <p>If present, specifies the AWS KMS Encryption Context to use for object encryption. The value of this header is a base64-encoded UTF-8 string holding JSON with the encryption context key-value pairs.</p>
+    #[serde(rename = "SSEKMSEncryptionContext")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssekms_encryption_context: Option<String>,
     /// <p>If present, specifies the ID of the AWS Key Management Service (AWS KMS) symmetric customer managed customer master key (CMK) that was used for the object.</p>
+    #[serde(rename = "SSEKMSKeyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssekms_key_id: Option<String>,
     /// <p>The server-side encryption algorithm used when storing this object in Amazon S3 (for example, AES256, aws:kms).</p>
+    #[serde(rename = "ServerSideEncryption")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub server_side_encryption: Option<String>,
     /// <p>Version ID of the newly created copy.</p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -2277,12 +2357,16 @@ pub struct CopyObjectRequest {
 }
 
 /// <p>Container for all response elements.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CopyObjectResult {
     /// <p>Returns the ETag of the new object. The ETag reflects only changes to the contents of an object, not its metadata. The source and destination ETag is identical for a successfully copied object.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Returns the date that the object was last modified.</p>
+    #[serde(rename = "LastModified")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_modified: Option<String>,
 }
 
@@ -2311,12 +2395,16 @@ impl CopyObjectResultDeserializer {
     }
 }
 /// <p>Container for all response elements.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CopyPartResult {
     /// <p>Entity tag of the object.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Date and time at which the object was uploaded.</p>
+    #[serde(rename = "LastModified")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_modified: Option<String>,
 }
 
@@ -2376,10 +2464,12 @@ impl CreateBucketConfigurationSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateBucketOutput {
     /// <p>Specifies the Region where the bucket will be created. If you are creating a bucket on the US East (N. Virginia) Region (us-east-1), you do not need to specify the location.</p>
+    #[serde(rename = "Location")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
 }
 
@@ -2422,29 +2512,51 @@ pub struct CreateBucketRequest {
     pub object_lock_enabled_for_bucket: Option<bool>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateMultipartUploadOutput {
     /// <p>If the bucket has a lifecycle rule configured with an action to abort incomplete multipart uploads and the prefix in the lifecycle rule matches the object name in the request, the response includes this header. The header indicates when the initiated multipart upload becomes eligible for an abort operation. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/mpuoverview.html#mpu-abort-incomplete-mpu-lifecycle-config"> Aborting Incomplete Multipart Uploads Using a Bucket Lifecycle Policy</a>.</p> <p>The response also includes the <code>x-amz-abort-rule-id</code> header that provides the ID of the lifecycle configuration rule that defines this action.</p>
+    #[serde(rename = "AbortDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub abort_date: Option<String>,
     /// <p>This header is returned along with the <code>x-amz-abort-date</code> header. It identifies the applicable lifecycle configuration rule that defines the action to abort incomplete multipart uploads.</p>
+    #[serde(rename = "AbortRuleId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub abort_rule_id: Option<String>,
     /// <p>Name of the bucket to which the multipart upload was initiated. </p> <p>When using this API with an access point, you must direct requests to the access point hostname. The access point hostname takes the form <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this operation using an access point through the AWS SDKs, you provide the access point ARN in place of the bucket name. For more information about access point ARNs, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html">Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.</p>
+    #[serde(rename = "Bucket")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bucket: Option<String>,
     /// <p>Object key for which the multipart upload was initiated.</p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
     /// <p>If server-side encryption with a customer-provided encryption key was requested, the response will include this header confirming the encryption algorithm used.</p>
+    #[serde(rename = "SSECustomerAlgorithm")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sse_customer_algorithm: Option<String>,
     /// <p>If server-side encryption with a customer-provided encryption key was requested, the response will include this header to provide round-trip message integrity verification of the customer-provided encryption key.</p>
+    #[serde(rename = "SSECustomerKeyMD5")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sse_customer_key_md5: Option<String>,
     /// <p>If present, specifies the AWS KMS Encryption Context to use for object encryption. The value of this header is a base64-encoded UTF-8 string holding JSON with the encryption context key-value pairs.</p>
+    #[serde(rename = "SSEKMSEncryptionContext")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssekms_encryption_context: Option<String>,
     /// <p>If present, specifies the ID of the AWS Key Management Service (AWS KMS) symmetric customer managed customer master key (CMK) that was used for the object.</p>
+    #[serde(rename = "SSEKMSKeyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssekms_key_id: Option<String>,
     /// <p>The server-side encryption algorithm used when storing this object in Amazon S3 (for example, AES256, aws:kms).</p>
+    #[serde(rename = "ServerSideEncryption")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub server_side_encryption: Option<String>,
     /// <p>ID for the initiated multipart upload.</p>
+    #[serde(rename = "UploadId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub upload_id: Option<String>,
 }
 
@@ -2644,15 +2756,20 @@ impl DaysAfterInitiationSerializer {
 }
 
 /// <p>The container element for specifying the default Object Lock retention settings for new objects placed in the specified bucket.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DefaultRetention {
     /// <p>The number of days that you want to specify for the default retention period.</p>
+    #[serde(rename = "Days")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub days: Option<i64>,
     /// <p>The default Object Lock retention mode you want to apply to new objects placed in the specified bucket.</p>
+    #[serde(rename = "Mode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub mode: Option<String>,
     /// <p>The number of years that you want to specify for the default retention period.</p>
+    #[serde(rename = "Years")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub years: Option<i64>,
 }
 
@@ -2853,18 +2970,28 @@ impl DeleteMarkerDeserializer {
     }
 }
 /// <p>Information about the delete marker.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteMarkerEntry {
     /// <p>Specifies whether the object is (true) or is not (false) the latest version of an object.</p>
+    #[serde(rename = "IsLatest")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_latest: Option<bool>,
     /// <p>The object key.</p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>Date and time the object was last modified.</p>
+    #[serde(rename = "LastModified")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_modified: Option<String>,
     /// <p>The account that created the delete marker.&gt;</p>
+    #[serde(rename = "Owner")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub owner: Option<Owner>,
     /// <p>Version ID of an object.</p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -2905,11 +3032,12 @@ impl DeleteMarkerEntryDeserializer {
     }
 }
 /// <p><p>Specifies whether Amazon S3 replicates the delete markers. If you specify a <code>Filter</code>, you must specify this element. However, in the latest version of replication configuration (when <code>Filter</code> is specified), Amazon S3 doesn&#39;t replicate delete markers. Therefore, the <code>DeleteMarkerReplication</code> element can contain only &lt;Status&gt;Disabled&lt;/Status&gt;. For an example configuration, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/replication-add-config.html#replication-config-min-rule-config">Basic Rule Configuration</a>. </p> <note> <p> If you don&#39;t specify the <code>Filter</code> element, Amazon S3 assumes that the replication configuration is the earlier version, V1. In the earlier version, Amazon S3 handled replication of delete markers differently. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/replication-add-config.html#replication-backward-compat-considerations">Backward Compatibility</a>.</p> </note></p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteMarkerReplication {
     /// <p><p>Indicates whether to replicate delete markers.</p> <note> <p> In the current implementation, Amazon S3 doesn&#39;t replicate the delete markers. The status must be <code>Disabled</code>. </p> </note></p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -3032,13 +3160,19 @@ impl DeleteMarkersDeserializer {
         Ok(obj)
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteObjectOutput {
     /// <p>Specifies whether the versioned object that was permanently deleted was (true) or was not (false) a delete marker.</p>
+    #[serde(rename = "DeleteMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delete_marker: Option<bool>,
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
     /// <p>Returns the version ID of the delete marker created as a result of the DELETE operation.</p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -3074,10 +3208,12 @@ pub struct DeleteObjectRequest {
     pub version_id: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteObjectTaggingOutput {
     /// <p>The versionId of the object the tag-set was removed from.</p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -3108,13 +3244,19 @@ pub struct DeleteObjectTaggingRequest {
     pub version_id: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteObjectsOutput {
     /// <p>Container element for a successful delete. It identifies the object that was successfully deleted.</p>
+    #[serde(rename = "Deleted")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub deleted: Option<Vec<DeletedObject>>,
     /// <p>Container for a failed delete operation that describes the object that Amazon S3 attempted to delete and the error it encountered.</p>
+    #[serde(rename = "Errors")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub errors: Option<Vec<S3Error>>,
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
 }
 
@@ -3165,16 +3307,24 @@ pub struct DeletePublicAccessBlockRequest {
 }
 
 /// <p>Information about the deleted object.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeletedObject {
     /// <p>Specifies whether the versioned object that was permanently deleted was (true) or was not (false) a delete marker. In a simple DELETE, this header indicates whether (true) or not (false) a delete marker was created.</p>
+    #[serde(rename = "DeleteMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delete_marker: Option<bool>,
     /// <p>The version ID of the delete marker created as a result of the DELETE operation. If you delete a specific object version, the value returned by this header is the version ID of the object version deleted.</p>
+    #[serde(rename = "DeleteMarkerVersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delete_marker_version_id: Option<String>,
     /// <p>The name of the deleted object.</p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>The version ID of the deleted object.</p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -3295,23 +3445,35 @@ impl DescriptionSerializer {
 }
 
 /// <p>Specifies information about where to publish analysis or configuration results for an Amazon S3 bucket and S3 Replication Time Control (S3 RTC).</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Destination {
     /// <p>Specify this only in a cross-account scenario (where source and destination bucket owners are not the same), and you want to change replica ownership to the AWS account that owns the destination bucket. If this is not specified in the replication configuration, the replicas are owned by same AWS account that owns the source object.</p>
+    #[serde(rename = "AccessControlTranslation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub access_control_translation: Option<AccessControlTranslation>,
     /// <p>Destination bucket owner account ID. In a cross-account scenario, if you direct Amazon S3 to change replica ownership to the AWS account that owns the destination bucket by specifying the <code>AccessControlTranslation</code> property, this is the account ID of the destination bucket owner. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/replication-change-owner.html">Replication Additional Configuration: Changing the Replica Owner</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.</p>
+    #[serde(rename = "Account")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub account: Option<String>,
     /// <p> The Amazon Resource Name (ARN) of the bucket where you want Amazon S3 to store the results.</p>
+    #[serde(rename = "Bucket")]
     pub bucket: String,
     /// <p>A container that provides information about encryption. If <code>SourceSelectionCriteria</code> is specified, you must specify this element.</p>
+    #[serde(rename = "EncryptionConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub encryption_configuration: Option<EncryptionConfiguration>,
     /// <p> A container specifying replication metrics-related settings enabling metrics and Amazon S3 events for S3 Replication Time Control (S3 RTC). Must be specified together with a <code>ReplicationTime</code> block. </p>
+    #[serde(rename = "Metrics")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metrics: Option<Metrics>,
     /// <p> A container specifying S3 Replication Time Control (S3 RTC), including whether S3 RTC is enabled and the time when all objects and operations on objects must be replicated. Must be specified together with a <code>Metrics</code> block. </p>
+    #[serde(rename = "ReplicationTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub replication_time: Option<ReplicationTime>,
     /// <p> The storage class to use when replicating objects, such as standard or reduced redundancy. By default, Amazon S3 uses the storage class of the source object to create the object replica. </p> <p>For valid values, see the <code>StorageClass</code> element of the <a href="https://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketPUTreplication.html">PUT Bucket replication</a> action in the <i>Amazon Simple Storage Service API Reference</i>.</p>
+    #[serde(rename = "StorageClass")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub storage_class: Option<String>,
 }
 
@@ -3623,11 +3785,12 @@ impl EncryptionSerializer {
 }
 
 /// <p>Specifies encryption-related information for an Amazon S3 bucket that is a destination for replicated objects.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EncryptionConfiguration {
     /// <p>Specifies the ID (Key ARN or Alias ARN) of the customer managed customer master key (CMK) stored in AWS Key Management Service (KMS) for the destination bucket. Amazon S3 uses this key to encrypt replica objects. Amazon S3 only supports symmetric customer managed CMKs. For more information, see <a href="https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html">Using Symmetric and Asymmetric Keys</a> in the <i>AWS Key Management Service Developer Guide</i>.</p>
+    #[serde(rename = "ReplicaKmsKeyID")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub replica_kms_key_id: Option<String>,
 }
 
@@ -3702,8 +3865,8 @@ impl EndSerializer {
 }
 
 /// <p>A message that indicates the request is complete and no more messages will be sent. You should not assume that the request is complete until the client receives an <code>EndEvent</code>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EndEvent {}
 
 struct EndEventDeserializer;
@@ -3723,16 +3886,24 @@ impl EndEventDeserializer {
     }
 }
 /// <p>Container for all error elements.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct S3Error {
     /// <p><p>The error code is a string that uniquely identifies an error condition. It is meant to be read and understood by programs that detect and handle errors by type. </p> <p class="title"> <b>Amazon S3 error codes</b> </p> <ul> <li> <ul> <li> <p> <i>Code:</i> AccessDenied </p> </li> <li> <p> <i>Description:</i> Access Denied</p> </li> <li> <p> <i>HTTP Status Code:</i> 403 Forbidden</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> AccountProblem</p> </li> <li> <p> <i>Description:</i> There is a problem with your AWS account that prevents the operation from completing successfully. Contact AWS Support for further assistance.</p> </li> <li> <p> <i>HTTP Status Code:</i> 403 Forbidden</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> AllAccessDisabled</p> </li> <li> <p> <i>Description:</i> All access to this Amazon S3 resource has been disabled. Contact AWS Support for further assistance.</p> </li> <li> <p> <i>HTTP Status Code:</i> 403 Forbidden</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> AmbiguousGrantByEmailAddress</p> </li> <li> <p> <i>Description:</i> The email address you provided is associated with more than one account.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> AuthorizationHeaderMalformed</p> </li> <li> <p> <i>Description:</i> The authorization header you provided is invalid.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>HTTP Status Code:</i> N/A</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> BadDigest</p> </li> <li> <p> <i>Description:</i> The Content-MD5 you specified did not match what we received.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> BucketAlreadyExists</p> </li> <li> <p> <i>Description:</i> The requested bucket name is not available. The bucket namespace is shared by all users of the system. Please select a different name and try again.</p> </li> <li> <p> <i>HTTP Status Code:</i> 409 Conflict</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> BucketAlreadyOwnedByYou</p> </li> <li> <p> <i>Description:</i> The bucket you tried to create already exists, and you own it. Amazon S3 returns this error in all AWS Regions except in the North Virginia Region. For legacy compatibility, if you re-create an existing bucket that you already own in the North Virginia Region, Amazon S3 returns 200 OK and resets the bucket access control lists (ACLs).</p> </li> <li> <p> <i>Code:</i> 409 Conflict (in all Regions except the North Virginia Region) </p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> BucketNotEmpty</p> </li> <li> <p> <i>Description:</i> The bucket you tried to delete is not empty.</p> </li> <li> <p> <i>HTTP Status Code:</i> 409 Conflict</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> CredentialsNotSupported</p> </li> <li> <p> <i>Description:</i> This request does not support credentials.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> CrossLocationLoggingProhibited</p> </li> <li> <p> <i>Description:</i> Cross-location logging not allowed. Buckets in one geographic location cannot log information to a bucket in another location.</p> </li> <li> <p> <i>HTTP Status Code:</i> 403 Forbidden</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> EntityTooSmall</p> </li> <li> <p> <i>Description:</i> Your proposed upload is smaller than the minimum allowed object size.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> EntityTooLarge</p> </li> <li> <p> <i>Description:</i> Your proposed upload exceeds the maximum allowed object size.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> ExpiredToken</p> </li> <li> <p> <i>Description:</i> The provided token has expired.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> IllegalVersioningConfigurationException </p> </li> <li> <p> <i>Description:</i> Indicates that the versioning configuration specified in the request is invalid.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> IncompleteBody</p> </li> <li> <p> <i>Description:</i> You did not provide the number of bytes specified by the Content-Length HTTP header</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> IncorrectNumberOfFilesInPostRequest</p> </li> <li> <p> <i>Description:</i> POST requires exactly one file upload per request.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InlineDataTooLarge</p> </li> <li> <p> <i>Description:</i> Inline data exceeds the maximum allowed size.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InternalError</p> </li> <li> <p> <i>Description:</i> We encountered an internal error. Please try again.</p> </li> <li> <p> <i>HTTP Status Code:</i> 500 Internal Server Error</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Server</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidAccessKeyId</p> </li> <li> <p> <i>Description:</i> The AWS access key ID you provided does not exist in our records.</p> </li> <li> <p> <i>HTTP Status Code:</i> 403 Forbidden</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidAddressingHeader</p> </li> <li> <p> <i>Description:</i> You must specify the Anonymous role.</p> </li> <li> <p> <i>HTTP Status Code:</i> N/A</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidArgument</p> </li> <li> <p> <i>Description:</i> Invalid Argument</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidBucketName</p> </li> <li> <p> <i>Description:</i> The specified bucket is not valid.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidBucketState</p> </li> <li> <p> <i>Description:</i> The request is not valid with the current state of the bucket.</p> </li> <li> <p> <i>HTTP Status Code:</i> 409 Conflict</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidDigest</p> </li> <li> <p> <i>Description:</i> The Content-MD5 you specified is not valid.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidEncryptionAlgorithmError</p> </li> <li> <p> <i>Description:</i> The encryption request you specified is not valid. The valid value is AES256.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidLocationConstraint</p> </li> <li> <p> <i>Description:</i> The specified location constraint is not valid. For more information about Regions, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html#access-bucket-intro">How to Select a Region for Your Buckets</a>. </p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidObjectState</p> </li> <li> <p> <i>Description:</i> The operation is not valid for the current state of the object.</p> </li> <li> <p> <i>HTTP Status Code:</i> 403 Forbidden</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidPart</p> </li> <li> <p> <i>Description:</i> One or more of the specified parts could not be found. The part might not have been uploaded, or the specified entity tag might not have matched the part&#39;s entity tag.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidPartOrder</p> </li> <li> <p> <i>Description:</i> The list of parts was not in ascending order. Parts list must be specified in order by part number.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidPayer</p> </li> <li> <p> <i>Description:</i> All access to this object has been disabled. Please contact AWS Support for further assistance.</p> </li> <li> <p> <i>HTTP Status Code:</i> 403 Forbidden</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidPolicyDocument</p> </li> <li> <p> <i>Description:</i> The content of the form does not meet the conditions specified in the policy document.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidRange</p> </li> <li> <p> <i>Description:</i> The requested range cannot be satisfied.</p> </li> <li> <p> <i>HTTP Status Code:</i> 416 Requested Range Not Satisfiable</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidRequest</p> </li> <li> <p> <i>Description:</i> Please use AWS4-HMAC-SHA256.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>Code:</i> N/A</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidRequest</p> </li> <li> <p> <i>Description:</i> SOAP requests must be made over an HTTPS connection.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidRequest</p> </li> <li> <p> <i>Description:</i> Amazon S3 Transfer Acceleration is not supported for buckets with non-DNS compliant names.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>Code:</i> N/A</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidRequest</p> </li> <li> <p> <i>Description:</i> Amazon S3 Transfer Acceleration is not supported for buckets with periods (.) in their names.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>Code:</i> N/A</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidRequest</p> </li> <li> <p> <i>Description:</i> Amazon S3 Transfer Accelerate endpoint only supports virtual style requests.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>Code:</i> N/A</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidRequest</p> </li> <li> <p> <i>Description:</i> Amazon S3 Transfer Accelerate is not configured on this bucket.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>Code:</i> N/A</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidRequest</p> </li> <li> <p> <i>Description:</i> Amazon S3 Transfer Accelerate is disabled on this bucket.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>Code:</i> N/A</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidRequest</p> </li> <li> <p> <i>Description:</i> Amazon S3 Transfer Acceleration is not supported on this bucket. Contact AWS Support for more information.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>Code:</i> N/A</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidRequest</p> </li> <li> <p> <i>Description:</i> Amazon S3 Transfer Acceleration cannot be enabled on this bucket. Contact AWS Support for more information.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>Code:</i> N/A</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidSecurity</p> </li> <li> <p> <i>Description:</i> The provided security credentials are not valid.</p> </li> <li> <p> <i>HTTP Status Code:</i> 403 Forbidden</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidSOAPRequest</p> </li> <li> <p> <i>Description:</i> The SOAP request body is invalid.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidStorageClass</p> </li> <li> <p> <i>Description:</i> The storage class you specified is not valid.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidTargetBucketForLogging</p> </li> <li> <p> <i>Description:</i> The target bucket for logging does not exist, is not owned by you, or does not have the appropriate grants for the log-delivery group. </p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidToken</p> </li> <li> <p> <i>Description:</i> The provided token is malformed or otherwise invalid.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> InvalidURI</p> </li> <li> <p> <i>Description:</i> Couldn&#39;t parse the specified URI.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> KeyTooLongError</p> </li> <li> <p> <i>Description:</i> Your key is too long.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> MalformedACLError</p> </li> <li> <p> <i>Description:</i> The XML you provided was not well-formed or did not validate against our published schema.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> MalformedPOSTRequest </p> </li> <li> <p> <i>Description:</i> The body of your POST request is not well-formed multipart/form-data.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> MalformedXML</p> </li> <li> <p> <i>Description:</i> This happens when the user sends malformed XML (XML that doesn&#39;t conform to the published XSD) for the configuration. The error message is, &quot;The XML you provided was not well-formed or did not validate against our published schema.&quot; </p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> MaxMessageLengthExceeded</p> </li> <li> <p> <i>Description:</i> Your request was too big.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> MaxPostPreDataLengthExceededError</p> </li> <li> <p> <i>Description:</i> Your POST request fields preceding the upload file were too large.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> MetadataTooLarge</p> </li> <li> <p> <i>Description:</i> Your metadata headers exceed the maximum allowed metadata size.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> MethodNotAllowed</p> </li> <li> <p> <i>Description:</i> The specified method is not allowed against this resource.</p> </li> <li> <p> <i>HTTP Status Code:</i> 405 Method Not Allowed</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> MissingAttachment</p> </li> <li> <p> <i>Description:</i> A SOAP attachment was expected, but none were found.</p> </li> <li> <p> <i>HTTP Status Code:</i> N/A</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> MissingContentLength</p> </li> <li> <p> <i>Description:</i> You must provide the Content-Length HTTP header.</p> </li> <li> <p> <i>HTTP Status Code:</i> 411 Length Required</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> MissingRequestBodyError</p> </li> <li> <p> <i>Description:</i> This happens when the user sends an empty XML document as a request. The error message is, &quot;Request body is empty.&quot; </p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> MissingSecurityElement</p> </li> <li> <p> <i>Description:</i> The SOAP 1.1 request is missing a security element.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> MissingSecurityHeader</p> </li> <li> <p> <i>Description:</i> Your request is missing a required header.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> NoLoggingStatusForKey</p> </li> <li> <p> <i>Description:</i> There is no such thing as a logging status subresource for a key.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> NoSuchBucket</p> </li> <li> <p> <i>Description:</i> The specified bucket does not exist.</p> </li> <li> <p> <i>HTTP Status Code:</i> 404 Not Found</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> NoSuchBucketPolicy</p> </li> <li> <p> <i>Description:</i> The specified bucket does not have a bucket policy.</p> </li> <li> <p> <i>HTTP Status Code:</i> 404 Not Found</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> NoSuchKey</p> </li> <li> <p> <i>Description:</i> The specified key does not exist.</p> </li> <li> <p> <i>HTTP Status Code:</i> 404 Not Found</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> NoSuchLifecycleConfiguration</p> </li> <li> <p> <i>Description:</i> The lifecycle configuration does not exist. </p> </li> <li> <p> <i>HTTP Status Code:</i> 404 Not Found</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> NoSuchUpload</p> </li> <li> <p> <i>Description:</i> The specified multipart upload does not exist. The upload ID might be invalid, or the multipart upload might have been aborted or completed.</p> </li> <li> <p> <i>HTTP Status Code:</i> 404 Not Found</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> NoSuchVersion </p> </li> <li> <p> <i>Description:</i> Indicates that the version ID specified in the request does not match an existing version.</p> </li> <li> <p> <i>HTTP Status Code:</i> 404 Not Found</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> NotImplemented</p> </li> <li> <p> <i>Description:</i> A header you provided implies functionality that is not implemented.</p> </li> <li> <p> <i>HTTP Status Code:</i> 501 Not Implemented</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Server</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> NotSignedUp</p> </li> <li> <p> <i>Description:</i> Your account is not signed up for the Amazon S3 service. You must sign up before you can use Amazon S3. You can sign up at the following URL: https://aws.amazon.com/s3</p> </li> <li> <p> <i>HTTP Status Code:</i> 403 Forbidden</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> OperationAborted</p> </li> <li> <p> <i>Description:</i> A conflicting conditional operation is currently in progress against this resource. Try again.</p> </li> <li> <p> <i>HTTP Status Code:</i> 409 Conflict</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> PermanentRedirect</p> </li> <li> <p> <i>Description:</i> The bucket you are attempting to access must be addressed using the specified endpoint. Send all future requests to this endpoint.</p> </li> <li> <p> <i>HTTP Status Code:</i> 301 Moved Permanently</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> PreconditionFailed</p> </li> <li> <p> <i>Description:</i> At least one of the preconditions you specified did not hold.</p> </li> <li> <p> <i>HTTP Status Code:</i> 412 Precondition Failed</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> Redirect</p> </li> <li> <p> <i>Description:</i> Temporary redirect.</p> </li> <li> <p> <i>HTTP Status Code:</i> 307 Moved Temporarily</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> RestoreAlreadyInProgress</p> </li> <li> <p> <i>Description:</i> Object restore is already in progress.</p> </li> <li> <p> <i>HTTP Status Code:</i> 409 Conflict</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> RequestIsNotMultiPartContent</p> </li> <li> <p> <i>Description:</i> Bucket POST must be of the enclosure-type multipart/form-data.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> RequestTimeout</p> </li> <li> <p> <i>Description:</i> Your socket connection to the server was not read from or written to within the timeout period.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> RequestTimeTooSkewed</p> </li> <li> <p> <i>Description:</i> The difference between the request time and the server&#39;s time is too large.</p> </li> <li> <p> <i>HTTP Status Code:</i> 403 Forbidden</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> RequestTorrentOfBucketError</p> </li> <li> <p> <i>Description:</i> Requesting the torrent file of a bucket is not permitted.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> SignatureDoesNotMatch</p> </li> <li> <p> <i>Description:</i> The request signature we calculated does not match the signature you provided. Check your AWS secret access key and signing method. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/RESTAuthentication.html">REST Authentication</a> and <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/SOAPAuthentication.html">SOAP Authentication</a> for details.</p> </li> <li> <p> <i>HTTP Status Code:</i> 403 Forbidden</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> ServiceUnavailable</p> </li> <li> <p> <i>Description:</i> Reduce your request rate.</p> </li> <li> <p> <i>HTTP Status Code:</i> 503 Service Unavailable</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Server</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> SlowDown</p> </li> <li> <p> <i>Description:</i> Reduce your request rate.</p> </li> <li> <p> <i>HTTP Status Code:</i> 503 Slow Down</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Server</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> TemporaryRedirect</p> </li> <li> <p> <i>Description:</i> You are being redirected to the bucket while DNS updates.</p> </li> <li> <p> <i>HTTP Status Code:</i> 307 Moved Temporarily</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> TokenRefreshRequired</p> </li> <li> <p> <i>Description:</i> The provided token must be refreshed.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> TooManyBuckets</p> </li> <li> <p> <i>Description:</i> You have attempted to create more buckets than allowed.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> UnexpectedContent</p> </li> <li> <p> <i>Description:</i> This request does not support content.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> UnresolvableGrantByEmailAddress</p> </li> <li> <p> <i>Description:</i> The email address you provided does not match any account on record.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> <li> <ul> <li> <p> <i>Code:</i> UserKeyMustBeSpecified</p> </li> <li> <p> <i>Description:</i> The bucket POST must contain the specified field name. If it is specified, check the order of the fields.</p> </li> <li> <p> <i>HTTP Status Code:</i> 400 Bad Request</p> </li> <li> <p> <i>SOAP Fault Code Prefix:</i> Client</p> </li> </ul> </li> </ul> <p/></p>
+    #[serde(rename = "Code")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
     /// <p>The error key.</p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>The error message contains a generic description of the error condition in English. It is intended for a human audience. Simple programs display the message directly to the end user if they encounter an error condition they don't know how or don't care to handle. Sophisticated programs with more exhaustive error handling and proper internationalization are more likely to ignore the error message.</p>
+    #[serde(rename = "Message")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
     /// <p>The version ID of the error.</p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -3767,11 +3938,11 @@ impl S3ErrorDeserializer {
     }
 }
 /// <p>The error information.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ErrorDocument {
     /// <p>The object key name to use when a 4XX class error occurs.</p>
+    #[serde(rename = "Key")]
     pub key: String,
 }
 
@@ -3922,11 +4093,11 @@ impl EventListSerializer {
 }
 
 /// <p>Optional configuration to replicate existing source bucket objects. For more information, see <a href=" https://docs.aws.amazon.com/AmazonS3/latest/dev/replication-what-is-isnot-replicated.html#existing-object-replication">Replicating Existing Objects</a> in the <i>Amazon S3 Developer Guide</i>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ExistingObjectReplication {
     /// <p><p/></p>
+    #[serde(rename = "Status")]
     pub status: String,
 }
 
@@ -4252,13 +4423,16 @@ impl FileHeaderInfoSerializer {
 }
 
 /// <p>Specifies the Amazon S3 object key name to filter on and whether to filter on the suffix or prefix of the key name.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FilterRule {
     /// <p>The object key name prefix or suffix identifying one or more objects to which the filtering rule applies. The maximum length is 1,024 characters. Overlapping prefixes and suffixes are not supported. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html">Configuring Event Notifications</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p>The value that the filter searches for in object key names.</p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -4426,10 +4600,12 @@ impl FilterRuleValueSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketAccelerateConfigurationOutput {
     /// <p>The accelerate configuration of the bucket.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -4464,12 +4640,16 @@ pub struct GetBucketAccelerateConfigurationRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketAclOutput {
     /// <p>A list of grants.</p>
+    #[serde(rename = "Grants")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub grants: Option<Vec<Grant>>,
     /// <p>Container for the bucket owner's display name and ID.</p>
+    #[serde(rename = "Owner")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub owner: Option<Owner>,
 }
 
@@ -4503,10 +4683,12 @@ pub struct GetBucketAclRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketAnalyticsConfigurationOutput {
     /// <p>The configuration and any analyses for the analytics filter.</p>
+    #[serde(rename = "AnalyticsConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub analytics_configuration: Option<AnalyticsConfiguration>,
 }
 
@@ -4535,10 +4717,12 @@ pub struct GetBucketAnalyticsConfigurationRequest {
     pub id: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketCorsOutput {
     /// <p>A set of origins and methods (cross-origin access that you want to allow). You can add up to 100 rules to the configuration.</p>
+    #[serde(rename = "CORSRules")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cors_rules: Option<Vec<CORSRule>>,
 }
 
@@ -4569,9 +4753,11 @@ pub struct GetBucketCorsRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketEncryptionOutput {
+    #[serde(rename = "ServerSideEncryptionConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub server_side_encryption_configuration: Option<ServerSideEncryptionConfiguration>,
 }
 
@@ -4600,10 +4786,12 @@ pub struct GetBucketEncryptionRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketInventoryConfigurationOutput {
     /// <p>Specifies the inventory configuration.</p>
+    #[serde(rename = "InventoryConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub inventory_configuration: Option<InventoryConfiguration>,
 }
 
@@ -4632,10 +4820,12 @@ pub struct GetBucketInventoryConfigurationRequest {
     pub id: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketLifecycleConfigurationOutput {
     /// <p>Container for a lifecycle rule.</p>
+    #[serde(rename = "Rules")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rules: Option<Vec<LifecycleRule>>,
 }
 
@@ -4670,10 +4860,12 @@ pub struct GetBucketLifecycleConfigurationRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketLifecycleOutput {
     /// <p>Container for a lifecycle rule.</p>
+    #[serde(rename = "Rules")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rules: Option<Vec<Rule>>,
 }
 
@@ -4708,10 +4900,12 @@ pub struct GetBucketLifecycleRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketLocationOutput {
     /// <p>Specifies the Region where the bucket resides. For a list of all the Amazon S3 supported location constraints by Region, see <a href="https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region">Regions and Endpoints</a>.</p>
+    #[serde(rename = "LocationConstraint")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location_constraint: Option<String>,
 }
 
@@ -4737,9 +4931,11 @@ pub struct GetBucketLocationRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketLoggingOutput {
+    #[serde(rename = "LoggingEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub logging_enabled: Option<LoggingEnabled>,
 }
 
@@ -4771,10 +4967,12 @@ pub struct GetBucketLoggingRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketMetricsConfigurationOutput {
     /// <p>Specifies the metrics configuration.</p>
+    #[serde(rename = "MetricsConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metrics_configuration: Option<MetricsConfiguration>,
 }
 
@@ -4823,10 +5021,12 @@ pub struct GetBucketPolicyRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketPolicyStatusOutput {
     /// <p>The policy status for the specified bucket.</p>
+    #[serde(rename = "PolicyStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_status: Option<PolicyStatus>,
 }
 
@@ -4853,9 +5053,11 @@ pub struct GetBucketPolicyStatusRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketReplicationOutput {
+    #[serde(rename = "ReplicationConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub replication_configuration: Option<ReplicationConfiguration>,
 }
 
@@ -4882,10 +5084,12 @@ pub struct GetBucketReplicationRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketRequestPaymentOutput {
     /// <p>Specifies who pays for the download and request fees.</p>
+    #[serde(rename = "Payer")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub payer: Option<String>,
 }
 
@@ -4918,10 +5122,11 @@ pub struct GetBucketRequestPaymentRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketTaggingOutput {
     /// <p>Contains the tag set.</p>
+    #[serde(rename = "TagSet")]
     pub tag_set: Vec<Tag>,
 }
 
@@ -4951,12 +5156,16 @@ pub struct GetBucketTaggingRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketVersioningOutput {
     /// <p>Specifies whether MFA delete is enabled in the bucket versioning configuration. This element is only returned if the bucket has been configured with MFA delete. If the bucket has never been so configured, this element is not returned.</p>
+    #[serde(rename = "MFADelete")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub mfa_delete: Option<String>,
     /// <p>The versioning state of the bucket.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -4997,16 +5206,24 @@ pub struct GetBucketVersioningRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetBucketWebsiteOutput {
     /// <p>The name of the error document for the website.</p>
+    #[serde(rename = "ErrorDocument")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub error_document: Option<ErrorDocument>,
     /// <p>The name of the index document for the website.</p>
+    #[serde(rename = "IndexDocument")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub index_document: Option<IndexDocument>,
     /// <p>Specifies the redirect behavior of all requests to a website endpoint of an Amazon S3 bucket.</p>
+    #[serde(rename = "RedirectAllRequestsTo")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub redirect_all_requests_to: Option<RedirectAllRequestsTo>,
     /// <p>Rules that define when a redirect is applied and the redirect behavior.</p>
+    #[serde(rename = "RoutingRules")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub routing_rules: Option<Vec<RoutingRule>>,
 }
 
@@ -5056,13 +5273,19 @@ pub struct GetBucketWebsiteRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetObjectAclOutput {
     /// <p>A list of grants.</p>
+    #[serde(rename = "Grants")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub grants: Option<Vec<Grant>>,
     /// <p> Container for the bucket owner's display name and ID.</p>
+    #[serde(rename = "Owner")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub owner: Option<Owner>,
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
 }
 
@@ -5101,10 +5324,12 @@ pub struct GetObjectAclRequest {
     pub version_id: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetObjectLegalHoldOutput {
     /// <p>The current Legal Hold status for the specified object.</p>
+    #[serde(rename = "LegalHold")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub legal_hold: Option<ObjectLockLegalHold>,
 }
 
@@ -5136,10 +5361,12 @@ pub struct GetObjectLegalHoldRequest {
     pub version_id: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetObjectLockConfigurationOutput {
     /// <p>The specified bucket's Object Lock configuration.</p>
+    #[serde(rename = "ObjectLockConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub object_lock_configuration: Option<ObjectLockConfiguration>,
 }
 
@@ -5273,10 +5500,12 @@ pub struct GetObjectRequest {
     pub version_id: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetObjectRetentionOutput {
     /// <p>The container element for an object's retention settings.</p>
+    #[serde(rename = "Retention")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub retention: Option<ObjectLockRetention>,
 }
 
@@ -5308,12 +5537,15 @@ pub struct GetObjectRetentionRequest {
     pub version_id: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetObjectTaggingOutput {
     /// <p>Contains the tag set.</p>
+    #[serde(rename = "TagSet")]
     pub tag_set: Vec<Tag>,
     /// <p>The versionId of the object for which you got the tagging information.</p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -5364,10 +5596,12 @@ pub struct GetObjectTorrentRequest {
     pub request_payer: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetPublicAccessBlockOutput {
     /// <p>The <code>PublicAccessBlock</code> configuration currently in effect for this Amazon S3 bucket.</p>
+    #[serde(rename = "PublicAccessBlockConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub public_access_block_configuration: Option<PublicAccessBlockConfiguration>,
 }
 
@@ -5427,13 +5661,16 @@ impl GlacierJobParametersSerializer {
 }
 
 /// <p>Container for grant information.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Grant {
     /// <p>The person being granted permissions.</p>
+    #[serde(rename = "Grantee")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub grantee: Option<Grantee>,
     /// <p>Specifies the permission given to the grantee.</p>
+    #[serde(rename = "Permission")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permission: Option<String>,
 }
 
@@ -5485,19 +5722,27 @@ impl GrantSerializer {
 }
 
 /// <p>Container for the person being granted permissions.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Grantee {
     /// <p>Screen name of the grantee.</p>
+    #[serde(rename = "DisplayName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub display_name: Option<String>,
     /// <p>Email address of the grantee.</p>
+    #[serde(rename = "EmailAddress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub email_address: Option<String>,
     /// <p>The canonical user ID of the grantee.</p>
+    #[serde(rename = "ID")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// <p>Type of grantee</p>
+    #[serde(rename = "Type")]
     pub type_: String,
     /// <p>URI of the grantee group.</p>
+    #[serde(rename = "URI")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub uri: Option<String>,
 }
 
@@ -5635,63 +5880,119 @@ pub struct HeadBucketRequest {
     pub bucket: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct HeadObjectOutput {
     /// <p>Indicates that a range of bytes was specified.</p>
+    #[serde(rename = "AcceptRanges")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub accept_ranges: Option<String>,
     /// <p>Specifies caching behavior along the request/reply chain.</p>
+    #[serde(rename = "CacheControl")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cache_control: Option<String>,
     /// <p>Specifies presentational information for the object.</p>
+    #[serde(rename = "ContentDisposition")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub content_disposition: Option<String>,
     /// <p>Specifies what content encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.</p>
+    #[serde(rename = "ContentEncoding")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub content_encoding: Option<String>,
     /// <p>The language the content is in.</p>
+    #[serde(rename = "ContentLanguage")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub content_language: Option<String>,
     /// <p>Size of the body in bytes.</p>
+    #[serde(rename = "ContentLength")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub content_length: Option<i64>,
     /// <p>A standard MIME type describing the format of the object data.</p>
+    #[serde(rename = "ContentType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub content_type: Option<String>,
     /// <p>Specifies whether the object retrieved was (true) or was not (false) a Delete Marker. If false, this response header does not appear in the response.</p>
+    #[serde(rename = "DeleteMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delete_marker: Option<bool>,
     /// <p>An ETag is an opaque identifier assigned by a web server to a specific version of a resource found at a URL.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>If the object expiration is configured (see PUT Bucket lifecycle), the response includes this header. It includes the expiry-date and rule-id key-value pairs providing object expiration information. The value of the rule-id is URL encoded.</p>
+    #[serde(rename = "Expiration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expiration: Option<String>,
     /// <p>The date and time at which the object is no longer cacheable.</p>
+    #[serde(rename = "Expires")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expires: Option<String>,
     /// <p>Last modified date of the object</p>
+    #[serde(rename = "LastModified")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_modified: Option<String>,
     /// <p>A map of metadata to store with the object in S3.</p>
+    #[serde(rename = "Metadata")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metadata: Option<::std::collections::HashMap<String, String>>,
     /// <p>This is set to the number of metadata entries not returned in <code>x-amz-meta</code> headers. This can happen if you create metadata using an API like SOAP that supports more flexible metadata than the REST API. For example, using SOAP, you can create metadata whose values are not legal HTTP headers.</p>
+    #[serde(rename = "MissingMeta")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub missing_meta: Option<i64>,
     /// <p>Specifies whether a legal hold is in effect for this object. This header is only returned if the requester has the <code>s3:GetObjectLegalHold</code> permission. This header is not returned if the specified version of this object has never had a legal hold applied. For more information about S3 Object Lock, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lock.html">Object Lock</a>.</p>
+    #[serde(rename = "ObjectLockLegalHoldStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub object_lock_legal_hold_status: Option<String>,
     /// <p>The Object Lock mode, if any, that's in effect for this object. This header is only returned if the requester has the <code>s3:GetObjectRetention</code> permission. For more information about S3 Object Lock, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lock.html">Object Lock</a>. </p>
+    #[serde(rename = "ObjectLockMode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub object_lock_mode: Option<String>,
     /// <p>The date and time when the Object Lock retention period expires. This header is only returned if the requester has the <code>s3:GetObjectRetention</code> permission.</p>
+    #[serde(rename = "ObjectLockRetainUntilDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub object_lock_retain_until_date: Option<String>,
     /// <p>The count of parts this object has.</p>
+    #[serde(rename = "PartsCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parts_count: Option<i64>,
     /// <p>Amazon S3 can return this header if your request involves a bucket that is either a source or destination in a replication rule.</p> <p>In replication, you have a source bucket on which you configure replication and destination bucket where Amazon S3 stores object replicas. When you request an object (<code>GetObject</code>) or object metadata (<code>HeadObject</code>) from these buckets, Amazon S3 will return the <code>x-amz-replication-status</code> header in the response as follows:</p> <ul> <li> <p>If requesting an object from the source bucket — Amazon S3 will return the <code>x-amz-replication-status</code> header if the object in your request is eligible for replication.</p> <p> For example, suppose that in your replication configuration, you specify object prefix <code>TaxDocs</code> requesting Amazon S3 to replicate objects with key prefix <code>TaxDocs</code>. Any objects you upload with this key name prefix, for example <code>TaxDocs/document1.pdf</code>, are eligible for replication. For any object request with this key name prefix, Amazon S3 will return the <code>x-amz-replication-status</code> header with value PENDING, COMPLETED or FAILED indicating object replication status.</p> </li> <li> <p>If requesting an object from the destination bucket — Amazon S3 will return the <code>x-amz-replication-status</code> header with value REPLICA if the object in your request is a replica that Amazon S3 created.</p> </li> </ul> <p>For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html">Replication</a>.</p>
+    #[serde(rename = "ReplicationStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub replication_status: Option<String>,
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
     /// <p>If the object is an archived object (an object whose storage class is GLACIER), the response includes this header if either the archive restoration is in progress (see <a>RestoreObject</a> or an archive copy is already restored.</p> <p> If an archive copy is already restored, the header value indicates when Amazon S3 is scheduled to delete the object copy. For example:</p> <p> <code>x-amz-restore: ongoing-request="false", expiry-date="Fri, 23 Dec 2012 00:00:00 GMT"</code> </p> <p>If the object restoration is in progress, the header returns the value <code>ongoing-request="true"</code>.</p> <p>For more information about archiving objects, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html#lifecycle-transition-general-considerations">Transitioning Objects: General Considerations</a>.</p>
+    #[serde(rename = "Restore")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub restore: Option<String>,
     /// <p>If server-side encryption with a customer-provided encryption key was requested, the response will include this header confirming the encryption algorithm used.</p>
+    #[serde(rename = "SSECustomerAlgorithm")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sse_customer_algorithm: Option<String>,
     /// <p>If server-side encryption with a customer-provided encryption key was requested, the response will include this header to provide round-trip message integrity verification of the customer-provided encryption key.</p>
+    #[serde(rename = "SSECustomerKeyMD5")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sse_customer_key_md5: Option<String>,
     /// <p>If present, specifies the ID of the AWS Key Management Service (AWS KMS) symmetric customer managed customer master key (CMK) that was used for the object.</p>
+    #[serde(rename = "SSEKMSKeyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssekms_key_id: Option<String>,
     /// <p>If the object is stored using server-side encryption either with an AWS KMS customer master key (CMK) or an Amazon S3-managed encryption key, the response includes this header with the value of the server-side encryption algorithm used when storing this object in Amazon S3 (for example, AES256, aws:kms).</p>
+    #[serde(rename = "ServerSideEncryption")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub server_side_encryption: Option<String>,
     /// <p>Provides storage class information of the object. Amazon S3 returns this header for all objects except for Standard storage class objects.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/storage-class-intro.html">Storage Classes</a>.</p>
+    #[serde(rename = "StorageClass")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub storage_class: Option<String>,
     /// <p>Version of the object.</p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
     /// <p>If the bucket is configured as a website, redirects requests for this object to another object in the same bucket or to an external URL. Amazon S3 stores the value of this header in the object metadata.</p>
+    #[serde(rename = "WebsiteRedirectLocation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub website_redirect_location: Option<String>,
 }
 
@@ -5870,11 +6171,11 @@ impl IDSerializer {
 }
 
 /// <p>Container for the <code>Suffix</code> element.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct IndexDocument {
     /// <p>A suffix that is appended to a request that is for a directory on the website endpoint (for example,if the suffix is index.html and you make a request to samplebucket/images/ the data that is returned will be for the object with the key name images/index.html) The suffix must not be empty and must not include a slash character.</p>
+    #[serde(rename = "Suffix")]
     pub suffix: String,
 }
 
@@ -5931,12 +6232,16 @@ impl InitiatedDeserializer {
     }
 }
 /// <p>Container element that identifies who initiated the multipart upload. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Initiator {
     /// <p>Name of the Principal.</p>
+    #[serde(rename = "DisplayName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub display_name: Option<String>,
     /// <p>If the principal is an AWS account, it provides the Canonical User ID. If the principal is an IAM User, it provides a user ARN value.</p>
+    #[serde(rename = "ID")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 }
 
@@ -6010,23 +6315,31 @@ impl InputSerializationSerializer {
 }
 
 /// <p>Specifies the inventory configuration for an Amazon S3 bucket. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketGETInventoryConfig.html">GET Bucket inventory</a> in the <i>Amazon Simple Storage Service API Reference</i>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InventoryConfiguration {
     /// <p>Contains information about where to publish the inventory results.</p>
+    #[serde(rename = "Destination")]
     pub destination: InventoryDestination,
     /// <p>Specifies an inventory filter. The inventory only includes objects that meet the filter's criteria.</p>
+    #[serde(rename = "Filter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub filter: Option<InventoryFilter>,
     /// <p>The ID used to identify the inventory configuration.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>Object versions to include in the inventory list. If set to <code>All</code>, the list includes all the object versions, which adds the version-related fields <code>VersionId</code>, <code>IsLatest</code>, and <code>DeleteMarker</code> to the list. If set to <code>Current</code>, the list does not contain these version-related fields.</p>
+    #[serde(rename = "IncludedObjectVersions")]
     pub included_object_versions: String,
     /// <p>Specifies whether the inventory is enabled or disabled. If set to <code>True</code>, an inventory list is generated. If set to <code>False</code>, no inventory list is generated.</p>
+    #[serde(rename = "IsEnabled")]
     pub is_enabled: bool,
     /// <p>Contains the optional fields that are included in the inventory results.</p>
+    #[serde(rename = "OptionalFields")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub optional_fields: Option<Vec<String>>,
     /// <p>Specifies the schedule for generating inventory results.</p>
+    #[serde(rename = "Schedule")]
     pub schedule: InventorySchedule,
 }
 
@@ -6148,11 +6461,11 @@ impl InventoryConfigurationListDeserializer {
     }
 }
 /// <p>Specifies the inventory configuration for an Amazon S3 bucket.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InventoryDestination {
     /// <p>Contains the bucket name, file format, bucket owner (optional), and prefix (optional) where inventory results are published.</p>
+    #[serde(rename = "S3BucketDestination")]
     pub s3_bucket_destination: InventoryS3BucketDestination,
 }
 
@@ -6201,13 +6514,16 @@ impl InventoryDestinationSerializer {
 }
 
 /// <p>Contains the type of server-side encryption used to encrypt the inventory results.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InventoryEncryption {
     /// <p>Specifies the use of SSE-KMS to encrypt delivered inventory reports.</p>
+    #[serde(rename = "SSEKMS")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssekms: Option<SSEKMS>,
     /// <p>Specifies the use of SSE-S3 to encrypt delivered inventory reports.</p>
+    #[serde(rename = "SSES3")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sses3: Option<SSES3>,
 }
 
@@ -6256,11 +6572,11 @@ impl InventoryEncryptionSerializer {
 }
 
 /// <p>Specifies an inventory filter. The inventory only includes objects that meet the filter's criteria.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InventoryFilter {
     /// <p>The prefix that an object must have to be included in the inventory results.</p>
+    #[serde(rename = "Prefix")]
     pub prefix: String,
 }
 
@@ -6506,19 +6822,26 @@ impl InventoryOptionalFieldsSerializer {
 }
 
 /// <p>Contains the bucket name, file format, bucket owner (optional), and prefix (optional) where inventory results are published.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InventoryS3BucketDestination {
     /// <p>The ID of the account that owns the destination bucket.</p>
+    #[serde(rename = "AccountId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub account_id: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the bucket where inventory results will be published.</p>
+    #[serde(rename = "Bucket")]
     pub bucket: String,
     /// <p>Contains the type of server-side encryption used to encrypt the inventory results.</p>
+    #[serde(rename = "Encryption")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub encryption: Option<InventoryEncryption>,
     /// <p>Specifies the output format of the inventory results.</p>
+    #[serde(rename = "Format")]
     pub format: String,
     /// <p>The prefix that is prepended to all inventory results.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
 }
 
@@ -6609,11 +6932,11 @@ impl InventoryS3BucketDestinationSerializer {
 }
 
 /// <p>Specifies the schedule for generating inventory results.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InventorySchedule {
     /// <p>Specifies how frequently inventory results are produced.</p>
+    #[serde(rename = "Frequency")]
     pub frequency: String,
 }
 
@@ -6936,15 +7259,20 @@ impl LambdaFunctionArnSerializer {
 }
 
 /// <p>A container for specifying the configuration for AWS Lambda notifications.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LambdaFunctionConfiguration {
     /// <p>The Amazon S3 bucket event for which to invoke the AWS Lambda function. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html">Supported Event Types</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.</p>
+    #[serde(rename = "Events")]
     pub events: Vec<String>,
+    #[serde(rename = "Filter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub filter: Option<NotificationConfigurationFilter>,
+    #[serde(rename = "Id")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the AWS Lambda function that Amazon S3 invokes when the specified event type occurs.</p>
+    #[serde(rename = "LambdaFunctionArn")]
     pub lambda_function_arn: String,
 }
 
@@ -7104,15 +7432,20 @@ impl LifecycleConfigurationSerializer {
 }
 
 /// <p>Container for the expiration for the lifecycle of the object.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LifecycleExpiration {
     /// <p>Indicates at what date the object is to be moved or deleted. Should be in GMT ISO 8601 Format.</p>
+    #[serde(rename = "Date")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date: Option<String>,
     /// <p>Indicates the lifetime, in days, of the objects that are subject to the rule. The value must be a non-zero positive integer.</p>
+    #[serde(rename = "Days")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub days: Option<i64>,
     /// <p>Indicates whether Amazon S3 will remove a delete marker with no noncurrent versions. If set to true, the delete marker will be expired; if set to false the policy takes no action. This cannot be specified with Days or Date in a Lifecycle Expiration Policy.</p>
+    #[serde(rename = "ExpiredObjectDeleteMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expired_object_delete_marker: Option<bool>,
 }
 
@@ -7188,22 +7521,36 @@ impl LifecycleExpirationSerializer {
 }
 
 /// <p>A lifecycle rule for individual objects in an Amazon S3 bucket.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LifecycleRule {
+    #[serde(rename = "AbortIncompleteMultipartUpload")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub abort_incomplete_multipart_upload: Option<AbortIncompleteMultipartUpload>,
     /// <p>Specifies the expiration for the lifecycle of the object in the form of date, days and, whether the object has a delete marker.</p>
+    #[serde(rename = "Expiration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expiration: Option<LifecycleExpiration>,
+    #[serde(rename = "Filter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub filter: Option<LifecycleRuleFilter>,
     /// <p>Unique identifier for the rule. The value cannot be longer than 255 characters.</p>
+    #[serde(rename = "ID")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
+    #[serde(rename = "NoncurrentVersionExpiration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub noncurrent_version_expiration: Option<NoncurrentVersionExpiration>,
     /// <p> Specifies the transition rule for the lifecycle rule that describes when noncurrent objects transition to a specific storage class. If your bucket is versioning-enabled (or versioning is suspended), you can set this action to request that Amazon S3 transition noncurrent object versions to a specific storage class at a set period in the object's lifetime. </p>
+    #[serde(rename = "NoncurrentVersionTransitions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub noncurrent_version_transitions: Option<Vec<NoncurrentVersionTransition>>,
     /// <p>If 'Enabled', the rule is currently being applied. If 'Disabled', the rule is not currently being applied.</p>
+    #[serde(rename = "Status")]
     pub status: String,
     /// <p>Specifies when an Amazon S3 object transitions to a specified storage class.</p>
+    #[serde(rename = "Transitions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub transitions: Option<Vec<Transition>>,
 }
 
@@ -7328,13 +7675,16 @@ impl LifecycleRuleSerializer {
 }
 
 /// <p>This is used in a Lifecycle Rule Filter to apply a logical AND to two or more predicates. The Lifecycle Rule will apply to any object matching all of the predicates configured inside the And operator.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LifecycleRuleAndOperator {
     /// <p>Prefix identifying one or more objects to which the rule applies.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
     /// <p>All of these tags must exist in the object's tag set in order for the rule to apply.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
 }
 
@@ -7394,14 +7744,19 @@ impl LifecycleRuleAndOperatorSerializer {
 }
 
 /// <p>The <code>Filter</code> is used to identify objects that a Lifecycle Rule applies to. A <code>Filter</code> must have exactly one of <code>Prefix</code>, <code>Tag</code>, or <code>And</code> specified.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LifecycleRuleFilter {
+    #[serde(rename = "And")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub and: Option<LifecycleRuleAndOperator>,
     /// <p>Prefix identifying one or more objects to which the rule applies.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
     /// <p>This tag must exist in the object's tag set in order for the rule to apply.</p>
+    #[serde(rename = "Tag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tag: Option<Tag>,
 }
 
@@ -7508,16 +7863,24 @@ impl LifecycleRulesSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListBucketAnalyticsConfigurationsOutput {
     /// <p>The list of analytics configurations for a bucket.</p>
+    #[serde(rename = "AnalyticsConfigurationList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub analytics_configuration_list: Option<Vec<AnalyticsConfiguration>>,
     /// <p>The marker that is used as a starting point for this analytics configuration list response. This value is present if it was sent in the request.</p>
+    #[serde(rename = "ContinuationToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub continuation_token: Option<String>,
     /// <p>Indicates whether the returned list of analytics configurations is complete. A value of true indicates that the list is not complete and the NextContinuationToken will be provided for a subsequent request.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p> <code>NextContinuationToken</code> is sent when <code>isTruncated</code> is true, which indicates that there are more analytics configurations to list. The next request must include this <code>NextContinuationToken</code>. The token is obfuscated and is not a usable value.</p>
+    #[serde(rename = "NextContinuationToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_continuation_token: Option<String>,
 }
 
@@ -7571,16 +7934,24 @@ pub struct ListBucketAnalyticsConfigurationsRequest {
     pub continuation_token: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListBucketInventoryConfigurationsOutput {
     /// <p>If sent in the request, the marker that is used as a starting point for this inventory configuration list response.</p>
+    #[serde(rename = "ContinuationToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub continuation_token: Option<String>,
     /// <p>The list of inventory configurations for a bucket.</p>
+    #[serde(rename = "InventoryConfigurationList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub inventory_configuration_list: Option<Vec<InventoryConfiguration>>,
     /// <p>Tells whether the returned list of inventory configurations is complete. A value of true indicates that the list is not complete and the NextContinuationToken is provided for a subsequent request.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>The marker used to continue this inventory configuration listing. Use the <code>NextContinuationToken</code> from this response to continue the listing in a subsequent request. The continuation token is an opaque value that Amazon S3 understands.</p>
+    #[serde(rename = "NextContinuationToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_continuation_token: Option<String>,
 }
 
@@ -7634,16 +8005,24 @@ pub struct ListBucketInventoryConfigurationsRequest {
     pub continuation_token: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListBucketMetricsConfigurationsOutput {
     /// <p>The marker that is used as a starting point for this metrics configuration list response. This value is present if it was sent in the request.</p>
+    #[serde(rename = "ContinuationToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub continuation_token: Option<String>,
     /// <p>Indicates whether the returned list of metrics configurations is complete. A value of true indicates that the list is not complete and the NextContinuationToken will be provided for a subsequent request.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>The list of metrics configurations for a bucket.</p>
+    #[serde(rename = "MetricsConfigurationList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metrics_configuration_list: Option<Vec<MetricsConfiguration>>,
     /// <p>The marker used to continue a metrics configuration listing that has been truncated. Use the <code>NextContinuationToken</code> from a previously truncated list response to continue the listing. The continuation token is an opaque value that Amazon S3 understands.</p>
+    #[serde(rename = "NextContinuationToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_continuation_token: Option<String>,
 }
 
@@ -7697,12 +8076,16 @@ pub struct ListBucketMetricsConfigurationsRequest {
     pub continuation_token: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListBucketsOutput {
     /// <p>The list of buckets owned by the requestor.</p>
+    #[serde(rename = "Buckets")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub buckets: Option<Vec<Bucket>>,
     /// <p>The owner of the buckets listed.</p>
+    #[serde(rename = "Owner")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub owner: Option<Owner>,
 }
 
@@ -7729,32 +8112,56 @@ impl ListBucketsOutputDeserializer {
         })
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListMultipartUploadsOutput {
     /// <p>Name of the bucket to which the multipart upload was initiated.</p>
+    #[serde(rename = "Bucket")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bucket: Option<String>,
     /// <p>If you specify a delimiter in the request, then the result returns each distinct key prefix containing the delimiter in a <code>CommonPrefixes</code> element. The distinct key prefixes are returned in the <code>Prefix</code> child element.</p>
+    #[serde(rename = "CommonPrefixes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub common_prefixes: Option<Vec<CommonPrefix>>,
     /// <p>Contains the delimiter you specified in the request. If you don't specify a delimiter in your request, this element is absent from the response.</p>
+    #[serde(rename = "Delimiter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delimiter: Option<String>,
     /// <p>Encoding type used by Amazon S3 to encode object keys in the response.</p> <p>If you specify <code>encoding-type</code> request parameter, Amazon S3 includes this element in the response, and returns encoded key name values in the following response elements:</p> <p> <code>Delimiter</code>, <code>KeyMarker</code>, <code>Prefix</code>, <code>NextKeyMarker</code>, <code>Key</code>.</p>
+    #[serde(rename = "EncodingType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub encoding_type: Option<String>,
     /// <p>Indicates whether the returned list of multipart uploads is truncated. A value of true indicates that the list was truncated. The list can be truncated if the number of multipart uploads exceeds the limit allowed or specified by max uploads.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>The key at or after which the listing began.</p>
+    #[serde(rename = "KeyMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key_marker: Option<String>,
     /// <p>Maximum number of multipart uploads that could have been included in the response.</p>
+    #[serde(rename = "MaxUploads")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_uploads: Option<i64>,
     /// <p>When a list is truncated, this element specifies the value that should be used for the key-marker request parameter in a subsequent request.</p>
+    #[serde(rename = "NextKeyMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_key_marker: Option<String>,
     /// <p>When a list is truncated, this element specifies the value that should be used for the <code>upload-id-marker</code> request parameter in a subsequent request.</p>
+    #[serde(rename = "NextUploadIdMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_upload_id_marker: Option<String>,
     /// <p>When a prefix is provided in the request, this field contains the specified prefix. The result contains only keys starting with the specified prefix.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
     /// <p>Upload ID after which listing began.</p>
+    #[serde(rename = "UploadIdMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub upload_id_marker: Option<String>,
     /// <p>Container for elements related to a particular multipart upload. A response can contain zero or more <code>Upload</code> elements.</p>
+    #[serde(rename = "Uploads")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub uploads: Option<Vec<MultipartUpload>>,
 }
 
@@ -7852,34 +8259,60 @@ pub struct ListMultipartUploadsRequest {
     pub upload_id_marker: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListObjectVersionsOutput {
     /// <p>All of the keys rolled up into a common prefix count as a single return when calculating the number of returns.</p>
+    #[serde(rename = "CommonPrefixes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub common_prefixes: Option<Vec<CommonPrefix>>,
     /// <p>Container for an object that is a delete marker.</p>
+    #[serde(rename = "DeleteMarkers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delete_markers: Option<Vec<DeleteMarkerEntry>>,
     /// <p>The delimiter grouping the included keys. A delimiter is a character that you specify to group keys. All keys that contain the same string between the prefix and the first occurrence of the delimiter are grouped under a single result element in <code>CommonPrefixes</code>. These groups are counted as one result against the max-keys limitation. These keys are not returned elsewhere in the response.</p>
+    #[serde(rename = "Delimiter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delimiter: Option<String>,
     /// <p> Encoding type used by Amazon S3 to encode object key names in the XML response.</p> <p>If you specify encoding-type request parameter, Amazon S3 includes this element in the response, and returns encoded key name values in the following response elements:</p> <p> <code>KeyMarker, NextKeyMarker, Prefix, Key</code>, and <code>Delimiter</code>.</p>
+    #[serde(rename = "EncodingType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub encoding_type: Option<String>,
     /// <p>A flag that indicates whether Amazon S3 returned all of the results that satisfied the search criteria. If your results were truncated, you can make a follow-up paginated request using the NextKeyMarker and NextVersionIdMarker response parameters as a starting place in another request to return the rest of the results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>Marks the last key returned in a truncated response.</p>
+    #[serde(rename = "KeyMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key_marker: Option<String>,
     /// <p>Specifies the maximum number of objects to return.</p>
+    #[serde(rename = "MaxKeys")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_keys: Option<i64>,
     /// <p>Bucket name.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p>When the number of responses exceeds the value of <code>MaxKeys</code>, <code>NextKeyMarker</code> specifies the first key not returned that satisfies the search criteria. Use this value for the key-marker request parameter in a subsequent request.</p>
+    #[serde(rename = "NextKeyMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_key_marker: Option<String>,
     /// <p>When the number of responses exceeds the value of <code>MaxKeys</code>, <code>NextVersionIdMarker</code> specifies the first object version not returned that satisfies the search criteria. Use this value for the version-id-marker request parameter in a subsequent request.</p>
+    #[serde(rename = "NextVersionIdMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_version_id_marker: Option<String>,
     /// <p>Selects objects that start with the value supplied by this parameter.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
     /// <p>Marks the last version of the key returned in a truncated response.</p>
+    #[serde(rename = "VersionIdMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id_marker: Option<String>,
     /// <p>Container for version information.</p>
+    #[serde(rename = "Versions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub versions: Option<Vec<ObjectVersion>>,
 }
 
@@ -7981,28 +8414,48 @@ pub struct ListObjectVersionsRequest {
     pub version_id_marker: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListObjectsOutput {
     /// <p>All of the keys rolled up in a common prefix count as a single return when calculating the number of returns. </p> <p>A response can contain CommonPrefixes only if you specify a delimiter.</p> <p>CommonPrefixes contains all (if there are any) keys between Prefix and the next occurrence of the string specified by the delimiter.</p> <p> CommonPrefixes lists keys that act like subdirectories in the directory specified by Prefix.</p> <p>For example, if the prefix is notes/ and the delimiter is a slash (/) as in notes/summer/july, the common prefix is notes/summer/. All of the keys that roll up into a common prefix count as a single return when calculating the number of returns.</p>
+    #[serde(rename = "CommonPrefixes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub common_prefixes: Option<Vec<CommonPrefix>>,
     /// <p>Metadata about each object returned.</p>
+    #[serde(rename = "Contents")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contents: Option<Vec<Object>>,
     /// <p>Causes keys that contain the same string between the prefix and the first occurrence of the delimiter to be rolled up into a single result element in the <code>CommonPrefixes</code> collection. These rolled-up keys are not returned elsewhere in the response. Each rolled-up result counts as only one return against the <code>MaxKeys</code> value.</p>
+    #[serde(rename = "Delimiter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delimiter: Option<String>,
     /// <p>Encoding type used by Amazon S3 to encode object keys in the response.</p>
+    #[serde(rename = "EncodingType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub encoding_type: Option<String>,
     /// <p>A flag that indicates whether Amazon S3 returned all of the results that satisfied the search criteria.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>Indicates where in the bucket listing begins. Marker is included in the response if it was sent with the request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>The maximum number of keys returned in the response body.</p>
+    #[serde(rename = "MaxKeys")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_keys: Option<i64>,
     /// <p>Bucket name.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p>When response is truncated (the IsTruncated element value in the response is true), you can use the key name in this field as marker in the subsequent request to get next set of objects. Amazon S3 lists objects in alphabetical order Note: This element is returned only if you have delimiter request parameter specified. If response does not include the NextMaker and it is truncated, you can use the value of the last Key in the response as the marker in the subsequent request to get the next set of object keys.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
     /// <p>Keys that begin with the indicated prefix.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
 }
 
@@ -8078,32 +8531,56 @@ pub struct ListObjectsRequest {
     pub request_payer: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListObjectsV2Output {
     /// <p>All of the keys rolled up into a common prefix count as a single return when calculating the number of returns.</p> <p>A response can contain <code>CommonPrefixes</code> only if you specify a delimiter.</p> <p> <code>CommonPrefixes</code> contains all (if there are any) keys between <code>Prefix</code> and the next occurrence of the string specified by a delimiter.</p> <p> <code>CommonPrefixes</code> lists keys that act like subdirectories in the directory specified by <code>Prefix</code>.</p> <p>For example, if the prefix is <code>notes/</code> and the delimiter is a slash (<code>/</code>) as in <code>notes/summer/july</code>, the common prefix is <code>notes/summer/</code>. All of the keys that roll up into a common prefix count as a single return when calculating the number of returns. </p>
+    #[serde(rename = "CommonPrefixes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub common_prefixes: Option<Vec<CommonPrefix>>,
     /// <p>Metadata about each object returned.</p>
+    #[serde(rename = "Contents")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contents: Option<Vec<Object>>,
     /// <p> If ContinuationToken was sent with the request, it is included in the response.</p>
+    #[serde(rename = "ContinuationToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub continuation_token: Option<String>,
     /// <p>Causes keys that contain the same string between the prefix and the first occurrence of the delimiter to be rolled up into a single result element in the CommonPrefixes collection. These rolled-up keys are not returned elsewhere in the response. Each rolled-up result counts as only one return against the <code>MaxKeys</code> value.</p>
+    #[serde(rename = "Delimiter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delimiter: Option<String>,
     /// <p>Encoding type used by Amazon S3 to encode object key names in the XML response.</p> <p>If you specify the encoding-type request parameter, Amazon S3 includes this element in the response, and returns encoded key name values in the following response elements:</p> <p> <code>Delimiter, Prefix, Key,</code> and <code>StartAfter</code>.</p>
+    #[serde(rename = "EncodingType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub encoding_type: Option<String>,
     /// <p>Set to false if all of the results were returned. Set to true if more keys are available to return. If the number of results exceeds that specified by MaxKeys, all of the results might not be returned.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>KeyCount is the number of keys returned with this request. KeyCount will always be less than equals to MaxKeys field. Say you ask for 50 keys, your result will include less than equals 50 keys </p>
+    #[serde(rename = "KeyCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key_count: Option<i64>,
     /// <p>Sets the maximum number of keys returned in the response. The response might contain fewer keys but will never contain more.</p>
+    #[serde(rename = "MaxKeys")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_keys: Option<i64>,
     /// <p>Bucket name. </p> <p>When using this API with an access point, you must direct requests to the access point hostname. The access point hostname takes the form <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this operation using an access point through the AWS SDKs, you provide the access point ARN in place of the bucket name. For more information about access point ARNs, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html">Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// <p> <code>NextContinuationToken</code> is sent when <code>isTruncated</code> is true, which means there are more keys in the bucket that can be listed. The next list requests to Amazon S3 can be continued with this <code>NextContinuationToken</code>. <code>NextContinuationToken</code> is obfuscated and is not a real key</p>
+    #[serde(rename = "NextContinuationToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_continuation_token: Option<String>,
     /// <p> Keys that begin with the indicated prefix.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
     /// <p>If StartAfter was sent with the request, it is included in the response.</p>
+    #[serde(rename = "StartAfter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub start_after: Option<String>,
 }
 
@@ -8194,35 +8671,63 @@ pub struct ListObjectsV2Request {
     pub start_after: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListPartsOutput {
     /// <p>If the bucket has a lifecycle rule configured with an action to abort incomplete multipart uploads and the prefix in the lifecycle rule matches the object name in the request, then the response includes this header indicating when the initiated multipart upload will become eligible for abort operation. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/mpuoverview.html#mpu-abort-incomplete-mpu-lifecycle-config">Aborting Incomplete Multipart Uploads Using a Bucket Lifecycle Policy</a>.</p> <p>The response will also include the <code>x-amz-abort-rule-id</code> header that will provide the ID of the lifecycle configuration rule that defines this action.</p>
+    #[serde(rename = "AbortDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub abort_date: Option<String>,
     /// <p>This header is returned along with the <code>x-amz-abort-date</code> header. It identifies applicable lifecycle configuration rule that defines the action to abort incomplete multipart uploads.</p>
+    #[serde(rename = "AbortRuleId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub abort_rule_id: Option<String>,
     /// <p>Name of the bucket to which the multipart upload was initiated.</p>
+    #[serde(rename = "Bucket")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bucket: Option<String>,
     /// <p>Container element that identifies who initiated the multipart upload. If the initiator is an AWS account, this element provides the same information as the <code>Owner</code> element. If the initiator is an IAM User, this element provides the user ARN and display name.</p>
+    #[serde(rename = "Initiator")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub initiator: Option<Initiator>,
     /// <p> Indicates whether the returned list of parts is truncated. A true value indicates that the list was truncated. A list can be truncated if the number of parts exceeds the limit returned in the MaxParts element.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>Object key for which the multipart upload was initiated.</p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>Maximum number of parts that were allowed in the response.</p>
+    #[serde(rename = "MaxParts")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_parts: Option<i64>,
     /// <p>When a list is truncated, this element specifies the last part in the list, as well as the value to use for the part-number-marker request parameter in a subsequent request.</p>
+    #[serde(rename = "NextPartNumberMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_part_number_marker: Option<i64>,
     /// <p> Container element that identifies the object owner, after the object is created. If multipart upload is initiated by an IAM user, this element provides the parent account ID and display name.</p>
+    #[serde(rename = "Owner")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub owner: Option<Owner>,
     /// <p>When a list is truncated, this element specifies the last part in the list, as well as the value to use for the part-number-marker request parameter in a subsequent request.</p>
+    #[serde(rename = "PartNumberMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub part_number_marker: Option<i64>,
     /// <p> Container for elements related to a particular part. A response can contain zero or more <code>Part</code> elements.</p>
+    #[serde(rename = "Parts")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parts: Option<Vec<Part>>,
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
     /// <p>Class of storage (STANDARD or REDUCED_REDUNDANCY) used to store the uploaded object.</p>
+    #[serde(rename = "StorageClass")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub storage_class: Option<String>,
     /// <p>Upload ID identifying the multipart upload whose parts are being listed.</p>
+    #[serde(rename = "UploadId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub upload_id: Option<String>,
 }
 
@@ -8338,15 +8843,18 @@ impl LocationPrefixSerializer {
 }
 
 /// <p>Describes where logs are stored and the prefix that Amazon S3 assigns to all log object keys for a bucket. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketPUTlogging.html">PUT Bucket logging</a> in the <i>Amazon Simple Storage Service API Reference</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LoggingEnabled {
     /// <p>Specifies the bucket where you want Amazon S3 to store server access logs. You can have your logs delivered to any bucket that you own, including the same bucket that is being logged. You can also configure multiple buckets to deliver their logs to the same target bucket. In this case, you should choose a different <code>TargetPrefix</code> for each source bucket so that the delivered log files can be distinguished by key.</p>
+    #[serde(rename = "TargetBucket")]
     pub target_bucket: String,
     /// <p>Container for granting information.</p>
+    #[serde(rename = "TargetGrants")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_grants: Option<Vec<TargetGrant>>,
     /// <p>A prefix for all log object keys. If you store log files from multiple Amazon S3 buckets in a single bucket, you can use a prefix to distinguish which log files came from which bucket.</p>
+    #[serde(rename = "TargetPrefix")]
     pub target_prefix: String,
 }
 
@@ -8695,13 +9203,14 @@ impl MetadataValueSerializer {
 }
 
 /// <p> A container specifying replication metrics-related settings enabling metrics and Amazon S3 events for S3 Replication Time Control (S3 RTC). Must be specified together with a <code>ReplicationTime</code> block. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Metrics {
     /// <p> A container specifying the time threshold for emitting the <code>s3:Replication:OperationMissedThreshold</code> event. </p>
+    #[serde(rename = "EventThreshold")]
     pub event_threshold: ReplicationTimeValue,
     /// <p> Specifies whether the replication metrics are enabled. </p>
+    #[serde(rename = "Status")]
     pub status: String,
 }
 
@@ -8756,13 +9265,16 @@ impl MetricsSerializer {
 }
 
 /// <p>A conjunction (logical AND) of predicates, which is used in evaluating a metrics filter. The operator must have at least two predicates, and an object must match all of the predicates in order for the filter to apply.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MetricsAndOperator {
     /// <p>The prefix used when evaluating an AND predicate.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
     /// <p>The list of tags used when evaluating an AND predicate.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
 }
 
@@ -8818,13 +9330,15 @@ impl MetricsAndOperatorSerializer {
 }
 
 /// <p>Specifies a metrics configuration for the CloudWatch request metrics (specified by the metrics configuration ID) from an Amazon S3 bucket. If you're updating an existing metrics configuration, note that this is a full replacement of the existing metrics configuration. If you don't include the elements you want to keep, they are erased. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketPUTMetricConfiguration.html"> PUT Bucket metrics</a> in the <i>Amazon Simple Storage Service API Reference</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MetricsConfiguration {
     /// <p>Specifies a metrics configuration filter. The metrics configuration will only include objects that meet the filter's criteria. A filter must be a prefix, a tag, or a conjunction (MetricsAndOperator).</p>
+    #[serde(rename = "Filter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub filter: Option<MetricsFilter>,
     /// <p>The ID used to identify the metrics configuration.</p>
+    #[serde(rename = "Id")]
     pub id: String,
 }
 
@@ -8905,15 +9419,20 @@ impl MetricsConfigurationListDeserializer {
     }
 }
 /// <p>Specifies a metrics configuration filter. The metrics configuration only includes objects that meet the filter's criteria. A filter must be a prefix, a tag, or a conjunction (MetricsAndOperator).</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MetricsFilter {
     /// <p>A conjunction (logical AND) of predicates, which is used in evaluating a metrics filter. The operator must have at least two predicates, and an object must match all of the predicates in order for the filter to apply.</p>
+    #[serde(rename = "And")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub and: Option<MetricsAndOperator>,
     /// <p>The prefix used when evaluating a metrics filter.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
     /// <p>The tag used when evaluating a metrics filter.</p>
+    #[serde(rename = "Tag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tag: Option<Tag>,
 }
 
@@ -9069,20 +9588,32 @@ impl MinutesSerializer {
 }
 
 /// <p>Container for the <code>MultipartUpload</code> for the Amazon S3 object.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MultipartUpload {
     /// <p>Date and time at which the multipart upload was initiated.</p>
+    #[serde(rename = "Initiated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub initiated: Option<String>,
     /// <p>Identifies who initiated the multipart upload.</p>
+    #[serde(rename = "Initiator")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub initiator: Option<Initiator>,
     /// <p>Key of the object for which the multipart upload was initiated.</p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>Specifies the owner of the object that is part of the multipart upload. </p>
+    #[serde(rename = "Owner")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub owner: Option<Owner>,
     /// <p>The class of storage used to store the object.</p>
+    #[serde(rename = "StorageClass")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub storage_class: Option<String>,
     /// <p>Upload ID that identifies the multipart upload.</p>
+    #[serde(rename = "UploadId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub upload_id: Option<String>,
 }
 
@@ -9250,11 +9781,12 @@ impl NextVersionIdMarkerDeserializer {
     }
 }
 /// <p>Specifies when noncurrent object versions expire. Upon expiration, Amazon S3 permanently deletes the noncurrent object versions. You set this lifecycle configuration action on a bucket that has versioning enabled (or suspended) to request that Amazon S3 delete noncurrent object versions at a specific period in the object's lifetime.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct NoncurrentVersionExpiration {
     /// <p>Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action. For information about the noncurrent days calculations, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/intro-lifecycle-rules.html#non-current-days-calculations">How Amazon S3 Calculates When an Object Became Noncurrent</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.</p>
+    #[serde(rename = "NoncurrentDays")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub noncurrent_days: Option<i64>,
 }
 
@@ -9307,13 +9839,16 @@ impl NoncurrentVersionExpirationSerializer {
 }
 
 /// <p>Container for the transition rule that describes when noncurrent objects transition to the <code>STANDARD_IA</code>, <code>ONEZONE_IA</code>, <code>INTELLIGENT_TIERING</code>, <code>GLACIER</code>, or <code>DEEP_ARCHIVE</code> storage class. If your bucket is versioning-enabled (or versioning is suspended), you can set this action to request that Amazon S3 transition noncurrent object versions to the <code>STANDARD_IA</code>, <code>ONEZONE_IA</code>, <code>INTELLIGENT_TIERING</code>, <code>GLACIER</code>, or <code>DEEP_ARCHIVE</code> storage class at a specific period in the object's lifetime.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct NoncurrentVersionTransition {
     /// <p>Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action. For information about the noncurrent days calculations, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/intro-lifecycle-rules.html#non-current-days-calculations">How Amazon S3 Calculates How Long an Object Has Been Noncurrent</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.</p>
+    #[serde(rename = "NoncurrentDays")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub noncurrent_days: Option<i64>,
     /// <p>The class of storage used to store the object.</p>
+    #[serde(rename = "StorageClass")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub storage_class: Option<String>,
 }
 
@@ -9428,15 +9963,20 @@ impl NoncurrentVersionTransitionListSerializer {
 }
 
 /// <p>A container for specifying the notification configuration of the bucket. If this element is empty, notifications are turned off for the bucket.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct NotificationConfiguration {
     /// <p>Describes the AWS Lambda functions to invoke and the events for which to invoke them.</p>
+    #[serde(rename = "LambdaFunctionConfigurations")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lambda_function_configurations: Option<Vec<LambdaFunctionConfiguration>>,
     /// <p>The Amazon Simple Queue Service queues to publish messages to and the events for which to publish messages.</p>
+    #[serde(rename = "QueueConfigurations")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub queue_configurations: Option<Vec<QueueConfiguration>>,
     /// <p>The topic to which notifications are sent and the events for which notifications are generated.</p>
+    #[serde(rename = "TopicConfigurations")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub topic_configurations: Option<Vec<TopicConfiguration>>,
 }
 
@@ -9513,15 +10053,20 @@ impl NotificationConfigurationSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct NotificationConfigurationDeprecated {
     /// <p>Container for specifying the AWS Lambda notification configuration.</p>
+    #[serde(rename = "CloudFunctionConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cloud_function_configuration: Option<CloudFunctionConfiguration>,
     /// <p>This data type is deprecated. This data type specifies the configuration for publishing messages to an Amazon Simple Queue Service (Amazon SQS) queue when Amazon S3 detects specified events. </p>
+    #[serde(rename = "QueueConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub queue_configuration: Option<QueueConfigurationDeprecated>,
     /// <p>This data type is deprecated. A container for specifying the configuration for publication of messages to an Amazon Simple Notification Service (Amazon SNS) topic when Amazon S3 detects specified events. </p>
+    #[serde(rename = "TopicConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub topic_configuration: Option<TopicConfigurationDeprecated>,
 }
 
@@ -9604,10 +10149,11 @@ impl NotificationConfigurationDeprecatedSerializer {
 }
 
 /// <p>Specifies object key name filtering rules. For information about key name filtering, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html">Configuring Event Notifications</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct NotificationConfigurationFilter {
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<S3KeyFilter>,
 }
 
@@ -9686,20 +10232,32 @@ impl NotificationIdSerializer {
 }
 
 /// <p>An object consists of data and its descriptive metadata.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Object {
     /// <p>The entity tag is an MD5 hash of the object. ETag reflects only changes to the contents of an object, not its metadata.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>The name that you assign to an object. You use the object key to retrieve the object.</p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>The date the Object was Last Modified</p>
+    #[serde(rename = "LastModified")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_modified: Option<String>,
     /// <p>The owner of the object</p>
+    #[serde(rename = "Owner")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub owner: Option<Owner>,
     /// <p>Size in bytes of the object</p>
+    #[serde(rename = "Size")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<i64>,
     /// <p>The class of storage used to store the object.</p>
+    #[serde(rename = "StorageClass")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub storage_class: Option<String>,
 }
 
@@ -9878,13 +10436,16 @@ impl ObjectListDeserializer {
     }
 }
 /// <p>The container element for Object Lock configuration parameters.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ObjectLockConfiguration {
     /// <p>Indicates whether this bucket has an Object Lock configuration enabled.</p>
+    #[serde(rename = "ObjectLockEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub object_lock_enabled: Option<String>,
     /// <p>The Object Lock rule in place for the specified object.</p>
+    #[serde(rename = "Rule")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rule: Option<ObjectLockRule>,
 }
 
@@ -9977,11 +10538,12 @@ impl ObjectLockEnabledSerializer {
 }
 
 /// <p>A Legal Hold configuration for an object.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ObjectLockLegalHold {
     /// <p>Indicates whether the specified object has a Legal Hold in place.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -10063,13 +10625,16 @@ impl ObjectLockLegalHoldStatusSerializer {
 }
 
 /// <p>A Retention configuration for an object.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ObjectLockRetention {
     /// <p>Indicates the Retention mode for the specified object.</p>
+    #[serde(rename = "Mode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub mode: Option<String>,
     /// <p>The date on which this Object Lock Retention will expire.</p>
+    #[serde(rename = "RetainUntilDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub retain_until_date: Option<String>,
 }
 
@@ -10163,11 +10728,12 @@ impl ObjectLockRetentionModeSerializer {
 }
 
 /// <p>The container element for an Object Lock rule.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ObjectLockRule {
     /// <p>The default retention period that you want to apply to new objects placed in the specified bucket.</p>
+    #[serde(rename = "DefaultRetention")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_retention: Option<DefaultRetention>,
 }
 
@@ -10224,24 +10790,40 @@ impl ObjectStorageClassDeserializer {
     }
 }
 /// <p>The version of an object.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ObjectVersion {
     /// <p>The entity tag is an MD5 hash of that version of the object.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Specifies whether the object is (true) or is not (false) the latest version of an object.</p>
+    #[serde(rename = "IsLatest")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_latest: Option<bool>,
     /// <p>The object key.</p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>Date and time the object was last modified.</p>
+    #[serde(rename = "LastModified")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_modified: Option<String>,
     /// <p>Specifies the owner of the object.</p>
+    #[serde(rename = "Owner")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub owner: Option<Owner>,
     /// <p>Size in bytes of the object.</p>
+    #[serde(rename = "Size")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<i64>,
     /// <p>The class of storage used to store the object.</p>
+    #[serde(rename = "StorageClass")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub storage_class: Option<String>,
     /// <p>Version ID of an object.</p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -10423,13 +11005,16 @@ impl OutputSerializationSerializer {
 }
 
 /// <p>Container for the owner's display name and ID.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Owner {
     /// <p>Container for the display name of the owner.</p>
+    #[serde(rename = "DisplayName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub display_name: Option<String>,
     /// <p>Container for the ID of the owner.</p>
+    #[serde(rename = "ID")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 }
 
@@ -10539,16 +11124,24 @@ impl ParquetInputSerializer {
 }
 
 /// <p>Container for elements related to a part.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Part {
     /// <p>Entity tag returned when the part was uploaded.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Date and time at which the part was uploaded.</p>
+    #[serde(rename = "LastModified")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_modified: Option<String>,
     /// <p>Part number identifying the part. This is a positive integer between 1 and 10,000.</p>
+    #[serde(rename = "PartNumber")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub part_number: Option<i64>,
     /// <p>Size in bytes of the uploaded part data.</p>
+    #[serde(rename = "Size")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<i64>,
 }
 
@@ -10736,10 +11329,12 @@ impl PermissionSerializer {
 }
 
 /// <p>The container element for a bucket's policy status.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PolicyStatus {
     /// <p>The policy status for this bucket. <code>TRUE</code> indicates that this bucket is public. <code>FALSE</code> indicates that the bucket is not public.</p>
+    #[serde(rename = "IsPublic")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_public: Option<bool>,
 }
 
@@ -10826,14 +11421,20 @@ impl PrioritySerializer {
 }
 
 /// <p>This data type contains information about progress of an operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Progress {
     /// <p>The current number of uncompressed object bytes processed.</p>
+    #[serde(rename = "BytesProcessed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bytes_processed: Option<i64>,
     /// <p>The current number of bytes of records payload data returned.</p>
+    #[serde(rename = "BytesReturned")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bytes_returned: Option<i64>,
     /// <p>The current number of object bytes scanned.</p>
+    #[serde(rename = "BytesScanned")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bytes_scanned: Option<i64>,
 }
 
@@ -10871,10 +11472,12 @@ impl ProgressDeserializer {
     }
 }
 /// <p>This data type contains information about the progress event of an operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ProgressEvent {
     /// <p>The Progress event details.</p>
+    #[serde(rename = "Details")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub details: Option<Progress>,
 }
 
@@ -10929,17 +11532,24 @@ impl ProtocolSerializer {
 }
 
 /// <p>The PublicAccessBlock configuration that you want to apply to this Amazon S3 bucket. You can enable the configuration options in any combination. For more information about when Amazon S3 considers a bucket or object public, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/access-control-block-public-access.html#access-control-block-public-access-policy-status">The Meaning of "Public"</a> in the <i>Amazon Simple Storage Service Developer Guide</i>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PublicAccessBlockConfiguration {
     /// <p>Specifies whether Amazon S3 should block public access control lists (ACLs) for this bucket and objects in this bucket. Setting this element to <code>TRUE</code> causes the following behavior:</p> <ul> <li> <p>PUT Bucket acl and PUT Object acl calls fail if the specified ACL is public.</p> </li> <li> <p>PUT Object calls fail if the request includes a public ACL.</p> </li> <li> <p>PUT Bucket calls fail if the request includes a public ACL.</p> </li> </ul> <p>Enabling this setting doesn't affect existing policies or ACLs.</p>
+    #[serde(rename = "BlockPublicAcls")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub block_public_acls: Option<bool>,
     /// <p>Specifies whether Amazon S3 should block public bucket policies for this bucket. Setting this element to <code>TRUE</code> causes Amazon S3 to reject calls to PUT Bucket policy if the specified bucket policy allows public access. </p> <p>Enabling this setting doesn't affect existing bucket policies.</p>
+    #[serde(rename = "BlockPublicPolicy")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub block_public_policy: Option<bool>,
     /// <p>Specifies whether Amazon S3 should ignore public ACLs for this bucket and objects in this bucket. Setting this element to <code>TRUE</code> causes Amazon S3 to ignore all public ACLs on this bucket and objects in this bucket.</p> <p>Enabling this setting doesn't affect the persistence of any existing ACLs and doesn't prevent new public ACLs from being set.</p>
+    #[serde(rename = "IgnorePublicAcls")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ignore_public_acls: Option<bool>,
     /// <p>Specifies whether Amazon S3 should restrict public bucket policies for this bucket. Setting this element to <code>TRUE</code> restricts access to this bucket to only AWS services and authorized users within this account if the bucket has a public policy.</p> <p>Enabling this setting doesn't affect previously stored bucket policies, except that public and cross-account access within any public bucket policy, including non-public delegation to specific accounts, is blocked.</p>
+    #[serde(rename = "RestrictPublicBuckets")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub restrict_public_buckets: Option<bool>,
 }
 
@@ -11240,9 +11850,11 @@ pub struct PutBucketWebsiteRequest {
     pub website_configuration: WebsiteConfiguration,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PutObjectAclOutput {
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
 }
 
@@ -11290,9 +11902,11 @@ pub struct PutObjectAclRequest {
     pub version_id: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PutObjectLegalHoldOutput {
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
 }
 
@@ -11328,9 +11942,11 @@ pub struct PutObjectLegalHoldRequest {
     pub version_id: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PutObjectLockConfigurationOutput {
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
 }
 
@@ -11364,25 +11980,43 @@ pub struct PutObjectLockConfigurationRequest {
     pub token: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PutObjectOutput {
     /// <p>Entity tag for the uploaded object.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p> If the expiration is configured for the object (see <a>PutBucketLifecycleConfiguration</a>), the response includes this header. It includes the expiry-date and rule-id key-value pairs that provide information about object expiration. The value of the rule-id is URL encoded.</p>
+    #[serde(rename = "Expiration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expiration: Option<String>,
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
     /// <p>If server-side encryption with a customer-provided encryption key was requested, the response will include this header confirming the encryption algorithm used.</p>
+    #[serde(rename = "SSECustomerAlgorithm")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sse_customer_algorithm: Option<String>,
     /// <p>If server-side encryption with a customer-provided encryption key was requested, the response will include this header to provide round-trip message integrity verification of the customer-provided encryption key.</p>
+    #[serde(rename = "SSECustomerKeyMD5")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sse_customer_key_md5: Option<String>,
     /// <p>If present, specifies the AWS KMS Encryption Context to use for object encryption. The value of this header is a base64-encoded UTF-8 string holding JSON with the encryption context key-value pairs.</p>
+    #[serde(rename = "SSEKMSEncryptionContext")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssekms_encryption_context: Option<String>,
     /// <p>If <code>x-amz-server-side-encryption</code> is present and has the value of <code>aws:kms</code>, this header specifies the ID of the AWS Key Management Service (AWS KMS) symmetric customer managed customer master key (CMK) that was used for the object. </p>
+    #[serde(rename = "SSEKMSKeyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssekms_key_id: Option<String>,
     /// <p>If you specified server-side encryption either with an AWS KMS customer master key (CMK) or Amazon S3-managed encryption key in your PUT request, the response includes this header. It confirms the encryption algorithm that Amazon S3 used to encrypt the object.</p>
+    #[serde(rename = "ServerSideEncryption")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub server_side_encryption: Option<String>,
     /// <p>Version of the object.</p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -11465,9 +12099,11 @@ pub struct PutObjectRequest {
     pub website_redirect_location: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PutObjectRetentionOutput {
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
 }
 
@@ -11505,10 +12141,12 @@ pub struct PutObjectRetentionRequest {
     pub version_id: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PutObjectTaggingOutput {
     /// <p>The versionId of the object the tag-set was added to.</p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -11587,15 +12225,20 @@ impl QueueArnSerializer {
 }
 
 /// <p>Specifies the configuration for publishing messages to an Amazon Simple Queue Service (Amazon SQS) queue when Amazon S3 detects specified events.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct QueueConfiguration {
     /// <p>A collection of bucket events for which to send notifications</p>
+    #[serde(rename = "Events")]
     pub events: Vec<String>,
+    #[serde(rename = "Filter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub filter: Option<NotificationConfigurationFilter>,
+    #[serde(rename = "Id")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the Amazon SQS queue to which Amazon S3 publishes a message when it detects events of the specified type.</p>
+    #[serde(rename = "QueueArn")]
     pub queue_arn: String,
 }
 
@@ -11665,14 +12308,19 @@ impl QueueConfigurationSerializer {
 }
 
 /// <p>This data type is deprecated. Use <a>QueueConfiguration</a> for the same purposes. This data type specifies the configuration for publishing messages to an Amazon Simple Queue Service (Amazon SQS) queue when Amazon S3 detects specified events. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct QueueConfigurationDeprecated {
     /// <p>A collection of bucket events for which to send notifications</p>
+    #[serde(rename = "Events")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub events: Option<Vec<String>>,
+    #[serde(rename = "Id")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the Amazon SQS queue to which Amazon S3 publishes a message when it detects events of the specified type. </p>
+    #[serde(rename = "Queue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub queue: Option<String>,
 }
 
@@ -11891,10 +12539,17 @@ impl RecordDelimiterSerializer {
 }
 
 /// <p>The container for the records event.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RecordsEvent {
     /// <p>The byte array of partial, one or more result records.</p>
+    #[serde(rename = "Payload")]
+    #[serde(
+        deserialize_with = "::rusoto_core::serialization::SerdeBlob::deserialize_blob",
+        serialize_with = "::rusoto_core::serialization::SerdeBlob::serialize_blob",
+        default
+    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub payload: Option<bytes::Bytes>,
 }
 
@@ -11917,19 +12572,28 @@ impl RecordsEventDeserializer {
     }
 }
 /// <p>Specifies how requests are redirected. In the event of an error, you can specify a different error code to return.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Redirect {
     /// <p>The host name to use in the redirect request.</p>
+    #[serde(rename = "HostName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub host_name: Option<String>,
     /// <p>The HTTP redirect code to use on the response. Not required if one of the siblings is present.</p>
+    #[serde(rename = "HttpRedirectCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub http_redirect_code: Option<String>,
     /// <p>Protocol to use when redirecting requests. The default is the protocol that is used in the original request.</p>
+    #[serde(rename = "Protocol")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
     /// <p>The object key prefix to use in the redirect request. For example, to redirect requests for all pages with prefix <code>docs/</code> (objects in the <code>docs/</code> folder) to <code>documents/</code>, you can set a condition block with <code>KeyPrefixEquals</code> set to <code>docs/</code> and in the Redirect set <code>ReplaceKeyPrefixWith</code> to <code>/documents</code>. Not required if one of the siblings is present. Can be present only if <code>ReplaceKeyWith</code> is not provided.</p>
+    #[serde(rename = "ReplaceKeyPrefixWith")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub replace_key_prefix_with: Option<String>,
     /// <p>The specific object key to use in the redirect request. For example, redirect request to <code>error.html</code>. Not required if one of the siblings is present. Can be present only if <code>ReplaceKeyPrefixWith</code> is not provided.</p>
+    #[serde(rename = "ReplaceKeyWith")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub replace_key_with: Option<String>,
 }
 
@@ -12031,13 +12695,15 @@ impl RedirectSerializer {
 }
 
 /// <p>Specifies the redirect behavior of all requests to a website endpoint of an Amazon S3 bucket.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RedirectAllRequestsTo {
     /// <p>Name of the host where requests are redirected.</p>
+    #[serde(rename = "HostName")]
     pub host_name: String,
     /// <p>Protocol to use when redirecting requests. The default is the protocol that is used in the original request.</p>
+    #[serde(rename = "Protocol")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
 }
 
@@ -12190,13 +12856,14 @@ impl ReplicaKmsKeyIDSerializer {
 }
 
 /// <p>A container for replication rules. You can add up to 1,000 rules. The maximum size of a replication configuration is 2 MB.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReplicationConfiguration {
     /// <p>The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM) role that Amazon S3 assumes when replicating objects. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/replication-how-setup.html">How to Set Up Replication</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.</p>
+    #[serde(rename = "Role")]
     pub role: String,
     /// <p>A container for one or more replication rules. A replication configuration must have at least one rule and can contain a maximum of 1,000 rules. </p>
+    #[serde(rename = "Rules")]
     pub rules: Vec<ReplicationRule>,
 }
 
@@ -12251,23 +12918,36 @@ impl ReplicationConfigurationSerializer {
 }
 
 /// <p>Specifies which Amazon S3 objects to replicate and where to store the replicas.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReplicationRule {
+    #[serde(rename = "DeleteMarkerReplication")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delete_marker_replication: Option<DeleteMarkerReplication>,
     /// <p>A container for information about the replication destination and its configurations including enabling the S3 Replication Time Control (S3 RTC).</p>
+    #[serde(rename = "Destination")]
     pub destination: Destination,
     /// <p><p/></p>
+    #[serde(rename = "ExistingObjectReplication")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub existing_object_replication: Option<ExistingObjectReplication>,
+    #[serde(rename = "Filter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub filter: Option<ReplicationRuleFilter>,
     /// <p>A unique identifier for the rule. The maximum value is 255 characters.</p>
+    #[serde(rename = "ID")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// <p>The priority associated with the rule. If you specify multiple rules in a replication configuration, Amazon S3 prioritizes the rules to prevent conflicts when filtering. If two or more rules identify the same object based on a specified filter, the rule with higher priority takes precedence. For example:</p> <ul> <li> <p>Same object quality prefix-based filter criteria if prefixes you specified in multiple rules overlap </p> </li> <li> <p>Same object qualify tag-based filter criteria specified in multiple rules</p> </li> </ul> <p>For more information, see <a href=" https://docs.aws.amazon.com/AmazonS3/latest/dev/replication.html">Replication</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.</p>
+    #[serde(rename = "Priority")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub priority: Option<i64>,
     /// <p>A container that describes additional filters for identifying the source objects that you want to replicate. You can choose to enable or disable the replication of these objects. Currently, Amazon S3 supports only the filter that you can specify for objects created with server-side encryption using a customer master key (CMK) stored in AWS Key Management Service (SSE-KMS).</p>
+    #[serde(rename = "SourceSelectionCriteria")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_selection_criteria: Option<SourceSelectionCriteria>,
     /// <p>Specifies whether the rule is enabled.</p>
+    #[serde(rename = "Status")]
     pub status: String,
 }
 
@@ -12389,13 +13069,16 @@ impl ReplicationRuleSerializer {
 }
 
 /// <p><p>A container for specifying rule filters. The filters determine the subset of objects to which the rule applies. This element is required only if you specify more than one filter. </p> <p>For example:</p> <ul> <li> <p>If you specify both a <code>Prefix</code> and a <code>Tag</code> filter, wrap these filters in an <code>And</code> tag. </p> </li> <li> <p>If you specify a filter based on multiple tags, wrap the <code>Tag</code> elements in an <code>And</code> tag</p> </li> </ul></p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReplicationRuleAndOperator {
     /// <p>An object key name prefix that identifies the subset of objects to which the rule applies.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
     /// <p>An array of tags containing key and value pairs.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
 }
 
@@ -12455,15 +13138,20 @@ impl ReplicationRuleAndOperatorSerializer {
 }
 
 /// <p>A filter that identifies the subset of objects to which the replication rule applies. A <code>Filter</code> must specify exactly one <code>Prefix</code>, <code>Tag</code>, or an <code>And</code> child element.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReplicationRuleFilter {
     /// <p><p>A container for specifying rule filters. The filters determine the subset of objects to which the rule applies. This element is required only if you specify more than one filter. For example: </p> <ul> <li> <p>If you specify both a <code>Prefix</code> and a <code>Tag</code> filter, wrap these filters in an <code>And</code> tag.</p> </li> <li> <p>If you specify a filter based on multiple tags, wrap the <code>Tag</code> elements in an <code>And</code> tag.</p> </li> </ul></p>
+    #[serde(rename = "And")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub and: Option<ReplicationRuleAndOperator>,
     /// <p>An object key name prefix that identifies the subset of objects to which the rule applies.</p>
+    #[serde(rename = "Prefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
     /// <p>A container for specifying a tag key and value. </p> <p>The rule applies only to objects that have the tag in their tag set.</p>
+    #[serde(rename = "Tag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tag: Option<Tag>,
 }
 
@@ -12603,13 +13291,14 @@ impl ReplicationRulesSerializer {
 }
 
 /// <p> A container specifying S3 Replication Time Control (S3 RTC) related information, including whether S3 RTC is enabled and the time when all objects and operations on objects must be replicated. Must be specified together with a <code>Metrics</code> block. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReplicationTime {
     /// <p> Specifies whether the replication time is enabled. </p>
+    #[serde(rename = "Status")]
     pub status: String,
     /// <p> A container specifying the time by which replication should be complete for all objects and operations on objects. </p>
+    #[serde(rename = "Time")]
     pub time: ReplicationTimeValue,
 }
 
@@ -12691,11 +13380,12 @@ impl ReplicationTimeStatusSerializer {
 }
 
 /// <p> A container specifying the time value for S3 Replication Time Control (S3 RTC) and replication metrics <code>EventThreshold</code>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReplicationTimeValue {
     /// <p> Contains an integer specifying time in minutes. </p> <p> Valid values: 15 minutes. </p>
+    #[serde(rename = "Minutes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub minutes: Option<i64>,
 }
 
@@ -12924,11 +13614,15 @@ impl ResponseExpiresSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RestoreObjectOutput {
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
     /// <p>Indicates the path in the provided S3 output location where Select results will be restored to.</p>
+    #[serde(rename = "RestoreOutputPath")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub restore_output_path: Option<String>,
 }
 
@@ -13091,13 +13785,15 @@ impl RoleSerializer {
 }
 
 /// <p>Specifies the redirect behavior and when a redirect is applied.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RoutingRule {
     /// <p>A container for describing a condition that must be met for the specified redirect to apply. For example, 1. If request is for pages in the <code>/docs</code> folder, redirect to the <code>/documents</code> folder. 2. If request results in HTTP error 4xx, redirect request to another host where you might process the error.</p>
+    #[serde(rename = "Condition")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub condition: Option<Condition>,
     /// <p>Container for redirect information. You can redirect requests to another host, to another page, or with another protocol. In the event of an error, you can specify a different error code to return.</p>
+    #[serde(rename = "Redirect")]
     pub redirect: Redirect,
 }
 
@@ -13182,22 +13878,35 @@ impl RoutingRulesSerializer {
 }
 
 /// <p>Specifies lifecycle rules for an Amazon S3 bucket. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketPUTlifecycle.html">PUT Bucket lifecycle</a> in the <i>Amazon Simple Storage Service API Reference</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Rule {
+    #[serde(rename = "AbortIncompleteMultipartUpload")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub abort_incomplete_multipart_upload: Option<AbortIncompleteMultipartUpload>,
     /// <p>Specifies the expiration for the lifecycle of the object.</p>
+    #[serde(rename = "Expiration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expiration: Option<LifecycleExpiration>,
     /// <p>Unique identifier for the rule. The value can't be longer than 255 characters.</p>
+    #[serde(rename = "ID")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
+    #[serde(rename = "NoncurrentVersionExpiration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub noncurrent_version_expiration: Option<NoncurrentVersionExpiration>,
+    #[serde(rename = "NoncurrentVersionTransition")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub noncurrent_version_transition: Option<NoncurrentVersionTransition>,
     /// <p>Object key prefix that identifies one or more objects to which this rule applies.</p>
+    #[serde(rename = "Prefix")]
     pub prefix: String,
     /// <p>If <code>Enabled</code>, the rule is currently being applied. If <code>Disabled</code>, the rule is not currently being applied.</p>
+    #[serde(rename = "Status")]
     pub status: String,
     /// <p>Specifies when an object transitions to a specified storage class.</p>
+    #[serde(rename = "Transition")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub transition: Option<Transition>,
 }
 
@@ -13364,10 +14073,11 @@ impl RulesSerializer {
 }
 
 /// <p>A container for object key name prefix and suffix filtering rules.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct S3KeyFilter {
+    #[serde(rename = "FilterRules")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub filter_rules: Option<Vec<FilterRule>>,
 }
 
@@ -13489,11 +14199,11 @@ impl S3LocationSerializer {
 }
 
 /// <p>Specifies the use of SSE-KMS to encrypt delivered inventory reports.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SSEKMS {
     /// <p>Specifies the ID of the AWS Key Management Service (AWS KMS) symmetric customer managed customer master key (CMK) to use for encrypting inventory reports.</p>
+    #[serde(rename = "KeyId")]
     pub key_id: String,
 }
 
@@ -13568,9 +14278,8 @@ impl SSEKMSKeyIdSerializer {
 }
 
 /// <p>Specifies the use of SSE-S3 to encrypt delivered inventory reports.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SSES3 {}
 
 struct SSES3Deserializer;
@@ -13646,18 +14355,28 @@ impl ScanRangeSerializer {
 }
 
 /// <p>The container for selecting objects from a content event stream.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SelectObjectContentEventStream {
     /// <p>The Continuation Event.</p>
+    #[serde(rename = "Cont")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cont: Option<ContinuationEvent>,
     /// <p>The End Event.</p>
+    #[serde(rename = "End")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub end: Option<EndEvent>,
     /// <p>The Progress Event.</p>
+    #[serde(rename = "Progress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub progress: Option<ProgressEvent>,
     /// <p>The Records Event.</p>
+    #[serde(rename = "Records")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub records: Option<RecordsEvent>,
     /// <p>The Stats Event.</p>
+    #[serde(rename = "Stats")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stats: Option<StatsEvent>,
 }
 
@@ -13697,10 +14416,12 @@ impl SelectObjectContentEventStreamDeserializer {
         )
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SelectObjectContentOutput {
     /// <p>The array of results.</p>
+    #[serde(rename = "Payload")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub payload: Option<SelectObjectContentEventStream>,
 }
 
@@ -13866,13 +14587,15 @@ impl ServerSideEncryptionSerializer {
 }
 
 /// <p>Describes the default server-side encryption to apply to new objects in the bucket. If a PUT Object request doesn't specify any server-side encryption, this default encryption will be applied. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketPUTencryption.html">PUT Bucket encryption</a> in the <i>Amazon Simple Storage Service API Reference</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ServerSideEncryptionByDefault {
     /// <p>KMS master key ID to use for the default encryption. This parameter is allowed if and only if <code>SSEAlgorithm</code> is set to <code>aws:kms</code>.</p>
+    #[serde(rename = "KMSMasterKeyID")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kms_master_key_id: Option<String>,
     /// <p>Server-side encryption algorithm to use for the default encryption.</p>
+    #[serde(rename = "SSEAlgorithm")]
     pub sse_algorithm: String,
 }
 
@@ -13937,11 +14660,11 @@ impl ServerSideEncryptionByDefaultSerializer {
 }
 
 /// <p>Specifies the default server-side-encryption configuration.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ServerSideEncryptionConfiguration {
     /// <p>Container for information about a particular server-side encryption configuration rule.</p>
+    #[serde(rename = "Rules")]
     pub rules: Vec<ServerSideEncryptionRule>,
 }
 
@@ -13989,11 +14712,12 @@ impl ServerSideEncryptionConfigurationSerializer {
 }
 
 /// <p>Specifies the default server-side encryption configuration.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ServerSideEncryptionRule {
     /// <p>Specifies the default server-side encryption to apply to new objects in the bucket. If a PUT Object request doesn't specify any server-side encryption, this default encryption will be applied.</p>
+    #[serde(rename = "ApplyServerSideEncryptionByDefault")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub apply_server_side_encryption_by_default: Option<ServerSideEncryptionByDefault>,
 }
 
@@ -14139,11 +14863,12 @@ impl SizeDeserializer {
     }
 }
 /// <p>A container that describes additional filters for identifying the source objects that you want to replicate. You can choose to enable or disable the replication of these objects. Currently, Amazon S3 supports only the filter that you can specify for objects created with server-side encryption using a customer master key (CMK) stored in AWS Key Management Service (SSE-KMS).</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SourceSelectionCriteria {
     /// <p> A container for filter information for the selection of Amazon S3 objects encrypted with AWS KMS. If you include <code>SourceSelectionCriteria</code> in the replication configuration, this element is required. </p>
+    #[serde(rename = "SseKmsEncryptedObjects")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sse_kms_encrypted_objects: Option<SseKmsEncryptedObjects>,
 }
 
@@ -14198,11 +14923,11 @@ impl SourceSelectionCriteriaSerializer {
 }
 
 /// <p>A container for filter information for the selection of S3 objects encrypted with AWS KMS.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SseKmsEncryptedObjects {
     /// <p>Specifies whether Amazon S3 replicates objects created with server-side encryption using a customer master key (CMK) stored in AWS Key Management Service.</p>
+    #[serde(rename = "Status")]
     pub status: String,
 }
 
@@ -14333,14 +15058,20 @@ impl StartAfterSerializer {
 }
 
 /// <p>Container for the stats details.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Stats {
     /// <p>The total number of uncompressed object bytes processed.</p>
+    #[serde(rename = "BytesProcessed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bytes_processed: Option<i64>,
     /// <p>The total number of bytes of records payload data returned.</p>
+    #[serde(rename = "BytesReturned")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bytes_returned: Option<i64>,
     /// <p>The total number of object bytes scanned.</p>
+    #[serde(rename = "BytesScanned")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bytes_scanned: Option<i64>,
 }
 
@@ -14375,10 +15106,12 @@ impl StatsDeserializer {
     }
 }
 /// <p>Container for the Stats Event.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StatsEvent {
     /// <p>The Stats event details.</p>
+    #[serde(rename = "Details")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub details: Option<Stats>,
 }
 
@@ -14433,11 +15166,12 @@ impl StorageClassSerializer {
 }
 
 /// <p>Specifies data related to access patterns to be collected and made available to analyze the tradeoffs between different storage classes for an Amazon S3 bucket.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StorageClassAnalysis {
     /// <p>Specifies how data related to the storage class analysis for an Amazon S3 bucket should be exported.</p>
+    #[serde(rename = "DataExport")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub data_export: Option<StorageClassAnalysisDataExport>,
 }
 
@@ -14484,13 +15218,14 @@ impl StorageClassAnalysisSerializer {
 }
 
 /// <p>Container for data related to the storage class analysis for an Amazon S3 bucket for export.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StorageClassAnalysisDataExport {
     /// <p>The place to store the data for an analysis.</p>
+    #[serde(rename = "Destination")]
     pub destination: AnalyticsExportDestination,
     /// <p>The version of the output schema to use when exporting data. Must be <code>V_1</code>.</p>
+    #[serde(rename = "OutputSchemaVersion")]
     pub output_schema_version: String,
 }
 
@@ -14619,13 +15354,14 @@ impl SuffixSerializer {
 }
 
 /// <p>A container of a key value name pair.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Tag {
     /// <p>Name of the tag.</p>
+    #[serde(rename = "Key")]
     pub key: String,
     /// <p>Value of the tag.</p>
+    #[serde(rename = "Value")]
     pub value: String,
 }
 
@@ -14772,13 +15508,16 @@ impl TargetBucketSerializer {
 }
 
 /// <p>Container for granting information.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TargetGrant {
     /// <p>Container for the person being granted permissions.</p>
+    #[serde(rename = "Grantee")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub grantee: Option<Grantee>,
     /// <p>Logging permissions assigned to the Grantee for the bucket.</p>
+    #[serde(rename = "Permission")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permission: Option<String>,
 }
 
@@ -14989,15 +15728,20 @@ impl TopicArnSerializer {
 }
 
 /// <p>A container for specifying the configuration for publication of messages to an Amazon Simple Notification Service (Amazon SNS) topic when Amazon S3 detects specified events.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TopicConfiguration {
     /// <p>The Amazon S3 bucket event about which to send notifications. For more information, see <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html">Supported Event Types</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.</p>
+    #[serde(rename = "Events")]
     pub events: Vec<String>,
+    #[serde(rename = "Filter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub filter: Option<NotificationConfigurationFilter>,
+    #[serde(rename = "Id")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the Amazon SNS topic to which Amazon S3 publishes a message when it detects events of the specified type.</p>
+    #[serde(rename = "TopicArn")]
     pub topic_arn: String,
 }
 
@@ -15067,14 +15811,19 @@ impl TopicConfigurationSerializer {
 }
 
 /// <p>A container for specifying the configuration for publication of messages to an Amazon Simple Notification Service (Amazon SNS) topic when Amazon S3 detects specified events. This data type is deprecated. Use <a>TopicConfiguration</a> instead.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TopicConfigurationDeprecated {
     /// <p>A collection of events related to objects</p>
+    #[serde(rename = "Events")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub events: Option<Vec<String>>,
+    #[serde(rename = "Id")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// <p>Amazon SNS topic to which Amazon S3 will publish a message to report the specified events for the bucket.</p>
+    #[serde(rename = "Topic")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub topic: Option<String>,
 }
 
@@ -15193,15 +15942,20 @@ impl TopicConfigurationListSerializer {
 }
 
 /// <p>Specifies when an object transitions to a specified storage class.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Transition {
     /// <p>Indicates when objects are transitioned to the specified storage class. The date value must be in ISO 8601 format. The time is always midnight UTC.</p>
+    #[serde(rename = "Date")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date: Option<String>,
     /// <p>Indicates the number of days after creation when objects are transitioned to the specified storage class. The value must be a positive integer.</p>
+    #[serde(rename = "Days")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub days: Option<i64>,
     /// <p>The storage class to which you want the object to transition.</p>
+    #[serde(rename = "StorageClass")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub storage_class: Option<String>,
 }
 
@@ -15447,21 +16201,35 @@ impl UploadIdMarkerSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UploadPartCopyOutput {
     /// <p>Container for all response elements.</p>
+    #[serde(rename = "CopyPartResult")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub copy_part_result: Option<CopyPartResult>,
     /// <p>The version of the source object that was copied, if you have enabled versioning on the source bucket.</p>
+    #[serde(rename = "CopySourceVersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub copy_source_version_id: Option<String>,
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
     /// <p>If server-side encryption with a customer-provided encryption key was requested, the response will include this header confirming the encryption algorithm used.</p>
+    #[serde(rename = "SSECustomerAlgorithm")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sse_customer_algorithm: Option<String>,
     /// <p>If server-side encryption with a customer-provided encryption key was requested, the response will include this header to provide round-trip message integrity verification of the customer-provided encryption key.</p>
+    #[serde(rename = "SSECustomerKeyMD5")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sse_customer_key_md5: Option<String>,
     /// <p>If present, specifies the ID of the AWS Key Management Service (AWS KMS) symmetric customer managed customer master key (CMK) that was used for the object.</p>
+    #[serde(rename = "SSEKMSKeyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssekms_key_id: Option<String>,
     /// <p>The server-side encryption algorithm used when storing this object in Amazon S3 (for example, AES256, aws:kms).</p>
+    #[serde(rename = "ServerSideEncryption")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub server_side_encryption: Option<String>,
 }
 
@@ -15519,19 +16287,31 @@ pub struct UploadPartCopyRequest {
     pub upload_id: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UploadPartOutput {
     /// <p>Entity tag for the uploaded object.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
+    #[serde(rename = "RequestCharged")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_charged: Option<String>,
     /// <p>If server-side encryption with a customer-provided encryption key was requested, the response will include this header confirming the encryption algorithm used.</p>
+    #[serde(rename = "SSECustomerAlgorithm")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sse_customer_algorithm: Option<String>,
     /// <p>If server-side encryption with a customer-provided encryption key was requested, the response will include this header to provide round-trip message integrity verification of the customer-provided encryption key.</p>
+    #[serde(rename = "SSECustomerKeyMD5")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sse_customer_key_md5: Option<String>,
     /// <p>If present, specifies the ID of the AWS Key Management Service (AWS KMS) symmetric customer managed customer master key (CMK) was used for the object.</p>
+    #[serde(rename = "SSEKMSKeyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssekms_key_id: Option<String>,
     /// <p>The server-side encryption algorithm used when storing this object in Amazon S3 (for example, AES256, aws:kms).</p>
+    #[serde(rename = "ServerSideEncryption")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub server_side_encryption: Option<String>,
 }
 

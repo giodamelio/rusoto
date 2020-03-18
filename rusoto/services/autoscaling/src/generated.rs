@@ -53,12 +53,15 @@ impl ActivitiesDeserializer {
         })
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ActivitiesType {
     /// <p>The scaling activities. Activities are sorted by start time. Activities still in progress are described first.</p>
+    #[serde(rename = "Activities")]
     pub activities: Vec<Activity>,
     /// <p>A string that indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the <code>NextToken</code> value when requesting the next set of items. This value is null when there are no more items to return.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -85,28 +88,43 @@ impl ActivitiesTypeDeserializer {
     }
 }
 /// <p>Describes scaling activity, which is a long-running process that represents a change to your Auto Scaling group, such as changing its size or replacing an instance.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Activity {
     /// <p>The ID of the activity.</p>
+    #[serde(rename = "ActivityId")]
     pub activity_id: String,
     /// <p>The name of the Auto Scaling group.</p>
+    #[serde(rename = "AutoScalingGroupName")]
     pub auto_scaling_group_name: String,
     /// <p>The reason the activity began.</p>
+    #[serde(rename = "Cause")]
     pub cause: String,
     /// <p>A friendly, more verbose description of the activity.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>The details about the activity.</p>
+    #[serde(rename = "Details")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub details: Option<String>,
     /// <p>The end time of the activity.</p>
+    #[serde(rename = "EndTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub end_time: Option<String>,
     /// <p>A value between 0 and 100 that indicates the progress of the activity.</p>
+    #[serde(rename = "Progress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub progress: Option<i64>,
     /// <p>The start time of the activity.</p>
+    #[serde(rename = "StartTime")]
     pub start_time: String,
     /// <p>The current status of the activity.</p>
+    #[serde(rename = "StatusCode")]
     pub status_code: String,
     /// <p>A friendly, more verbose description of the activity status.</p>
+    #[serde(rename = "StatusMessage")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_message: Option<String>,
 }
 
@@ -173,10 +191,12 @@ impl ActivityIdsSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ActivityType {
     /// <p>A scaling activity.</p>
+    #[serde(rename = "Activity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub activity: Option<Activity>,
 }
 
@@ -199,10 +219,12 @@ impl ActivityTypeDeserializer {
     }
 }
 /// <p>Describes a policy adjustment type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AdjustmentType {
     /// <p>The policy adjustment type. The valid values are <code>ChangeInCapacity</code>, <code>ExactCapacity</code>, and <code>PercentChangeInCapacity</code>.</p>
+    #[serde(rename = "AdjustmentType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub adjustment_type: Option<String>,
 }
 
@@ -245,12 +267,16 @@ impl AdjustmentTypesDeserializer {
     }
 }
 /// <p>Describes an alarm.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Alarm {
     /// <p>The Amazon Resource Name (ARN) of the alarm.</p>
+    #[serde(rename = "AlarmARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alarm_arn: Option<String>,
     /// <p>The name of the alarm.</p>
+    #[serde(rename = "AlarmName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alarm_name: Option<String>,
 }
 
@@ -346,8 +372,8 @@ impl AttachInstancesQuerySerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AttachLoadBalancerTargetGroupsResultType {}
 
 struct AttachLoadBalancerTargetGroupsResultTypeDeserializer;
@@ -396,8 +422,8 @@ impl AttachLoadBalancerTargetGroupsTypeSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AttachLoadBalancersResultType {}
 
 struct AttachLoadBalancersResultTypeDeserializer;
@@ -447,60 +473,104 @@ impl AttachLoadBalancersTypeSerializer {
 }
 
 /// <p>Describes an Auto Scaling group.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AutoScalingGroup {
     /// <p>The Amazon Resource Name (ARN) of the Auto Scaling group.</p>
+    #[serde(rename = "AutoScalingGroupARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_scaling_group_arn: Option<String>,
     /// <p>The name of the Auto Scaling group.</p>
+    #[serde(rename = "AutoScalingGroupName")]
     pub auto_scaling_group_name: String,
     /// <p>One or more Availability Zones for the group.</p>
+    #[serde(rename = "AvailabilityZones")]
     pub availability_zones: Vec<String>,
     /// <p>The date and time the group was created.</p>
+    #[serde(rename = "CreatedTime")]
     pub created_time: String,
     /// <p>The amount of time, in seconds, after a scaling activity completes before another scaling activity can start.</p>
+    #[serde(rename = "DefaultCooldown")]
     pub default_cooldown: i64,
     /// <p>The desired size of the group.</p>
+    #[serde(rename = "DesiredCapacity")]
     pub desired_capacity: i64,
     /// <p>The metrics enabled for the group.</p>
+    #[serde(rename = "EnabledMetrics")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enabled_metrics: Option<Vec<EnabledMetric>>,
     /// <p>The amount of time, in seconds, that Amazon EC2 Auto Scaling waits before checking the health status of an EC2 instance that has come into service.</p>
+    #[serde(rename = "HealthCheckGracePeriod")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health_check_grace_period: Option<i64>,
     /// <p>The service to use for the health checks. The valid values are <code>EC2</code> and <code>ELB</code>. If you configure an Auto Scaling group to use ELB health checks, it considers the instance unhealthy if it fails either the EC2 status checks or the load balancer health checks.</p>
+    #[serde(rename = "HealthCheckType")]
     pub health_check_type: String,
     /// <p>The EC2 instances associated with the group.</p>
+    #[serde(rename = "Instances")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub instances: Option<Vec<Instance>>,
     /// <p>The name of the associated launch configuration.</p>
+    #[serde(rename = "LaunchConfigurationName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launch_configuration_name: Option<String>,
     /// <p>The launch template for the group.</p>
+    #[serde(rename = "LaunchTemplate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launch_template: Option<LaunchTemplateSpecification>,
     /// <p>One or more load balancers associated with the group.</p>
+    #[serde(rename = "LoadBalancerNames")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancer_names: Option<Vec<String>>,
     /// <p>The maximum amount of time, in seconds, that an instance can be in service.</p> <p>Valid Range: Minimum value of 604800.</p>
+    #[serde(rename = "MaxInstanceLifetime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_instance_lifetime: Option<i64>,
     /// <p>The maximum size of the group.</p>
+    #[serde(rename = "MaxSize")]
     pub max_size: i64,
     /// <p>The minimum size of the group.</p>
+    #[serde(rename = "MinSize")]
     pub min_size: i64,
     /// <p>The mixed instances policy for the group.</p>
+    #[serde(rename = "MixedInstancesPolicy")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub mixed_instances_policy: Option<MixedInstancesPolicy>,
     /// <p>Indicates whether newly launched instances are protected from termination by Amazon EC2 Auto Scaling when scaling in.</p>
+    #[serde(rename = "NewInstancesProtectedFromScaleIn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub new_instances_protected_from_scale_in: Option<bool>,
     /// <p>The name of the placement group into which to launch your instances, if any.</p>
+    #[serde(rename = "PlacementGroup")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub placement_group: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the service-linked role that the Auto Scaling group uses to call other AWS services on your behalf.</p>
+    #[serde(rename = "ServiceLinkedRoleARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub service_linked_role_arn: Option<String>,
     /// <p>The current state of the group when <a>DeleteAutoScalingGroup</a> is in progress.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>The suspended processes associated with the group.</p>
+    #[serde(rename = "SuspendedProcesses")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub suspended_processes: Option<Vec<SuspendedProcess>>,
     /// <p>The tags for the group.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<TagDescription>>,
     /// <p>The Amazon Resource Names (ARN) of the target groups for your load balancer.</p>
+    #[serde(rename = "TargetGroupARNs")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_group_ar_ns: Option<Vec<String>>,
     /// <p>The termination policies for the group.</p>
+    #[serde(rename = "TerminationPolicies")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub termination_policies: Option<Vec<String>>,
     /// <p>One or more subnet IDs, if applicable, separated by commas.</p>
+    #[serde(rename = "VPCZoneIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vpc_zone_identifier: Option<String>,
 }
 
@@ -760,12 +830,15 @@ impl AutoScalingGroupsDeserializer {
         })
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AutoScalingGroupsType {
     /// <p>The groups.</p>
+    #[serde(rename = "AutoScalingGroups")]
     pub auto_scaling_groups: Vec<AutoScalingGroup>,
     /// <p>A string that indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the <code>NextToken</code> value when requesting the next set of items. This value is null when there are no more items to return.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -795,28 +868,42 @@ impl AutoScalingGroupsTypeDeserializer {
     }
 }
 /// <p>Describes an EC2 instance associated with an Auto Scaling group.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AutoScalingInstanceDetails {
     /// <p>The name of the Auto Scaling group for the instance.</p>
+    #[serde(rename = "AutoScalingGroupName")]
     pub auto_scaling_group_name: String,
     /// <p>The Availability Zone for the instance.</p>
+    #[serde(rename = "AvailabilityZone")]
     pub availability_zone: String,
     /// <p>The last reported health status of this instance. "Healthy" means that the instance is healthy and should remain in service. "Unhealthy" means that the instance is unhealthy and Amazon EC2 Auto Scaling should terminate and replace it.</p>
+    #[serde(rename = "HealthStatus")]
     pub health_status: String,
     /// <p>The ID of the instance.</p>
+    #[serde(rename = "InstanceId")]
     pub instance_id: String,
     /// <p>The instance type of the EC2 instance.</p>
+    #[serde(rename = "InstanceType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub instance_type: Option<String>,
     /// <p>The launch configuration used to launch the instance. This value is not available if you attached the instance to the Auto Scaling group.</p>
+    #[serde(rename = "LaunchConfigurationName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launch_configuration_name: Option<String>,
     /// <p>The launch template for the instance.</p>
+    #[serde(rename = "LaunchTemplate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launch_template: Option<LaunchTemplateSpecification>,
     /// <p>The lifecycle state for the instance.</p>
+    #[serde(rename = "LifecycleState")]
     pub lifecycle_state: String,
     /// <p>Indicates whether the instance is protected from termination by Amazon EC2 Auto Scaling when scaling in.</p>
+    #[serde(rename = "ProtectedFromScaleIn")]
     pub protected_from_scale_in: bool,
     /// <p>The number of capacity units contributed by the instance based on its instance type.</p> <p>Valid Range: Minimum value of 1. Maximum value of 999.</p>
+    #[serde(rename = "WeightedCapacity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub weighted_capacity: Option<String>,
 }
 
@@ -912,12 +999,16 @@ impl AutoScalingInstancesDeserializer {
         })
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AutoScalingInstancesType {
     /// <p>The instances.</p>
+    #[serde(rename = "AutoScalingInstances")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_scaling_instances: Option<Vec<AutoScalingInstanceDetails>>,
     /// <p>A string that indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the <code>NextToken</code> value when requesting the next set of items. This value is null when there are no more items to return.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -1014,10 +1105,12 @@ impl AvailabilityZonesSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct BatchDeleteScheduledActionAnswer {
     /// <p>The names of the scheduled actions that could not be deleted, including an error message.</p>
+    #[serde(rename = "FailedScheduledActions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failed_scheduled_actions: Option<Vec<FailedScheduledUpdateGroupActionRequest>>,
 }
 
@@ -1078,10 +1171,12 @@ impl BatchDeleteScheduledActionTypeSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct BatchPutScheduledUpdateGroupActionAnswer {
     /// <p>The names of the scheduled actions that could not be created or updated, including an error message.</p>
+    #[serde(rename = "FailedScheduledUpdateGroupActions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failed_scheduled_update_group_actions: Option<Vec<FailedScheduledUpdateGroupActionRequest>>,
 }
 
@@ -1200,17 +1295,23 @@ impl BlockDeviceEbsVolumeTypeDeserializer {
     }
 }
 /// <p>Describes a block device mapping.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct BlockDeviceMapping {
     /// <p>The device name exposed to the EC2 instance (for example, <code>/dev/sdh</code> or <code>xvdh</code>). For more information, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/device_naming.html">Device Naming on Linux Instances</a> in the <i>Amazon EC2 User Guide for Linux Instances</i>.</p>
+    #[serde(rename = "DeviceName")]
     pub device_name: String,
     /// <p>The information about the Amazon EBS volume.</p>
+    #[serde(rename = "Ebs")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ebs: Option<Ebs>,
     /// <p>Suppresses a device mapping.</p> <p>If this parameter is true for the root device, the instance might fail the EC2 health check. In that case, Amazon EC2 Auto Scaling launches a replacement instance.</p>
+    #[serde(rename = "NoDevice")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub no_device: Option<bool>,
     /// <p>The name of the virtual device (for example, <code>ephemeral0</code>).</p>
+    #[serde(rename = "VirtualName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub virtual_name: Option<String>,
 }
 
@@ -1330,8 +1431,8 @@ impl ClassicLinkVPCSecurityGroupsSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CompleteLifecycleActionAnswer {}
 
 struct CompleteLifecycleActionAnswerDeserializer;
@@ -1724,19 +1825,25 @@ impl CreateOrUpdateTagsTypeSerializer {
 }
 
 /// <p>Represents a CloudWatch metric of your choosing for a target tracking scaling policy to use with Amazon EC2 Auto Scaling.</p> <p>To create your customized metric specification:</p> <ul> <li> <p>Add values for each required parameter from CloudWatch. You can use an existing metric, or a new metric that you create. To use your own metric, you must first publish the metric to CloudWatch. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/publishingMetrics.html">Publish Custom Metrics</a> in the <i>Amazon CloudWatch User Guide</i>.</p> </li> <li> <p>Choose a metric that changes proportionally with capacity. The value of the metric should increase or decrease in inverse proportion to the number of capacity units. That is, the value of the metric should decrease when capacity increases.</p> </li> </ul> <p>For more information about CloudWatch, see <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html">Amazon CloudWatch Concepts</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CustomizedMetricSpecification {
     /// <p>The dimensions of the metric.</p> <p>Conditional: If you published your metric with dimensions, you must specify the same dimensions in your scaling policy.</p>
+    #[serde(rename = "Dimensions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dimensions: Option<Vec<MetricDimension>>,
     /// <p>The name of the metric.</p>
+    #[serde(rename = "MetricName")]
     pub metric_name: String,
     /// <p>The namespace of the metric.</p>
+    #[serde(rename = "Namespace")]
     pub namespace: String,
     /// <p>The statistic of the metric.</p>
+    #[serde(rename = "Statistic")]
     pub statistic: String,
     /// <p>The unit of the metric.</p>
+    #[serde(rename = "Unit")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub unit: Option<String>,
 }
 
@@ -1832,8 +1939,8 @@ impl DeleteAutoScalingGroupTypeSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteLifecycleHookAnswer {}
 
 struct DeleteLifecycleHookAnswerDeserializer;
@@ -1984,16 +2091,24 @@ impl DeleteTagsTypeSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeAccountLimitsAnswer {
     /// <p>The maximum number of groups allowed for your AWS account. The default limit is 200 per AWS Region.</p>
+    #[serde(rename = "MaxNumberOfAutoScalingGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_number_of_auto_scaling_groups: Option<i64>,
     /// <p>The maximum number of launch configurations allowed for your AWS account. The default limit is 200 per AWS Region.</p>
+    #[serde(rename = "MaxNumberOfLaunchConfigurations")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_number_of_launch_configurations: Option<i64>,
     /// <p>The current number of groups for your AWS account.</p>
+    #[serde(rename = "NumberOfAutoScalingGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub number_of_auto_scaling_groups: Option<i64>,
     /// <p>The current number of launch configurations for your AWS account.</p>
+    #[serde(rename = "NumberOfLaunchConfigurations")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub number_of_launch_configurations: Option<i64>,
 }
 
@@ -2044,10 +2159,12 @@ impl DescribeAccountLimitsAnswerDeserializer {
         )
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeAdjustmentTypesAnswer {
     /// <p>The policy adjustment types.</p>
+    #[serde(rename = "AdjustmentTypes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub adjustment_types: Option<Vec<AdjustmentType>>,
 }
 
@@ -2111,10 +2228,12 @@ impl DescribeAutoScalingInstancesTypeSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeAutoScalingNotificationTypesAnswer {
     /// <p>The notification types.</p>
+    #[serde(rename = "AutoScalingNotificationTypes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_scaling_notification_types: Option<Vec<String>>,
 }
 
@@ -2145,10 +2264,12 @@ impl DescribeAutoScalingNotificationTypesAnswerDeserializer {
         )
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeLifecycleHookTypesAnswer {
     /// <p>The lifecycle hook types.</p>
+    #[serde(rename = "LifecycleHookTypes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lifecycle_hook_types: Option<Vec<String>>,
 }
 
@@ -2179,10 +2300,12 @@ impl DescribeLifecycleHookTypesAnswerDeserializer {
         )
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeLifecycleHooksAnswer {
     /// <p>The lifecycle hooks for the specified group.</p>
+    #[serde(rename = "LifecycleHooks")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lifecycle_hooks: Option<Vec<LifecycleHook>>,
 }
 
@@ -2275,12 +2398,16 @@ impl DescribeLoadBalancerTargetGroupsRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeLoadBalancerTargetGroupsResponse {
     /// <p>Information about the target groups.</p>
+    #[serde(rename = "LoadBalancerTargetGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancer_target_groups: Option<Vec<LoadBalancerTargetGroupState>>,
     /// <p>A string that indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the <code>NextToken</code> value when requesting the next set of items. This value is null when there are no more items to return.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -2348,12 +2475,16 @@ impl DescribeLoadBalancersRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeLoadBalancersResponse {
     /// <p>The load balancers.</p>
+    #[serde(rename = "LoadBalancers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancers: Option<Vec<LoadBalancerState>>,
     /// <p>A string that indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the <code>NextToken</code> value when requesting the next set of items. This value is null when there are no more items to return.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -2385,12 +2516,16 @@ impl DescribeLoadBalancersResponseDeserializer {
         )
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeMetricCollectionTypesAnswer {
     /// <p>The granularities for the metrics.</p>
+    #[serde(rename = "Granularities")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub granularities: Option<Vec<MetricGranularityType>>,
     /// <p>One or more metrics.</p>
+    #[serde(rename = "Metrics")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metrics: Option<Vec<MetricCollectionType>>,
 }
 
@@ -2426,12 +2561,15 @@ impl DescribeMetricCollectionTypesAnswerDeserializer {
         )
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeNotificationConfigurationsAnswer {
     /// <p>A string that indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the <code>NextToken</code> value when requesting the next set of items. This value is null when there are no more items to return.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>The notification configurations.</p>
+    #[serde(rename = "NotificationConfigurations")]
     pub notification_configurations: Vec<NotificationConfiguration>,
 }
 
@@ -2685,10 +2823,12 @@ impl DescribeTagsTypeSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeTerminationPolicyTypesAnswer {
     /// <p>The termination policies supported by Amazon EC2 Auto Scaling: <code>OldestInstance</code>, <code>OldestLaunchConfiguration</code>, <code>NewestInstance</code>, <code>ClosestToNextInstanceHour</code>, <code>Default</code>, <code>OldestLaunchTemplate</code>, and <code>AllocationStrategy</code>.</p>
+    #[serde(rename = "TerminationPolicyTypes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub termination_policy_types: Option<Vec<String>>,
 }
 
@@ -2719,10 +2859,12 @@ impl DescribeTerminationPolicyTypesAnswerDeserializer {
         )
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DetachInstancesAnswer {
     /// <p>The activities related to detaching the instances from the Auto Scaling group.</p>
+    #[serde(rename = "Activities")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub activities: Option<Vec<Activity>>,
 }
 
@@ -2784,8 +2926,8 @@ impl DetachInstancesQuerySerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DetachLoadBalancerTargetGroupsResultType {}
 
 struct DetachLoadBalancerTargetGroupsResultTypeDeserializer;
@@ -2834,8 +2976,8 @@ impl DetachLoadBalancerTargetGroupsTypeSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DetachLoadBalancersResultType {}
 
 struct DetachLoadBalancersResultTypeDeserializer;
@@ -2924,21 +3066,32 @@ impl DisableScaleInDeserializer {
     }
 }
 /// <p>Describes an Amazon EBS volume. Used in combination with <a>BlockDeviceMapping</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Ebs {
     /// <p>Indicates whether the volume is deleted on instance termination. For Amazon EC2 Auto Scaling, the default value is <code>true</code>.</p>
+    #[serde(rename = "DeleteOnTermination")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delete_on_termination: Option<bool>,
     /// <p>Specifies whether the volume should be encrypted. Encrypted EBS volumes can only be attached to instances that support Amazon EBS encryption. For more information, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html#EBSEncryption_supported_instances">Supported Instance Types</a>. If your AMI uses encrypted volumes, you can also only launch it on supported instance types.</p> <note> <p>If you are creating a volume from a snapshot, you cannot specify an encryption value. Volumes that are created from encrypted snapshots are automatically encrypted, and volumes that are created from unencrypted snapshots are automatically unencrypted. By default, encrypted snapshots use the AWS managed CMK that is used for EBS encryption, but you can specify a custom CMK when you create the snapshot. The ability to encrypt a snapshot during copying also allows you to apply a new CMK to an already-encrypted snapshot. Volumes restored from the resulting copy are only accessible using the new CMK.</p> <p>Enabling <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html#encryption-by-default">encryption by default</a> results in all EBS volumes being encrypted with the AWS managed CMK or a customer managed CMK, whether or not the snapshot was encrypted.</p> </note> <p>For more information, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIEncryption.html">Using Encryption with EBS-Backed AMIs</a> in the <i>Amazon EC2 User Guide for Linux Instances</i> and <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/key-policy-requirements-EBS-encryption.html">Required CMK Key Policy for Use with Encrypted Volumes</a> in the <i>Amazon EC2 Auto Scaling User Guide</i>.</p>
+    #[serde(rename = "Encrypted")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub encrypted: Option<bool>,
     /// <p>The number of I/O operations per second (IOPS) to provision for the volume. The maximum ratio of IOPS to volume size (in GiB) is 50:1. For more information, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html">Amazon EBS Volume Types</a> in the <i>Amazon EC2 User Guide for Linux Instances</i>.</p> <p>Conditional: This parameter is required when the volume type is <code>io1</code>. (Not used with <code>standard</code>, <code>gp2</code>, <code>st1</code>, or <code>sc1</code> volumes.) </p>
+    #[serde(rename = "Iops")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub iops: Option<i64>,
     /// <p>The snapshot ID of the volume to use.</p> <p>Conditional: This parameter is optional if you specify a volume size. If you specify both <code>SnapshotId</code> and <code>VolumeSize</code>, <code>VolumeSize</code> must be equal or greater than the size of the snapshot.</p>
+    #[serde(rename = "SnapshotId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub snapshot_id: Option<String>,
     /// <p><p>The volume size, in Gibibytes (GiB).</p> <p>This can be a number from 1-1,024 for <code>standard</code>, 4-16,384 for <code>io1</code>, 1-16,384 for <code>gp2</code>, and 500-16,384 for <code>st1</code> and <code>sc1</code>. If you specify a snapshot, the volume size must be equal to or larger than the snapshot size.</p> <p>Default: If you create a volume from a snapshot and you don&#39;t specify a volume size, the default is the snapshot size.</p> <note> <p>At least one of VolumeSize or SnapshotId is required.</p> </note></p>
+    #[serde(rename = "VolumeSize")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub volume_size: Option<i64>,
     /// <p>The volume type, which can be <code>standard</code> for Magnetic, <code>io1</code> for Provisioned IOPS SSD, <code>gp2</code> for General Purpose SSD, <code>st1</code> for Throughput Optimized HDD, or <code>sc1</code> for Cold HDD. For more information, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html">Amazon EBS Volume Types</a> in the <i>Amazon EC2 User Guide for Linux Instances</i>.</p> <p>Valid Values: <code>standard</code> | <code>io1</code> | <code>gp2</code> | <code>st1</code> | <code>sc1</code> </p>
+    #[serde(rename = "VolumeType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub volume_type: Option<String>,
 }
 
@@ -3065,12 +3218,16 @@ impl EnableMetricsCollectionQuerySerializer {
 }
 
 /// <p>Describes an enabled metric.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EnabledMetric {
     /// <p>The granularity of the metric. The only valid value is <code>1Minute</code>.</p>
+    #[serde(rename = "Granularity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub granularity: Option<String>,
     /// <p><p>One of the following metrics:</p> <ul> <li> <p> <code>GroupMinSize</code> </p> </li> <li> <p> <code>GroupMaxSize</code> </p> </li> <li> <p> <code>GroupDesiredCapacity</code> </p> </li> <li> <p> <code>GroupInServiceInstances</code> </p> </li> <li> <p> <code>GroupPendingInstances</code> </p> </li> <li> <p> <code>GroupStandbyInstances</code> </p> </li> <li> <p> <code>GroupTerminatingInstances</code> </p> </li> <li> <p> <code>GroupTotalInstances</code> </p> </li> </ul></p>
+    #[serde(rename = "Metric")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric: Option<String>,
 }
 
@@ -3117,10 +3274,12 @@ impl EnabledMetricsDeserializer {
         })
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EnterStandbyAnswer {
     /// <p>The activities related to moving instances into <code>Standby</code> mode.</p>
+    #[serde(rename = "Activities")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub activities: Option<Vec<Activity>>,
 }
 
@@ -3236,10 +3395,12 @@ impl ExecutePolicyTypeSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ExitStandbyAnswer {
     /// <p>The activities related to moving instances out of <code>Standby</code> mode.</p>
+    #[serde(rename = "Activities")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub activities: Option<Vec<Activity>>,
 }
 
@@ -3296,14 +3457,19 @@ impl ExitStandbyQuerySerializer {
 }
 
 /// <p>Describes a scheduled action that could not be created, updated, or deleted.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FailedScheduledUpdateGroupActionRequest {
     /// <p>The error code.</p>
+    #[serde(rename = "ErrorCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub error_code: Option<String>,
     /// <p>The error message accompanying the error code.</p>
+    #[serde(rename = "ErrorMessage")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub error_message: Option<String>,
     /// <p>The name of the scheduled action.</p>
+    #[serde(rename = "ScheduledActionName")]
     pub scheduled_action_name: String,
 }
 
@@ -3436,26 +3602,39 @@ impl HeartbeatTimeoutDeserializer {
     }
 }
 /// <p>Describes an EC2 instance.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Instance {
     /// <p>The Availability Zone in which the instance is running.</p>
+    #[serde(rename = "AvailabilityZone")]
     pub availability_zone: String,
     /// <p>The last reported health status of the instance. "Healthy" means that the instance is healthy and should remain in service. "Unhealthy" means that the instance is unhealthy and that Amazon EC2 Auto Scaling should terminate and replace it.</p>
+    #[serde(rename = "HealthStatus")]
     pub health_status: String,
     /// <p>The ID of the instance.</p>
+    #[serde(rename = "InstanceId")]
     pub instance_id: String,
     /// <p>The instance type of the EC2 instance.</p>
+    #[serde(rename = "InstanceType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub instance_type: Option<String>,
     /// <p>The launch configuration associated with the instance.</p>
+    #[serde(rename = "LaunchConfigurationName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launch_configuration_name: Option<String>,
     /// <p>The launch template for the instance.</p>
+    #[serde(rename = "LaunchTemplate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launch_template: Option<LaunchTemplateSpecification>,
     /// <p>A description of the current lifecycle state. The <code>Quarantined</code> state is not used.</p>
+    #[serde(rename = "LifecycleState")]
     pub lifecycle_state: String,
     /// <p>Indicates whether the instance is protected from termination by Amazon EC2 Auto Scaling when scaling in.</p>
+    #[serde(rename = "ProtectedFromScaleIn")]
     pub protected_from_scale_in: bool,
     /// <p>The number of capacity units contributed by the instance based on its instance type.</p> <p>Valid Range: Minimum value of 1. Maximum value of 999.</p>
+    #[serde(rename = "WeightedCapacity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub weighted_capacity: Option<String>,
 }
 
@@ -3533,11 +3712,12 @@ impl InstanceIdsSerializer {
 }
 
 /// <p>Describes whether detailed monitoring is enabled for the Auto Scaling instances.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InstanceMonitoring {
     /// <p>If <code>true</code>, detailed monitoring is enabled. Otherwise, basic monitoring is enabled.</p>
+    #[serde(rename = "Enabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
 }
 
@@ -3606,21 +3786,32 @@ impl InstancesDeserializer {
     }
 }
 /// <p>Describes an instances distribution for an Auto Scaling group with <a>MixedInstancesPolicy</a>.</p> <p>The instances distribution specifies the distribution of On-Demand Instances and Spot Instances, the maximum price to pay for Spot Instances, and how the Auto Scaling group allocates instance types to fulfill On-Demand and Spot capacity.</p> <p>When you update <code>SpotAllocationStrategy</code>, <code>SpotInstancePools</code>, or <code>SpotMaxPrice</code>, this update action does not deploy any changes across the running Amazon EC2 instances in the group. Your existing Spot Instances continue to run as long as the maximum price for those instances is higher than the current Spot price. When scale out occurs, Amazon EC2 Auto Scaling launches instances based on the new settings. When scale in occurs, Amazon EC2 Auto Scaling terminates instances according to the group's termination policies.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InstancesDistribution {
     /// <p>Indicates how to allocate instance types to fulfill On-Demand capacity.</p> <p>The only valid value is <code>prioritized</code>, which is also the default value. This strategy uses the order of instance type overrides for the <a>LaunchTemplate</a> to define the launch priority of each instance type. The first instance type in the array is prioritized higher than the last. If all your On-Demand capacity cannot be fulfilled using your highest priority instance, then the Auto Scaling groups launches the remaining capacity using the second priority instance type, and so on.</p>
+    #[serde(rename = "OnDemandAllocationStrategy")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub on_demand_allocation_strategy: Option<String>,
     /// <p><p>The minimum amount of the Auto Scaling group&#39;s capacity that must be fulfilled by On-Demand Instances. This base portion is provisioned first as your group scales.</p> <p>Default if not set is 0. If you leave it set to 0, On-Demand Instances are launched as a percentage of the Auto Scaling group&#39;s desired capacity, per the <code>OnDemandPercentageAboveBaseCapacity</code> setting.</p> <note> <p>An update to this setting means a gradual replacement of instances to maintain the specified number of On-Demand Instances for your base capacity. When replacing instances, Amazon EC2 Auto Scaling launches new instances before terminating the old ones.</p> </note></p>
+    #[serde(rename = "OnDemandBaseCapacity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub on_demand_base_capacity: Option<i64>,
     /// <p>Controls the percentages of On-Demand Instances and Spot Instances for your additional capacity beyond <code>OnDemandBaseCapacity</code>.</p> <p>Default if not set is 100. If you leave it set to 100, the percentages are 100% for On-Demand Instances and 0% for Spot Instances.</p> <note> <p>An update to this setting means a gradual replacement of instances to maintain the percentage of On-Demand Instances for your additional capacity above the base capacity. When replacing instances, Amazon EC2 Auto Scaling launches new instances before terminating the old ones.</p> </note> <p>Valid Range: Minimum value of 0. Maximum value of 100.</p>
+    #[serde(rename = "OnDemandPercentageAboveBaseCapacity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub on_demand_percentage_above_base_capacity: Option<i64>,
     /// <p>Indicates how to allocate instances across Spot Instance pools.</p> <p>If the allocation strategy is <code>lowest-price</code>, the Auto Scaling group launches instances using the Spot pools with the lowest price, and evenly allocates your instances across the number of Spot pools that you specify. If the allocation strategy is <code>capacity-optimized</code>, the Auto Scaling group launches instances using Spot pools that are optimally chosen based on the available Spot capacity.</p> <p>The default Spot allocation strategy for calls that you make through the API, the AWS CLI, or the AWS SDKs is <code>lowest-price</code>. The default Spot allocation strategy for the AWS Management Console is <code>capacity-optimized</code>.</p> <p>Valid values: <code>lowest-price</code> | <code>capacity-optimized</code> </p>
+    #[serde(rename = "SpotAllocationStrategy")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub spot_allocation_strategy: Option<String>,
     /// <p>The number of Spot Instance pools across which to allocate your Spot Instances. The Spot pools are determined from the different instance types in the Overrides array of <a>LaunchTemplate</a>. Default if not set is 2.</p> <p>Used only when the Spot allocation strategy is <code>lowest-price</code>.</p> <p>Valid Range: Minimum value of 1. Maximum value of 20.</p>
+    #[serde(rename = "SpotInstancePools")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub spot_instance_pools: Option<i64>,
     /// <p>The maximum price per unit hour that you are willing to pay for a Spot Instance. If you leave the value of this parameter blank (which is the default), the maximum Spot price is set at the On-Demand price.</p> <p>To remove a value that you previously set, include the parameter but leave the value blank.</p>
+    #[serde(rename = "SpotMaxPrice")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub spot_max_price: Option<String>,
 }
 
@@ -3722,46 +3913,80 @@ impl InstancesDistributionSerializer {
 }
 
 /// <p>Describes a launch configuration.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LaunchConfiguration {
     /// <p>For Auto Scaling groups that are running in a VPC, specifies whether to assign a public IP address to the group's instances.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/asg-in-vpc.html">Launching Auto Scaling Instances in a VPC</a> in the <i>Amazon EC2 Auto Scaling User Guide</i>.</p>
+    #[serde(rename = "AssociatePublicIpAddress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub associate_public_ip_address: Option<bool>,
     /// <p>A block device mapping, which specifies the block devices for the instance.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/block-device-mapping-concepts.html">Block Device Mapping</a> in the <i>Amazon EC2 User Guide for Linux Instances</i>.</p>
+    #[serde(rename = "BlockDeviceMappings")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub block_device_mappings: Option<Vec<BlockDeviceMapping>>,
     /// <p>The ID of a ClassicLink-enabled VPC to link your EC2-Classic instances to.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/vpc-classiclink.html">ClassicLink</a> in the <i>Amazon EC2 User Guide for Linux Instances</i> and <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/asg-in-vpc.html#as-ClassicLink">Linking EC2-Classic Instances to a VPC</a> in the <i>Amazon EC2 Auto Scaling User Guide</i>.</p>
+    #[serde(rename = "ClassicLinkVPCId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub classic_link_vpc_id: Option<String>,
     /// <p>The IDs of one or more security groups for the VPC specified in <code>ClassicLinkVPCId</code>.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/vpc-classiclink.html">ClassicLink</a> in the <i>Amazon EC2 User Guide for Linux Instances</i> and <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/asg-in-vpc.html#as-ClassicLink">Linking EC2-Classic Instances to a VPC</a> in the <i>Amazon EC2 Auto Scaling User Guide</i>.</p>
+    #[serde(rename = "ClassicLinkVPCSecurityGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub classic_link_vpc_security_groups: Option<Vec<String>>,
     /// <p>The creation date and time for the launch configuration.</p>
+    #[serde(rename = "CreatedTime")]
     pub created_time: String,
     /// <p>Specifies whether the launch configuration is optimized for EBS I/O (<code>true</code>) or not (<code>false</code>).</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSOptimized.html">Amazon EBS-Optimized Instances</a> in the <i>Amazon EC2 User Guide for Linux Instances</i>.</p>
+    #[serde(rename = "EbsOptimized")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ebs_optimized: Option<bool>,
     /// <p>The name or the Amazon Resource Name (ARN) of the instance profile associated with the IAM role for the instance. The instance profile contains the IAM role.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/us-iam-role.html">IAM Role for Applications That Run on Amazon EC2 Instances</a> in the <i>Amazon EC2 Auto Scaling User Guide</i>.</p>
+    #[serde(rename = "IamInstanceProfile")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub iam_instance_profile: Option<String>,
     /// <p>The ID of the Amazon Machine Image (AMI) to use to launch your EC2 instances.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html">Finding an AMI</a> in the <i>Amazon EC2 User Guide for Linux Instances</i>.</p>
+    #[serde(rename = "ImageId")]
     pub image_id: String,
     /// <p>Controls whether instances in this group are launched with detailed (<code>true</code>) or basic (<code>false</code>) monitoring.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/autoscaling/latest/userguide/as-instance-monitoring.html#enable-as-instance-metrics">Configure Monitoring for Auto Scaling Instances</a> in the <i>Amazon EC2 Auto Scaling User Guide</i>.</p>
+    #[serde(rename = "InstanceMonitoring")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub instance_monitoring: Option<InstanceMonitoring>,
     /// <p>The instance type for the instances.</p> <p>For information about available instance types, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html#AvailableInstanceTypes">Available Instance Types</a> in the <i>Amazon EC2 User Guide for Linux Instances.</i> </p>
+    #[serde(rename = "InstanceType")]
     pub instance_type: String,
     /// <p>The ID of the kernel associated with the AMI.</p>
+    #[serde(rename = "KernelId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kernel_id: Option<String>,
     /// <p>The name of the key pair.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html">Amazon EC2 Key Pairs</a> in the <i>Amazon EC2 User Guide for Linux Instances</i>.</p>
+    #[serde(rename = "KeyName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key_name: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the launch configuration.</p>
+    #[serde(rename = "LaunchConfigurationARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launch_configuration_arn: Option<String>,
     /// <p>The name of the launch configuration.</p>
+    #[serde(rename = "LaunchConfigurationName")]
     pub launch_configuration_name: String,
     /// <p>The tenancy of the instance, either <code>default</code> or <code>dedicated</code>. An instance with <code>dedicated</code> tenancy runs on isolated, single-tenant hardware and can only be launched into a VPC.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/asg-in-vpc.html#as-vpc-tenancy">Instance Placement Tenancy</a> in the <i>Amazon EC2 Auto Scaling User Guide</i>.</p>
+    #[serde(rename = "PlacementTenancy")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub placement_tenancy: Option<String>,
     /// <p>The ID of the RAM disk associated with the AMI.</p>
+    #[serde(rename = "RamdiskId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ramdisk_id: Option<String>,
     /// <p>A list that contains the security groups to assign to the instances in the Auto Scaling group.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_SecurityGroups.html">Security Groups for Your VPC</a> in the <i>Amazon Virtual Private Cloud User Guide</i>.</p>
+    #[serde(rename = "SecurityGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub security_groups: Option<Vec<String>>,
     /// <p>The maximum hourly price to be paid for any Spot Instance launched to fulfill the request. Spot Instances are launched when the price you specify exceeds the current Spot price.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/asg-launch-spot-instances.html">Launching Spot Instances in Your Auto Scaling Group</a> in the <i>Amazon EC2 Auto Scaling User Guide</i>.</p>
+    #[serde(rename = "SpotPrice")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub spot_price: Option<String>,
     /// <p>The Base64-encoded user data to make available to the launched EC2 instances.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html">Instance Metadata and User Data</a> in the <i>Amazon EC2 User Guide for Linux Instances</i>.</p>
+    #[serde(rename = "UserData")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_data: Option<String>,
 }
 
@@ -3971,12 +4196,15 @@ impl LaunchConfigurationsDeserializer {
         })
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LaunchConfigurationsType {
     /// <p>The launch configurations.</p>
+    #[serde(rename = "LaunchConfigurations")]
     pub launch_configurations: Vec<LaunchConfiguration>,
     /// <p>A string that indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the <code>NextToken</code> value when requesting the next set of items. This value is null when there are no more items to return.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -4012,13 +4240,16 @@ impl LaunchConfigurationsTypeDeserializer {
     }
 }
 /// <p>Describes a launch template and overrides.</p> <p>The overrides are used to override the instance type specified by the launch template with multiple instance types that can be used to launch On-Demand Instances and Spot Instances.</p> <p>When you update the launch template or overrides, existing Amazon EC2 instances continue to run. When scale out occurs, Amazon EC2 Auto Scaling launches instances to match the new settings. When scale in occurs, Amazon EC2 Auto Scaling terminates instances according to the group's termination policies.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LaunchTemplate {
     /// <p>The launch template to use. You must specify either the launch template ID or launch template name in the request.</p>
+    #[serde(rename = "LaunchTemplateSpecification")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launch_template_specification: Option<LaunchTemplateSpecification>,
     /// <p>An optional setting. Any parameters that you specify override the same parameters in the launch template. Currently, the only supported override is instance type. You can specify between 1 and 20 instance types.</p>
+    #[serde(rename = "Overrides")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub overrides: Option<Vec<LaunchTemplateOverrides>>,
 }
 
@@ -4088,13 +4319,16 @@ impl LaunchTemplateNameDeserializer {
     }
 }
 /// <p>Describes an override for a launch template.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LaunchTemplateOverrides {
     /// <p>The instance type.</p> <p>For information about available instance types, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html#AvailableInstanceTypes">Available Instance Types</a> in the <i>Amazon Elastic Compute Cloud User Guide.</i> </p>
+    #[serde(rename = "InstanceType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub instance_type: Option<String>,
     /// <p>The number of capacity units, which gives the instance type a proportional weight to other instance types. For example, larger instance types are generally weighted more than smaller instance types. These are the same units that you chose to set the desired capacity in terms of instances, or a performance attribute such as vCPUs, memory, or I/O.</p> <p>Valid Range: Minimum value of 1. Maximum value of 999.</p>
+    #[serde(rename = "WeightedCapacity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub weighted_capacity: Option<String>,
 }
 
@@ -4149,15 +4383,20 @@ impl LaunchTemplateOverridesSerializer {
 }
 
 /// <p>Describes a launch template and the launch template version.</p> <p>The launch template that is specified must be configured for use with an Auto Scaling group. For more information, see <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/create-launch-template.html">Creating a Launch Template for an Auto Scaling Group</a> in the <i>Amazon EC2 Auto Scaling User Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LaunchTemplateSpecification {
     /// <p>The ID of the launch template. You must specify either a template ID or a template name.</p>
+    #[serde(rename = "LaunchTemplateId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launch_template_id: Option<String>,
     /// <p>The name of the launch template. You must specify either a template name or a template ID.</p>
+    #[serde(rename = "LaunchTemplateName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launch_template_name: Option<String>,
     /// <p>The version number, <code>$Latest</code>, or <code>$Default</code>. If the value is <code>$Latest</code>, Amazon EC2 Auto Scaling selects the latest version of the launch template when launching instances. If the value is <code>$Default</code>, Amazon EC2 Auto Scaling selects the default version of the launch template when launching instances. The default value is <code>$Default</code>.</p>
+    #[serde(rename = "Version")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
 
@@ -4232,26 +4471,44 @@ impl LifecycleActionResultDeserializer {
     }
 }
 /// <p>Describes a lifecycle hook, which tells Amazon EC2 Auto Scaling that you want to perform an action whenever it launches instances or terminates instances. Used in response to <a>DescribeLifecycleHooks</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LifecycleHook {
     /// <p>The name of the Auto Scaling group for the lifecycle hook.</p>
+    #[serde(rename = "AutoScalingGroupName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_scaling_group_name: Option<String>,
     /// <p>Defines the action the Auto Scaling group should take when the lifecycle hook timeout elapses or if an unexpected failure occurs. The possible values are <code>CONTINUE</code> and <code>ABANDON</code>.</p>
+    #[serde(rename = "DefaultResult")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_result: Option<String>,
     /// <p>The maximum time, in seconds, that an instance can remain in a <code>Pending:Wait</code> or <code>Terminating:Wait</code> state. The maximum is 172800 seconds (48 hours) or 100 times <code>HeartbeatTimeout</code>, whichever is smaller.</p>
+    #[serde(rename = "GlobalTimeout")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub global_timeout: Option<i64>,
     /// <p>The maximum time, in seconds, that can elapse before the lifecycle hook times out. If the lifecycle hook times out, Amazon EC2 Auto Scaling performs the action that you specified in the <code>DefaultResult</code> parameter.</p>
+    #[serde(rename = "HeartbeatTimeout")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub heartbeat_timeout: Option<i64>,
     /// <p>The name of the lifecycle hook.</p>
+    #[serde(rename = "LifecycleHookName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lifecycle_hook_name: Option<String>,
     /// <p><p>The state of the EC2 instance to which to attach the lifecycle hook. The following are possible values:</p> <ul> <li> <p>autoscaling:EC2<em>INSTANCE</em>LAUNCHING</p> </li> <li> <p>autoscaling:EC2<em>INSTANCE</em>TERMINATING</p> </li> </ul></p>
+    #[serde(rename = "LifecycleTransition")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lifecycle_transition: Option<String>,
     /// <p>Additional information that is included any time Amazon EC2 Auto Scaling sends a message to the notification target.</p>
+    #[serde(rename = "NotificationMetadata")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub notification_metadata: Option<String>,
     /// <p>The ARN of the target that Amazon EC2 Auto Scaling sends notifications to when an instance is in the transition state for the lifecycle hook. The notification target can be either an SQS queue or an SNS topic.</p>
+    #[serde(rename = "NotificationTargetARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub notification_target_arn: Option<String>,
     /// <p>The ARN of the IAM role that allows the Auto Scaling group to publish to the specified notification target.</p>
+    #[serde(rename = "RoleARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role_arn: Option<String>,
 }
 
@@ -4476,12 +4733,16 @@ impl LoadBalancerNamesSerializer {
 }
 
 /// <p>Describes the state of a Classic Load Balancer.</p> <p>If you specify a load balancer when creating the Auto Scaling group, the state of the load balancer is <code>InService</code>.</p> <p>If you attach a load balancer to an existing Auto Scaling group, the initial state is <code>Adding</code>. The state transitions to <code>Added</code> after all instances in the group are registered with the load balancer. If Elastic Load Balancing health checks are enabled for the load balancer, the state transitions to <code>InService</code> after at least one instance in the group passes the health check. If EC2 health checks are enabled instead, the load balancer remains in the <code>Added</code> state.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LoadBalancerState {
     /// <p>The name of the load balancer.</p>
+    #[serde(rename = "LoadBalancerName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancer_name: Option<String>,
     /// <p><p>One of the following load balancer states:</p> <ul> <li> <p> <code>Adding</code> - The instances in the group are being registered with the load balancer.</p> </li> <li> <p> <code>Added</code> - All instances in the group are registered with the load balancer.</p> </li> <li> <p> <code>InService</code> - At least one instance in the group passed an ELB health check.</p> </li> <li> <p> <code>Removing</code> - The instances in the group are being deregistered from the load balancer. If connection draining is enabled, Elastic Load Balancing waits for in-flight requests to complete before deregistering the instances.</p> </li> <li> <p> <code>Removed</code> - All instances in the group are deregistered from the load balancer.</p> </li> </ul></p>
+    #[serde(rename = "State")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub state: Option<String>,
 }
 
@@ -4527,12 +4788,16 @@ impl LoadBalancerStatesDeserializer {
     }
 }
 /// <p>Describes the state of a target group.</p> <p>If you attach a target group to an existing Auto Scaling group, the initial state is <code>Adding</code>. The state transitions to <code>Added</code> after all Auto Scaling instances are registered with the target group. If Elastic Load Balancing health checks are enabled, the state transitions to <code>InService</code> after at least one Auto Scaling instance passes the health check. If EC2 health checks are enabled instead, the target group remains in the <code>Added</code> state.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LoadBalancerTargetGroupState {
     /// <p>The Amazon Resource Name (ARN) of the target group.</p>
+    #[serde(rename = "LoadBalancerTargetGroupARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub load_balancer_target_group_arn: Option<String>,
     /// <p><p>The state of the target group.</p> <ul> <li> <p> <code>Adding</code> - The Auto Scaling instances are being registered with the target group.</p> </li> <li> <p> <code>Added</code> - All Auto Scaling instances are registered with the target group.</p> </li> <li> <p> <code>InService</code> - At least one Auto Scaling instance passed an ELB health check.</p> </li> <li> <p> <code>Removing</code> - The Auto Scaling instances are being deregistered from the target group. If connection draining is enabled, Elastic Load Balancing waits for in-flight requests to complete before deregistering the instances.</p> </li> <li> <p> <code>Removed</code> - All Auto Scaling instances are deregistered from the target group.</p> </li> </ul></p>
+    #[serde(rename = "State")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub state: Option<String>,
 }
 
@@ -4619,10 +4884,12 @@ impl MaxNumberOfLaunchConfigurationsDeserializer {
     }
 }
 /// <p>Describes a metric.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MetricCollectionType {
     /// <p><p>One of the following metrics:</p> <ul> <li> <p> <code>GroupMinSize</code> </p> </li> <li> <p> <code>GroupMaxSize</code> </p> </li> <li> <p> <code>GroupDesiredCapacity</code> </p> </li> <li> <p> <code>GroupInServiceInstances</code> </p> </li> <li> <p> <code>GroupPendingInstances</code> </p> </li> <li> <p> <code>GroupStandbyInstances</code> </p> </li> <li> <p> <code>GroupTerminatingInstances</code> </p> </li> <li> <p> <code>GroupTotalInstances</code> </p> </li> </ul></p>
+    #[serde(rename = "Metric")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric: Option<String>,
 }
 
@@ -4666,13 +4933,14 @@ impl MetricCollectionTypesDeserializer {
     }
 }
 /// <p>Describes the dimension of a metric.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MetricDimension {
     /// <p>The name of the dimension.</p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p>The value of the dimension.</p>
+    #[serde(rename = "Value")]
     pub value: String,
 }
 
@@ -4764,10 +5032,12 @@ impl MetricDimensionsSerializer {
 }
 
 /// <p>Describes a granularity of a metric.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MetricGranularityType {
     /// <p>The granularity. The only valid value is <code>1Minute</code>.</p>
+    #[serde(rename = "Granularity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub granularity: Option<String>,
 }
 
@@ -4923,13 +5193,16 @@ impl MixedInstanceSpotPriceDeserializer {
     }
 }
 /// <p>Describes a mixed instances policy for an Auto Scaling group. With mixed instances, your Auto Scaling group can provision a combination of On-Demand Instances and Spot Instances across multiple instance types. For more information, see <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/asg-purchase-options.html">Auto Scaling Groups with Multiple Instance Types and Purchase Options</a> in the <i>Amazon EC2 Auto Scaling User Guide</i>.</p> <p>You can create a mixed instances policy for a new Auto Scaling group, or you can create it for an existing group by updating the group to specify <code>MixedInstancesPolicy</code> as the top-level parameter instead of a launch configuration or template. For more information, see <a>CreateAutoScalingGroup</a> and <a>UpdateAutoScalingGroup</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MixedInstancesPolicy {
     /// <p>The instances distribution to use.</p> <p>If you leave this parameter unspecified, the value for each parameter in <code>InstancesDistribution</code> uses a default value.</p>
+    #[serde(rename = "InstancesDistribution")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub instances_distribution: Option<InstancesDistribution>,
     /// <p>The launch template and instance types (overrides).</p> <p>This parameter must be specified when creating a mixed instances policy.</p>
+    #[serde(rename = "LaunchTemplate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub launch_template: Option<LaunchTemplate>,
 }
 
@@ -5011,14 +5284,20 @@ impl NoDeviceDeserializer {
     }
 }
 /// <p>Describes a notification.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct NotificationConfiguration {
     /// <p>The name of the Auto Scaling group.</p>
+    #[serde(rename = "AutoScalingGroupName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_scaling_group_name: Option<String>,
     /// <p><p>One of the following event notification types:</p> <ul> <li> <p> <code>autoscaling:EC2<em>INSTANCE</em>LAUNCH</code> </p> </li> <li> <p> <code>autoscaling:EC2<em>INSTANCE</em>LAUNCH<em>ERROR</code> </p> </li> <li> <p> <code>autoscaling:EC2</em>INSTANCE<em>TERMINATE</code> </p> </li> <li> <p> <code>autoscaling:EC2</em>INSTANCE<em>TERMINATE</em>ERROR</code> </p> </li> <li> <p> <code>autoscaling:TEST_NOTIFICATION</code> </p> </li> </ul></p>
+    #[serde(rename = "NotificationType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub notification_type: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the Amazon Simple Notification Service (Amazon SNS) topic.</p>
+    #[serde(rename = "TopicARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub topic_arn: Option<String>,
 }
 
@@ -5151,12 +5430,16 @@ impl OverridesSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PoliciesType {
     /// <p>A string that indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the <code>NextToken</code> value when requesting the next set of items. This value is null when there are no more items to return.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>The scaling policies.</p>
+    #[serde(rename = "ScalingPolicies")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scaling_policies: Option<Vec<ScalingPolicy>>,
 }
 
@@ -5184,12 +5467,16 @@ impl PoliciesTypeDeserializer {
     }
 }
 /// <p>Contains the output of PutScalingPolicy.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PolicyARNType {
     /// <p>The CloudWatch alarms created for the target tracking scaling policy.</p>
+    #[serde(rename = "Alarms")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alarms: Option<Vec<Alarm>>,
     /// <p>The Amazon Resource Name (ARN) of the policy.</p>
+    #[serde(rename = "PolicyARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_arn: Option<String>,
 }
 
@@ -5252,13 +5539,15 @@ impl PolicyTypesSerializer {
 }
 
 /// <p>Represents a predefined metric for a target tracking scaling policy to use with Amazon EC2 Auto Scaling.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PredefinedMetricSpecification {
     /// <p><p>The metric type. The following predefined metrics are available:</p> <ul> <li> <p> <code>ASGAverageCPUUtilization</code> - Average CPU utilization of the Auto Scaling group.</p> </li> <li> <p> <code>ASGAverageNetworkIn</code> - Average number of bytes received on all network interfaces by the Auto Scaling group.</p> </li> <li> <p> <code>ASGAverageNetworkOut</code> - Average number of bytes sent out on all network interfaces by the Auto Scaling group.</p> </li> <li> <p> <code>ALBRequestCountPerTarget</code> - Number of requests completed per target in an Application Load Balancer target group.</p> </li> </ul></p>
+    #[serde(rename = "PredefinedMetricType")]
     pub predefined_metric_type: String,
     /// <p><p>Identifies the resource associated with the metric type. You can&#39;t specify a resource label unless the metric type is <code>ALBRequestCountPerTarget</code> and there is a target group attached to the Auto Scaling group.</p> <p>The format is <code>app/<i>load-balancer-name</i>/<i>load-balancer-id</i>/targetgroup/<i>target-group-name</i>/<i>target-group-id</i> </code>, where </p> <ul> <li> <p> <code>app/<i>load-balancer-name</i>/<i>load-balancer-id</i> </code> is the final portion of the load balancer ARN, and</p> </li> <li> <p> <code>targetgroup/<i>target-group-name</i>/<i>target-group-id</i> </code> is the final portion of the target group ARN.</p> </li> </ul></p>
+    #[serde(rename = "ResourceLabel")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_label: Option<String>,
 }
 
@@ -5323,10 +5612,11 @@ impl ProcessNamesSerializer {
 }
 
 /// <p>Describes a process type.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-suspend-resume-processes.html#process-types">Scaling Processes</a> in the <i>Amazon EC2 Auto Scaling User Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ProcessType {
     /// <p><p>One of the following processes:</p> <ul> <li> <p> <code>Launch</code> </p> </li> <li> <p> <code>Terminate</code> </p> </li> <li> <p> <code>AddToLoadBalancer</code> </p> </li> <li> <p> <code>AlarmNotification</code> </p> </li> <li> <p> <code>AZRebalance</code> </p> </li> <li> <p> <code>HealthCheck</code> </p> </li> <li> <p> <code>ReplaceUnhealthy</code> </p> </li> <li> <p> <code>ScheduledActions</code> </p> </li> </ul></p>
+    #[serde(rename = "ProcessName")]
     pub process_name: String,
 }
 
@@ -5366,10 +5656,12 @@ impl ProcessesDeserializer {
         })
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ProcessesType {
     /// <p>The names of the process types.</p>
+    #[serde(rename = "Processes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub processes: Option<Vec<ProcessType>>,
 }
 
@@ -5415,8 +5707,8 @@ impl PropagateAtLaunchDeserializer {
         Ok(obj)
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PutLifecycleHookAnswer {}
 
 struct PutLifecycleHookAnswerDeserializer;
@@ -5693,8 +5985,8 @@ impl PutScheduledUpdateGroupActionTypeSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RecordLifecycleActionHeartbeatAnswer {}
 
 struct RecordLifecycleActionHeartbeatAnswerDeserializer;
@@ -5795,36 +6087,64 @@ impl ScalingPoliciesDeserializer {
     }
 }
 /// <p>Describes a scaling policy.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ScalingPolicy {
     /// <p>The adjustment type, which specifies how <code>ScalingAdjustment</code> is interpreted. The valid values are <code>ChangeInCapacity</code>, <code>ExactCapacity</code>, and <code>PercentChangeInCapacity</code>.</p>
+    #[serde(rename = "AdjustmentType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub adjustment_type: Option<String>,
     /// <p>The CloudWatch alarms related to the policy.</p>
+    #[serde(rename = "Alarms")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alarms: Option<Vec<Alarm>>,
     /// <p>The name of the Auto Scaling group.</p>
+    #[serde(rename = "AutoScalingGroupName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_scaling_group_name: Option<String>,
     /// <p>The amount of time, in seconds, after a scaling activity completes before any further dynamic scaling activities can start.</p>
+    #[serde(rename = "Cooldown")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cooldown: Option<i64>,
     /// <p>The estimated time, in seconds, until a newly launched instance can contribute to the CloudWatch metrics.</p>
+    #[serde(rename = "EstimatedInstanceWarmup")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub estimated_instance_warmup: Option<i64>,
     /// <p>The aggregation type for the CloudWatch metrics. The valid values are <code>Minimum</code>, <code>Maximum</code>, and <code>Average</code>.</p>
+    #[serde(rename = "MetricAggregationType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric_aggregation_type: Option<String>,
     /// <p>The minimum number of instances to scale. If the value of <code>AdjustmentType</code> is <code>PercentChangeInCapacity</code>, the scaling policy changes the <code>DesiredCapacity</code> of the Auto Scaling group by at least this many instances. Otherwise, the error is <code>ValidationError</code>.</p>
+    #[serde(rename = "MinAdjustmentMagnitude")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub min_adjustment_magnitude: Option<i64>,
     /// <p>Available for backward compatibility. Use <code>MinAdjustmentMagnitude</code> instead.</p>
+    #[serde(rename = "MinAdjustmentStep")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub min_adjustment_step: Option<i64>,
     /// <p>The Amazon Resource Name (ARN) of the policy.</p>
+    #[serde(rename = "PolicyARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_arn: Option<String>,
     /// <p>The name of the scaling policy.</p>
+    #[serde(rename = "PolicyName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_name: Option<String>,
     /// <p>The policy type. The valid values are <code>SimpleScaling</code>, <code>StepScaling</code>, and <code>TargetTrackingScaling</code>.</p>
+    #[serde(rename = "PolicyType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_type: Option<String>,
     /// <p>The amount by which to scale, based on the specified adjustment type. A positive value adds to the current capacity while a negative number removes from the current capacity.</p>
+    #[serde(rename = "ScalingAdjustment")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scaling_adjustment: Option<i64>,
     /// <p>A set of adjustments that enable you to scale based on the size of the alarm breach.</p>
+    #[serde(rename = "StepAdjustments")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub step_adjustments: Option<Vec<StepAdjustment>>,
     /// <p>A target tracking scaling policy.</p>
+    #[serde(rename = "TargetTrackingConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target_tracking_configuration: Option<TargetTrackingConfiguration>,
 }
 
@@ -5965,12 +6285,16 @@ impl ScheduledActionNamesSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ScheduledActionsType {
     /// <p>A string that indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the <code>NextToken</code> value when requesting the next set of items. This value is null when there are no more items to return.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>The scheduled actions.</p>
+    #[serde(rename = "ScheduledUpdateGroupActions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scheduled_update_group_actions: Option<Vec<ScheduledUpdateGroupAction>>,
 }
 
@@ -6001,28 +6325,48 @@ impl ScheduledActionsTypeDeserializer {
     }
 }
 /// <p>Describes a scheduled scaling action. Used in response to <a>DescribeScheduledActions</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ScheduledUpdateGroupAction {
     /// <p>The name of the Auto Scaling group.</p>
+    #[serde(rename = "AutoScalingGroupName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_scaling_group_name: Option<String>,
     /// <p>The number of instances you prefer to maintain in the group.</p>
+    #[serde(rename = "DesiredCapacity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub desired_capacity: Option<i64>,
     /// <p>The date and time in UTC for the recurring schedule to end. For example, <code>"2019-06-01T00:00:00Z"</code>. </p>
+    #[serde(rename = "EndTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub end_time: Option<String>,
     /// <p>The maximum number of instances in the Auto Scaling group.</p>
+    #[serde(rename = "MaxSize")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_size: Option<i64>,
     /// <p>The minimum number of instances in the Auto Scaling group.</p>
+    #[serde(rename = "MinSize")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub min_size: Option<i64>,
     /// <p>The recurring schedule for the action, in Unix cron syntax format.</p> <p>When <code>StartTime</code> and <code>EndTime</code> are specified with <code>Recurrence</code>, they form the boundaries of when the recurring action starts and stops.</p>
+    #[serde(rename = "Recurrence")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub recurrence: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the scheduled action.</p>
+    #[serde(rename = "ScheduledActionARN")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scheduled_action_arn: Option<String>,
     /// <p>The name of the scheduled action.</p>
+    #[serde(rename = "ScheduledActionName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scheduled_action_name: Option<String>,
     /// <p>The date and time in UTC for this action to start. For example, <code>"2019-06-01T00:00:00Z"</code>. </p>
+    #[serde(rename = "StartTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub start_time: Option<String>,
     /// <p>This parameter is no longer used.</p>
+    #[serde(rename = "Time")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub time: Option<String>,
 }
 
@@ -6277,8 +6621,8 @@ impl SetInstanceHealthQuerySerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetInstanceProtectionAnswer {}
 
 struct SetInstanceProtectionAnswerDeserializer;
@@ -6356,15 +6700,19 @@ impl SpotPriceDeserializer {
     }
 }
 /// <p><p>Describes an adjustment based on the difference between the value of the aggregated CloudWatch metric and the breach threshold that you&#39;ve defined for the alarm. Used in combination with <a>PutScalingPolicy</a>.</p> <p>For the following examples, suppose that you have an alarm with a breach threshold of 50:</p> <ul> <li> <p>To trigger the adjustment when the metric is greater than or equal to 50 and less than 60, specify a lower bound of 0 and an upper bound of 10.</p> </li> <li> <p>To trigger the adjustment when the metric is greater than 40 and less than or equal to 50, specify a lower bound of -10 and an upper bound of 0.</p> </li> </ul> <p>There are a few rules for the step adjustments for your step policy:</p> <ul> <li> <p>The ranges of your step adjustments can&#39;t overlap or have a gap.</p> </li> <li> <p>At most, one step adjustment can have a null lower bound. If one step adjustment has a negative lower bound, then there must be a step adjustment with a null lower bound.</p> </li> <li> <p>At most, one step adjustment can have a null upper bound. If one step adjustment has a positive upper bound, then there must be a step adjustment with a null upper bound.</p> </li> <li> <p>The upper and lower bound can&#39;t be null in the same step adjustment.</p> </li> </ul></p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StepAdjustment {
     /// <p>The lower bound for the difference between the alarm threshold and the CloudWatch metric. If the metric value is above the breach threshold, the lower bound is inclusive (the metric must be greater than or equal to the threshold plus the lower bound). Otherwise, it is exclusive (the metric must be greater than the threshold plus the lower bound). A null value indicates negative infinity.</p>
+    #[serde(rename = "MetricIntervalLowerBound")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric_interval_lower_bound: Option<f64>,
     /// <p>The upper bound for the difference between the alarm threshold and the CloudWatch metric. If the metric value is above the breach threshold, the upper bound is exclusive (the metric must be less than the threshold plus the upper bound). Otherwise, it is inclusive (the metric must be less than or equal to the threshold plus the upper bound). A null value indicates positive infinity.</p> <p>The upper bound must be greater than the lower bound.</p>
+    #[serde(rename = "MetricIntervalUpperBound")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metric_interval_upper_bound: Option<f64>,
     /// <p>The amount by which to scale, based on the specified adjustment type. A positive value adds to the current capacity while a negative number removes from the current capacity.</p>
+    #[serde(rename = "ScalingAdjustment")]
     pub scaling_adjustment: i64,
 }
 
@@ -6458,12 +6806,16 @@ impl StepAdjustmentsSerializer {
 }
 
 /// <p>Describes an automatic scaling process that has been suspended. For more information, see <a>ProcessType</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SuspendedProcess {
     /// <p>The name of the suspended process.</p>
+    #[serde(rename = "ProcessName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub process_name: Option<String>,
     /// <p>The reason that the process was suspended.</p>
+    #[serde(rename = "SuspensionReason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub suspension_reason: Option<String>,
 }
 
@@ -6553,18 +6905,28 @@ impl TagSerializer {
 }
 
 /// <p>Describes a tag for an Auto Scaling group.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TagDescription {
     /// <p>The tag key.</p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>Determines whether the tag is added to new instances as they are launched in the group.</p>
+    #[serde(rename = "PropagateAtLaunch")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub propagate_at_launch: Option<bool>,
     /// <p>The name of the group.</p>
+    #[serde(rename = "ResourceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_id: Option<String>,
     /// <p>The type of resource. The only supported value is <code>auto-scaling-group</code>.</p>
+    #[serde(rename = "ResourceType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_type: Option<String>,
     /// <p>The tag value.</p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -6654,12 +7016,16 @@ impl TagsSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TagsType {
     /// <p>A string that indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the <code>NextToken</code> value when requesting the next set of items. This value is null when there are no more items to return.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>One or more tags.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<TagDescription>>,
 }
 
@@ -6718,17 +7084,23 @@ impl TargetGroupARNsSerializer {
 }
 
 /// <p>Represents a target tracking scaling policy configuration to use with Amazon EC2 Auto Scaling.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TargetTrackingConfiguration {
     /// <p>A customized metric. You must specify either a predefined metric or a customized metric.</p>
+    #[serde(rename = "CustomizedMetricSpecification")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub customized_metric_specification: Option<CustomizedMetricSpecification>,
     /// <p>Indicates whether scaling in by the target tracking scaling policy is disabled. If scaling in is disabled, the target tracking scaling policy doesn't remove instances from the Auto Scaling group. Otherwise, the target tracking scaling policy can remove instances from the Auto Scaling group. The default is <code>false</code>.</p>
+    #[serde(rename = "DisableScaleIn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub disable_scale_in: Option<bool>,
     /// <p>A predefined metric. You must specify either a predefined metric or a customized metric.</p>
+    #[serde(rename = "PredefinedMetricSpecification")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub predefined_metric_specification: Option<PredefinedMetricSpecification>,
     /// <p>The target value for the metric.</p>
+    #[serde(rename = "TargetValue")]
     pub target_value: f64,
 }
 

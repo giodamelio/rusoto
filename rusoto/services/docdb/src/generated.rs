@@ -101,9 +101,11 @@ impl ApplyPendingMaintenanceActionMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ApplyPendingMaintenanceActionResult {
+    #[serde(rename = "ResourcePendingMaintenanceActions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_pending_maintenance_actions: Option<ResourcePendingMaintenanceActions>,
 }
 
@@ -163,10 +165,12 @@ impl AttributeValueListSerializer {
 }
 
 /// <p>Information about an Availability Zone.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AvailabilityZone {
     /// <p>The name of the Availability Zone.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
@@ -260,20 +264,32 @@ impl BooleanOptionalDeserializer {
     }
 }
 /// <p>A certificate authority (CA) certificate for an AWS account.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Certificate {
     /// <p>The Amazon Resource Name (ARN) for the certificate.</p> <p>Example: <code>arn:aws:rds:us-east-1::cert:rds-ca-2019</code> </p>
+    #[serde(rename = "CertificateArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub certificate_arn: Option<String>,
     /// <p>The unique key that identifies a certificate.</p> <p>Example: <code>rds-ca-2019</code> </p>
+    #[serde(rename = "CertificateIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub certificate_identifier: Option<String>,
     /// <p>The type of the certificate.</p> <p>Example: <code>CA</code> </p>
+    #[serde(rename = "CertificateType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub certificate_type: Option<String>,
     /// <p>The thumbprint of the certificate.</p>
+    #[serde(rename = "Thumbprint")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub thumbprint: Option<String>,
     /// <p>The starting date-time from which the certificate is valid.</p> <p>Example: <code>2019-07-31T17:57:09Z</code> </p>
+    #[serde(rename = "ValidFrom")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub valid_from: Option<String>,
     /// <p>The date-time after which the certificate is no longer valid.</p> <p>Example: <code>2024-07-31T17:57:09Z</code> </p>
+    #[serde(rename = "ValidTill")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub valid_till: Option<String>,
 }
 
@@ -332,12 +348,16 @@ impl CertificateListDeserializer {
         })
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CertificateMessage {
     /// <p>A list of certificates for this AWS account.</p>
+    #[serde(rename = "Certificates")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub certificates: Option<Vec<Certificate>>,
     /// <p>An optional pagination token provided if the number of records retrieved is greater than <code>MaxRecords</code>. If this parameter is specified, the marker specifies the next record in the list. Including the value of <code>Marker</code> in the next call to <code>DescribeCertificates</code> results in the next page of certificates.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -441,9 +461,11 @@ impl CopyDBClusterParameterGroupMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CopyDBClusterParameterGroupResult {
+    #[serde(rename = "DBClusterParameterGroup")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_parameter_group: Option<DBClusterParameterGroup>,
 }
 
@@ -523,9 +545,11 @@ impl CopyDBClusterSnapshotMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CopyDBClusterSnapshotResult {
+    #[serde(rename = "DBClusterSnapshot")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_snapshot: Option<DBClusterSnapshot>,
 }
 
@@ -725,9 +749,11 @@ impl CreateDBClusterParameterGroupMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateDBClusterParameterGroupResult {
+    #[serde(rename = "DBClusterParameterGroup")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_parameter_group: Option<DBClusterParameterGroup>,
 }
 
@@ -757,9 +783,11 @@ impl CreateDBClusterParameterGroupResultDeserializer {
         )
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateDBClusterResult {
+    #[serde(rename = "DBCluster")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster: Option<DBCluster>,
 }
 
@@ -816,9 +844,11 @@ impl CreateDBClusterSnapshotMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateDBClusterSnapshotResult {
+    #[serde(rename = "DBClusterSnapshot")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_snapshot: Option<DBClusterSnapshot>,
 }
 
@@ -917,9 +947,11 @@ impl CreateDBInstanceMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateDBInstanceResult {
+    #[serde(rename = "DBInstance")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_instance: Option<DBInstance>,
 }
 
@@ -984,9 +1016,11 @@ impl CreateDBSubnetGroupMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateDBSubnetGroupResult {
+    #[serde(rename = "DBSubnetGroup")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_subnet_group: Option<DBSubnetGroup>,
 }
 
@@ -1016,66 +1050,124 @@ impl CreateDBSubnetGroupResultDeserializer {
     }
 }
 /// <p>Detailed information about a DB cluster. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBCluster {
     /// <p>Provides a list of the AWS Identity and Access Management (IAM) roles that are associated with the DB cluster. IAM roles that are associated with a DB cluster grant permission for the DB cluster to access other AWS services on your behalf.</p>
+    #[serde(rename = "AssociatedRoles")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub associated_roles: Option<Vec<DBClusterRole>>,
     /// <p>Provides the list of Amazon EC2 Availability Zones that instances in the DB cluster can be created in.</p>
+    #[serde(rename = "AvailabilityZones")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub availability_zones: Option<Vec<String>>,
     /// <p>Specifies the number of days for which automatic DB snapshots are retained.</p>
+    #[serde(rename = "BackupRetentionPeriod")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub backup_retention_period: Option<i64>,
     /// <p>Specifies the time when the DB cluster was created, in Universal Coordinated Time (UTC).</p>
+    #[serde(rename = "ClusterCreateTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cluster_create_time: Option<String>,
     /// <p>The Amazon Resource Name (ARN) for the DB cluster.</p>
+    #[serde(rename = "DBClusterArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_arn: Option<String>,
     /// <p>Contains a user-supplied DB cluster identifier. This identifier is the unique key that identifies a DB cluster.</p>
+    #[serde(rename = "DBClusterIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_identifier: Option<String>,
     /// <p>Provides the list of instances that make up the DB cluster.</p>
+    #[serde(rename = "DBClusterMembers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_members: Option<Vec<DBClusterMember>>,
     /// <p>Specifies the name of the DB cluster parameter group for the DB cluster.</p>
+    #[serde(rename = "DBClusterParameterGroup")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_parameter_group: Option<String>,
     /// <p>Specifies information on the subnet group that is associated with the DB cluster, including the name, description, and subnets in the subnet group.</p>
+    #[serde(rename = "DBSubnetGroup")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_subnet_group: Option<String>,
     /// <p>The AWS Region-unique, immutable identifier for the DB cluster. This identifier is found in AWS CloudTrail log entries whenever the AWS KMS key for the DB cluster is accessed.</p>
+    #[serde(rename = "DbClusterResourceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_resource_id: Option<String>,
     /// <p>Specifies whether this cluster can be deleted. If <code>DeletionProtection</code> is enabled, the cluster cannot be deleted unless it is modified and <code>DeletionProtection</code> is disabled. <code>DeletionProtection</code> protects clusters from being accidentally deleted.</p>
+    #[serde(rename = "DeletionProtection")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub deletion_protection: Option<bool>,
     /// <p>The earliest time to which a database can be restored with point-in-time restore.</p>
+    #[serde(rename = "EarliestRestorableTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub earliest_restorable_time: Option<String>,
     /// <p>A list of log types that this DB cluster is configured to export to Amazon CloudWatch Logs.</p>
+    #[serde(rename = "EnabledCloudwatchLogsExports")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enabled_cloudwatch_logs_exports: Option<Vec<String>>,
     /// <p>Specifies the connection endpoint for the primary instance of the DB cluster.</p>
+    #[serde(rename = "Endpoint")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub endpoint: Option<String>,
     /// <p>Provides the name of the database engine to be used for this DB cluster.</p>
+    #[serde(rename = "Engine")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine: Option<String>,
     /// <p>Indicates the database engine version.</p>
+    #[serde(rename = "EngineVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine_version: Option<String>,
     /// <p>Specifies the ID that Amazon Route 53 assigns when you create a hosted zone.</p>
+    #[serde(rename = "HostedZoneId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub hosted_zone_id: Option<String>,
     /// <p>If <code>StorageEncrypted</code> is <code>true</code>, the AWS KMS key identifier for the encrypted DB cluster.</p>
+    #[serde(rename = "KmsKeyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kms_key_id: Option<String>,
     /// <p>Specifies the latest time to which a database can be restored with point-in-time restore.</p>
+    #[serde(rename = "LatestRestorableTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub latest_restorable_time: Option<String>,
     /// <p>Contains the master user name for the DB cluster.</p>
+    #[serde(rename = "MasterUsername")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub master_username: Option<String>,
     /// <p>Specifies whether the DB cluster has instances in multiple Availability Zones.</p>
+    #[serde(rename = "MultiAZ")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub multi_az: Option<bool>,
     /// <p>Specifies the progress of the operation as a percentage.</p>
+    #[serde(rename = "PercentProgress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub percent_progress: Option<String>,
     /// <p>Specifies the port that the database engine is listening on.</p>
+    #[serde(rename = "Port")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub port: Option<i64>,
     /// <p>Specifies the daily time range during which automated backups are created if automated backups are enabled, as determined by the <code>BackupRetentionPeriod</code>. </p>
+    #[serde(rename = "PreferredBackupWindow")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub preferred_backup_window: Option<String>,
     /// <p>Specifies the weekly time range during which system maintenance can occur, in Universal Coordinated Time (UTC).</p>
+    #[serde(rename = "PreferredMaintenanceWindow")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub preferred_maintenance_window: Option<String>,
     /// <p>The reader endpoint for the DB cluster. The reader endpoint for a DB cluster load balances connections across the Amazon DocumentDB replicas that are available in a DB cluster. As clients request new connections to the reader endpoint, Amazon DocumentDB distributes the connection requests among the Amazon DocumentDB replicas in the DB cluster. This functionality can help balance your read workload across multiple Amazon DocumentDB replicas in your DB cluster. </p> <p>If a failover occurs, and the Amazon DocumentDB replica that you are connected to is promoted to be the primary instance, your connection is dropped. To continue sending your read workload to other Amazon DocumentDB replicas in the cluster, you can then reconnect to the reader endpoint.</p>
+    #[serde(rename = "ReaderEndpoint")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub reader_endpoint: Option<String>,
     /// <p>Specifies the current state of this DB cluster.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>Specifies whether the DB cluster is encrypted.</p>
+    #[serde(rename = "StorageEncrypted")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub storage_encrypted: Option<bool>,
     /// <p>Provides a list of virtual private cloud (VPC) security groups that the DB cluster belongs to.</p>
+    #[serde(rename = "VpcSecurityGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vpc_security_groups: Option<Vec<VpcSecurityGroupMembership>>,
 }
 
@@ -1251,16 +1343,24 @@ impl DBClusterListDeserializer {
     }
 }
 /// <p>Contains information about an instance that is part of a DB cluster.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBClusterMember {
     /// <p>Specifies the status of the DB cluster parameter group for this member of the DB cluster.</p>
+    #[serde(rename = "DBClusterParameterGroupStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_parameter_group_status: Option<String>,
     /// <p>Specifies the instance identifier for this member of the DB cluster.</p>
+    #[serde(rename = "DBInstanceIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_instance_identifier: Option<String>,
     /// <p>A value that is <code>true</code> if the cluster member is the primary instance for the DB cluster and <code>false</code> otherwise.</p>
+    #[serde(rename = "IsClusterWriter")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_cluster_writer: Option<bool>,
     /// <p>A value that specifies the order in which an Amazon DocumentDB replica is promoted to the primary instance after a failure of the existing primary instance. </p>
+    #[serde(rename = "PromotionTier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub promotion_tier: Option<i64>,
 }
 
@@ -1322,12 +1422,16 @@ impl DBClusterMemberListDeserializer {
     }
 }
 /// <p>Represents the output of <a>DescribeDBClusters</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBClusterMessage {
     /// <p>A list of DB clusters.</p>
+    #[serde(rename = "DBClusters")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_clusters: Option<Vec<DBCluster>>,
     /// <p>An optional pagination token provided by a previous request. If this parameter is specified, the response includes only records beyond the marker, up to the value specified by <code>MaxRecords</code>.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -1355,16 +1459,24 @@ impl DBClusterMessageDeserializer {
     }
 }
 /// <p>Detailed information about a DB cluster parameter group. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBClusterParameterGroup {
     /// <p>The Amazon Resource Name (ARN) for the DB cluster parameter group.</p>
+    #[serde(rename = "DBClusterParameterGroupArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_parameter_group_arn: Option<String>,
     /// <p>Provides the name of the DB cluster parameter group.</p>
+    #[serde(rename = "DBClusterParameterGroupName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_parameter_group_name: Option<String>,
     /// <p>Provides the name of the DB parameter group family that this DB cluster parameter group is compatible with.</p>
+    #[serde(rename = "DBParameterGroupFamily")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_parameter_group_family: Option<String>,
     /// <p>Provides the customer-specified description for this DB cluster parameter group.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
 }
 
@@ -1409,12 +1521,16 @@ impl DBClusterParameterGroupDeserializer {
     }
 }
 /// <p>Represents the output of <a>DBClusterParameterGroup</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBClusterParameterGroupDetails {
     /// <p>An optional pagination token provided by a previous request. If this parameter is specified, the response includes only records beyond the marker, up to the value specified by <code>MaxRecords</code>.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>Provides a list of parameters for the DB cluster parameter group.</p>
+    #[serde(rename = "Parameters")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<Parameter>>,
 }
 
@@ -1466,10 +1582,12 @@ impl DBClusterParameterGroupListDeserializer {
     }
 }
 /// <p>Contains the name of a DB cluster parameter group.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBClusterParameterGroupNameMessage {
     /// <p><p>The name of a DB cluster parameter group.</p> <p>Constraints:</p> <ul> <li> <p>Must be from 1 to 255 letters or numbers.</p> </li> <li> <p>The first character must be a letter.</p> </li> <li> <p>Cannot end with a hyphen or contain two consecutive hyphens.</p> </li> </ul> <note> <p>This value is stored as a lowercase string.</p> </note></p>
+    #[serde(rename = "DBClusterParameterGroupName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_parameter_group_name: Option<String>,
 }
 
@@ -1498,12 +1616,16 @@ impl DBClusterParameterGroupNameMessageDeserializer {
     }
 }
 /// <p>Represents the output of <a>DBClusterParameterGroups</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBClusterParameterGroupsMessage {
     /// <p>A list of DB cluster parameter groups.</p>
+    #[serde(rename = "DBClusterParameterGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_parameter_groups: Option<Vec<DBClusterParameterGroup>>,
     /// <p>An optional pagination token provided by a previous request. If this parameter is specified, the response includes only records beyond the marker, up to the value specified by <code>MaxRecords</code>.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -1538,12 +1660,16 @@ impl DBClusterParameterGroupsMessageDeserializer {
     }
 }
 /// <p>Describes an AWS Identity and Access Management (IAM) role that is associated with a DB cluster.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBClusterRole {
     /// <p>The Amazon Resource Name (ARN) of the IAM role that is associated with the DB cluster.</p>
+    #[serde(rename = "RoleArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role_arn: Option<String>,
     /// <p><p>Describes the state of association between the IAM role and the DB cluster. The <code>Status</code> property returns one of the following values:</p> <ul> <li> <p> <code>ACTIVE</code> - The IAM role ARN is associated with the DB cluster and can be used to access other AWS services on your behalf.</p> </li> <li> <p> <code>PENDING</code> - The IAM role ARN is being associated with the DB cluster.</p> </li> <li> <p> <code>INVALID</code> - The IAM role ARN is associated with the DB cluster, but the DB cluster cannot assume the IAM role to access other AWS services on your behalf.</p> </li> </ul></p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -1589,42 +1715,76 @@ impl DBClusterRolesDeserializer {
     }
 }
 /// <p>Detailed information about a DB cluster snapshot. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBClusterSnapshot {
     /// <p>Provides the list of Amazon EC2 Availability Zones that instances in the DB cluster snapshot can be restored in.</p>
+    #[serde(rename = "AvailabilityZones")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub availability_zones: Option<Vec<String>>,
     /// <p>Specifies the time when the DB cluster was created, in Universal Coordinated Time (UTC).</p>
+    #[serde(rename = "ClusterCreateTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cluster_create_time: Option<String>,
     /// <p>Specifies the DB cluster identifier of the DB cluster that this DB cluster snapshot was created from.</p>
+    #[serde(rename = "DBClusterIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_identifier: Option<String>,
     /// <p>The Amazon Resource Name (ARN) for the DB cluster snapshot.</p>
+    #[serde(rename = "DBClusterSnapshotArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_snapshot_arn: Option<String>,
     /// <p>Specifies the identifier for the DB cluster snapshot.</p>
+    #[serde(rename = "DBClusterSnapshotIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_snapshot_identifier: Option<String>,
     /// <p>Specifies the name of the database engine.</p>
+    #[serde(rename = "Engine")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine: Option<String>,
     /// <p>Provides the version of the database engine for this DB cluster snapshot.</p>
+    #[serde(rename = "EngineVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine_version: Option<String>,
     /// <p>If <code>StorageEncrypted</code> is <code>true</code>, the AWS KMS key identifier for the encrypted DB cluster snapshot.</p>
+    #[serde(rename = "KmsKeyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kms_key_id: Option<String>,
     /// <p>Provides the master user name for the DB cluster snapshot.</p>
+    #[serde(rename = "MasterUsername")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub master_username: Option<String>,
     /// <p>Specifies the percentage of the estimated data that has been transferred.</p>
+    #[serde(rename = "PercentProgress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub percent_progress: Option<i64>,
     /// <p>Specifies the port that the DB cluster was listening on at the time of the snapshot.</p>
+    #[serde(rename = "Port")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub port: Option<i64>,
     /// <p>Provides the time when the snapshot was taken, in UTC.</p>
+    #[serde(rename = "SnapshotCreateTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub snapshot_create_time: Option<String>,
     /// <p>Provides the type of the DB cluster snapshot.</p>
+    #[serde(rename = "SnapshotType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub snapshot_type: Option<String>,
     /// <p>If the DB cluster snapshot was copied from a source DB cluster snapshot, the ARN for the source DB cluster snapshot; otherwise, a null value.</p>
+    #[serde(rename = "SourceDBClusterSnapshotArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_db_cluster_snapshot_arn: Option<String>,
     /// <p>Specifies the status of this DB cluster snapshot.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>Specifies whether the DB cluster snapshot is encrypted.</p>
+    #[serde(rename = "StorageEncrypted")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub storage_encrypted: Option<bool>,
     /// <p>Provides the virtual private cloud (VPC) ID that is associated with the DB cluster snapshot.</p>
+    #[serde(rename = "VpcId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vpc_id: Option<String>,
 }
 
@@ -1718,12 +1878,16 @@ impl DBClusterSnapshotDeserializer {
     }
 }
 /// <p>Contains the name and values of a manual DB cluster snapshot attribute.</p> <p>Manual DB cluster snapshot attributes are used to authorize other AWS accounts to restore a manual DB cluster snapshot.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBClusterSnapshotAttribute {
     /// <p>The name of the manual DB cluster snapshot attribute.</p> <p>The attribute named <code>restore</code> refers to the list of AWS accounts that have permission to copy or restore the manual DB cluster snapshot.</p>
+    #[serde(rename = "AttributeName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attribute_name: Option<String>,
     /// <p>The values for the manual DB cluster snapshot attribute.</p> <p>If the <code>AttributeName</code> field is set to <code>restore</code>, then this element returns a list of IDs of the AWS accounts that are authorized to copy or restore the manual DB cluster snapshot. If a value of <code>all</code> is in the list, then the manual DB cluster snapshot is public and available for any AWS account to copy or restore.</p>
+    #[serde(rename = "AttributeValues")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attribute_values: Option<Vec<String>>,
 }
 
@@ -1776,12 +1940,16 @@ impl DBClusterSnapshotAttributeListDeserializer {
     }
 }
 /// <p>Detailed information about the attributes that are associated with a DB cluster snapshot.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBClusterSnapshotAttributesResult {
     /// <p>The list of attributes and values for the DB cluster snapshot.</p>
+    #[serde(rename = "DBClusterSnapshotAttributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_snapshot_attributes: Option<Vec<DBClusterSnapshotAttribute>>,
     /// <p>The identifier of the DB cluster snapshot that the attributes apply to.</p>
+    #[serde(rename = "DBClusterSnapshotIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_snapshot_identifier: Option<String>,
 }
 
@@ -1839,12 +2007,16 @@ impl DBClusterSnapshotListDeserializer {
     }
 }
 /// <p>Represents the output of <a>DescribeDBClusterSnapshots</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBClusterSnapshotMessage {
     /// <p>Provides a list of DB cluster snapshots.</p>
+    #[serde(rename = "DBClusterSnapshots")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_snapshots: Option<Vec<DBClusterSnapshot>>,
     /// <p>An optional pagination token provided by a previous request. If this parameter is specified, the response includes only records beyond the marker, up to the value specified by <code>MaxRecords</code>.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -1879,24 +2051,40 @@ impl DBClusterSnapshotMessageDeserializer {
     }
 }
 /// <p> Detailed information about a DB engine version. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBEngineVersion {
     /// <p>The description of the database engine.</p>
+    #[serde(rename = "DBEngineDescription")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_engine_description: Option<String>,
     /// <p>The description of the database engine version.</p>
+    #[serde(rename = "DBEngineVersionDescription")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_engine_version_description: Option<String>,
     /// <p>The name of the DB parameter group family for the database engine.</p>
+    #[serde(rename = "DBParameterGroupFamily")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_parameter_group_family: Option<String>,
     /// <p>The name of the database engine.</p>
+    #[serde(rename = "Engine")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine: Option<String>,
     /// <p>The version number of the database engine.</p>
+    #[serde(rename = "EngineVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine_version: Option<String>,
     /// <p>The types of logs that the database engine has available for export to Amazon CloudWatch Logs.</p>
+    #[serde(rename = "ExportableLogTypes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub exportable_log_types: Option<Vec<String>>,
     /// <p>A value that indicates whether the engine version supports exporting the log types specified by <code>ExportableLogTypes</code> to CloudWatch Logs.</p>
+    #[serde(rename = "SupportsLogExportsToCloudwatchLogs")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub supports_log_exports_to_cloudwatch_logs: Option<bool>,
     /// <p>A list of engine versions that this database engine version can be upgraded to.</p>
+    #[serde(rename = "ValidUpgradeTarget")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub valid_upgrade_target: Option<Vec<UpgradeTarget>>,
 }
 
@@ -1981,12 +2169,16 @@ impl DBEngineVersionListDeserializer {
     }
 }
 /// <p>Represents the output of <a>DescribeDBEngineVersions</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBEngineVersionMessage {
     /// <p>Detailed information about one or more DB engine versions.</p>
+    #[serde(rename = "DBEngineVersions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_engine_versions: Option<Vec<DBEngineVersion>>,
     /// <p>An optional pagination token provided by a previous request. If this parameter is specified, the response includes only records beyond the marker, up to the value specified by <code>MaxRecords</code>.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -2014,60 +2206,112 @@ impl DBEngineVersionMessageDeserializer {
     }
 }
 /// <p>Detailed information about a DB instance. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBInstance {
     /// <p>Indicates that minor version patches are applied automatically.</p>
+    #[serde(rename = "AutoMinorVersionUpgrade")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_minor_version_upgrade: Option<bool>,
     /// <p>Specifies the name of the Availability Zone that the DB instance is located in.</p>
+    #[serde(rename = "AvailabilityZone")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub availability_zone: Option<String>,
     /// <p>Specifies the number of days for which automatic DB snapshots are retained.</p>
+    #[serde(rename = "BackupRetentionPeriod")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub backup_retention_period: Option<i64>,
     /// <p>The identifier of the CA certificate for this DB instance.</p>
+    #[serde(rename = "CACertificateIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ca_certificate_identifier: Option<String>,
     /// <p>Contains the name of the DB cluster that the DB instance is a member of if the DB instance is a member of a DB cluster.</p>
+    #[serde(rename = "DBClusterIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_identifier: Option<String>,
     /// <p>The Amazon Resource Name (ARN) for the DB instance.</p>
+    #[serde(rename = "DBInstanceArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_instance_arn: Option<String>,
     /// <p>Contains the name of the compute and memory capacity class of the DB instance.</p>
+    #[serde(rename = "DBInstanceClass")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_instance_class: Option<String>,
     /// <p>Contains a user-provided database identifier. This identifier is the unique key that identifies a DB instance.</p>
+    #[serde(rename = "DBInstanceIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_instance_identifier: Option<String>,
     /// <p>Specifies the current state of this database.</p>
+    #[serde(rename = "DBInstanceStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_instance_status: Option<String>,
     /// <p>Specifies information on the subnet group that is associated with the DB instance, including the name, description, and subnets in the subnet group.</p>
+    #[serde(rename = "DBSubnetGroup")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_subnet_group: Option<DBSubnetGroup>,
     /// <p>The AWS Region-unique, immutable identifier for the DB instance. This identifier is found in AWS CloudTrail log entries whenever the AWS KMS key for the DB instance is accessed.</p>
+    #[serde(rename = "DbiResourceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dbi_resource_id: Option<String>,
     /// <p>A list of log types that this DB instance is configured to export to Amazon CloudWatch Logs.</p>
+    #[serde(rename = "EnabledCloudwatchLogsExports")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enabled_cloudwatch_logs_exports: Option<Vec<String>>,
     /// <p>Specifies the connection endpoint.</p>
+    #[serde(rename = "Endpoint")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub endpoint: Option<Endpoint>,
     /// <p>Provides the name of the database engine to be used for this DB instance.</p>
+    #[serde(rename = "Engine")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine: Option<String>,
     /// <p>Indicates the database engine version.</p>
+    #[serde(rename = "EngineVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine_version: Option<String>,
     /// <p>Provides the date and time that the DB instance was created.</p>
+    #[serde(rename = "InstanceCreateTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub instance_create_time: Option<String>,
     /// <p> If <code>StorageEncrypted</code> is <code>true</code>, the AWS KMS key identifier for the encrypted DB instance. </p>
+    #[serde(rename = "KmsKeyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kms_key_id: Option<String>,
     /// <p>Specifies the latest time to which a database can be restored with point-in-time restore.</p>
+    #[serde(rename = "LatestRestorableTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub latest_restorable_time: Option<String>,
     /// <p>Specifies that changes to the DB instance are pending. This element is included only when changes are pending. Specific changes are identified by subelements.</p>
+    #[serde(rename = "PendingModifiedValues")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pending_modified_values: Option<PendingModifiedValues>,
     /// <p> Specifies the daily time range during which automated backups are created if automated backups are enabled, as determined by the <code>BackupRetentionPeriod</code>. </p>
+    #[serde(rename = "PreferredBackupWindow")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub preferred_backup_window: Option<String>,
     /// <p>Specifies the weekly time range during which system maintenance can occur, in Universal Coordinated Time (UTC).</p>
+    #[serde(rename = "PreferredMaintenanceWindow")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub preferred_maintenance_window: Option<String>,
     /// <p>A value that specifies the order in which an Amazon DocumentDB replica is promoted to the primary instance after a failure of the existing primary instance.</p>
+    #[serde(rename = "PromotionTier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub promotion_tier: Option<i64>,
     /// <p>Not supported. Amazon DocumentDB does not currently support public endpoints. The value of <code>PubliclyAccessible</code> is always <code>false</code>.</p>
+    #[serde(rename = "PubliclyAccessible")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub publicly_accessible: Option<bool>,
     /// <p>The status of a read replica. If the instance is not a read replica, this is blank.</p>
+    #[serde(rename = "StatusInfos")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_infos: Option<Vec<DBInstanceStatusInfo>>,
     /// <p>Specifies whether or not the DB instance is encrypted.</p>
+    #[serde(rename = "StorageEncrypted")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub storage_encrypted: Option<bool>,
     /// <p>Provides a list of VPC security group elements that the DB instance belongs to.</p>
+    #[serde(rename = "VpcSecurityGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vpc_security_groups: Option<Vec<VpcSecurityGroupMembership>>,
 }
 
@@ -2241,12 +2485,16 @@ impl DBInstanceListDeserializer {
     }
 }
 /// <p>Represents the output of <a>DescribeDBInstances</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBInstanceMessage {
     /// <p>Detailed information about one or more DB instances. </p>
+    #[serde(rename = "DBInstances")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_instances: Option<Vec<DBInstance>>,
     /// <p>An optional pagination token provided by a previous request. If this parameter is specified, the response includes only records beyond the marker, up to the value specified by <code>MaxRecords</code>.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -2274,16 +2522,24 @@ impl DBInstanceMessageDeserializer {
     }
 }
 /// <p>Provides a list of status information for a DB instance.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBInstanceStatusInfo {
     /// <p>Details of the error if there is an error for the instance. If the instance is not in an error state, this value is blank.</p>
+    #[serde(rename = "Message")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
     /// <p>A Boolean value that is <code>true</code> if the instance is operating normally, or <code>false</code> if the instance is in an error state.</p>
+    #[serde(rename = "Normal")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub normal: Option<bool>,
     /// <p>Status of the DB instance. For a <code>StatusType</code> of read replica, the values can be <code>replicating</code>, error, <code>stopped</code>, or <code>terminated</code>.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>This value is currently "<code>read replication</code>."</p>
+    #[serde(rename = "StatusType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_type: Option<String>,
 }
 
@@ -2335,20 +2591,32 @@ impl DBInstanceStatusInfoListDeserializer {
     }
 }
 /// <p>Detailed information about a DB subnet group. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBSubnetGroup {
     /// <p>The Amazon Resource Name (ARN) for the DB subnet group.</p>
+    #[serde(rename = "DBSubnetGroupArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_subnet_group_arn: Option<String>,
     /// <p>Provides the description of the DB subnet group.</p>
+    #[serde(rename = "DBSubnetGroupDescription")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_subnet_group_description: Option<String>,
     /// <p>The name of the DB subnet group.</p>
+    #[serde(rename = "DBSubnetGroupName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_subnet_group_name: Option<String>,
     /// <p>Provides the status of the DB subnet group.</p>
+    #[serde(rename = "SubnetGroupStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subnet_group_status: Option<String>,
     /// <p>Detailed information about one or more subnets within a DB subnet group.</p>
+    #[serde(rename = "Subnets")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subnets: Option<Vec<Subnet>>,
     /// <p>Provides the virtual private cloud (VPC) ID of the DB subnet group.</p>
+    #[serde(rename = "VpcId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vpc_id: Option<String>,
 }
 
@@ -2394,12 +2662,16 @@ impl DBSubnetGroupDeserializer {
     }
 }
 /// <p>Represents the output of <a>DescribeDBSubnetGroups</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DBSubnetGroupMessage {
     /// <p>Detailed information about one or more DB subnet groups.</p>
+    #[serde(rename = "DBSubnetGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_subnet_groups: Option<Vec<DBSubnetGroup>>,
     /// <p>An optional pagination token provided by a previous request. If this parameter is specified, the response includes only records beyond the marker, up to the value specified by <code>MaxRecords</code>.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -2507,9 +2779,11 @@ impl DeleteDBClusterParameterGroupMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteDBClusterResult {
+    #[serde(rename = "DBCluster")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster: Option<DBCluster>,
 }
 
@@ -2555,9 +2829,11 @@ impl DeleteDBClusterSnapshotMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteDBClusterSnapshotResult {
+    #[serde(rename = "DBClusterSnapshot")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_snapshot: Option<DBClusterSnapshot>,
 }
 
@@ -2610,9 +2886,11 @@ impl DeleteDBInstanceMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteDBInstanceResult {
+    #[serde(rename = "DBInstance")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_instance: Option<DBInstance>,
 }
 
@@ -2824,9 +3102,11 @@ impl DescribeDBClusterSnapshotAttributesMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeDBClusterSnapshotAttributesResult {
+    #[serde(rename = "DBClusterSnapshotAttributesResult")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_snapshot_attributes_result: Option<DBClusterSnapshotAttributesResult>,
 }
 
@@ -3179,9 +3459,11 @@ impl DescribeEngineDefaultClusterParametersMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeEngineDefaultClusterParametersResult {
+    #[serde(rename = "EngineDefaults")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine_defaults: Option<EngineDefaults>,
 }
 
@@ -3416,14 +3698,20 @@ impl DescribePendingMaintenanceActionsMessageSerializer {
 }
 
 /// <p>Network information for accessing a DB cluster or DB instance. Client programs must specify a valid endpoint to access these Amazon DocumentDB resources.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Endpoint {
     /// <p>Specifies the DNS address of the DB instance.</p>
+    #[serde(rename = "Address")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub address: Option<String>,
     /// <p>Specifies the ID that Amazon Route 53 assigns when you create a hosted zone.</p>
+    #[serde(rename = "HostedZoneId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub hosted_zone_id: Option<String>,
     /// <p>Specifies the port that the database engine is listening on.</p>
+    #[serde(rename = "Port")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub port: Option<i64>,
 }
 
@@ -3453,14 +3741,20 @@ impl EndpointDeserializer {
     }
 }
 /// <p>Contains the result of a successful invocation of the <code>DescribeEngineDefaultClusterParameters</code> operation. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EngineDefaults {
     /// <p>The name of the DB cluster parameter group family to return the engine parameter information for.</p>
+    #[serde(rename = "DBParameterGroupFamily")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_parameter_group_family: Option<String>,
     /// <p>An optional pagination token provided by a previous request. If this parameter is specified, the response includes only records beyond the marker, up to the value specified by <code>MaxRecords</code>.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>The parameters of a particular DB cluster parameter group family.</p>
+    #[serde(rename = "Parameters")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<Parameter>>,
 }
 
@@ -3494,20 +3788,32 @@ impl EngineDefaultsDeserializer {
     }
 }
 /// <p>Detailed information about an event.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Event {
     /// <p>Specifies the date and time of the event.</p>
+    #[serde(rename = "Date")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date: Option<String>,
     /// <p>Specifies the category for the event.</p>
+    #[serde(rename = "EventCategories")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub event_categories: Option<Vec<String>>,
     /// <p>Provides the text of this event.</p>
+    #[serde(rename = "Message")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
     /// <p>The Amazon Resource Name (ARN) for the event.</p>
+    #[serde(rename = "SourceArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_arn: Option<String>,
     /// <p>Provides the identifier for the source of the event.</p>
+    #[serde(rename = "SourceIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_identifier: Option<String>,
     /// <p>Specifies the source type for this event.</p>
+    #[serde(rename = "SourceType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_type: Option<String>,
 }
 
@@ -3575,12 +3881,16 @@ impl EventCategoriesListSerializer {
 }
 
 /// <p>An event source type, accompanied by one or more event category names.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EventCategoriesMap {
     /// <p>The event categories for the specified source type.</p>
+    #[serde(rename = "EventCategories")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub event_categories: Option<Vec<String>>,
     /// <p>The source type that the returned categories belong to.</p>
+    #[serde(rename = "SourceType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_type: Option<String>,
 }
 
@@ -3628,10 +3938,12 @@ impl EventCategoriesMapListDeserializer {
     }
 }
 /// <p>Represents the output of <a>DescribeEventCategories</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EventCategoriesMessage {
     /// <p>A list of event category maps.</p>
+    #[serde(rename = "EventCategoriesMapList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub event_categories_map_list: Option<Vec<EventCategoriesMap>>,
 }
 
@@ -3676,12 +3988,16 @@ impl EventListDeserializer {
     }
 }
 /// <p>Represents the output of <a>DescribeEvents</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EventsMessage {
     /// <p>Detailed information about one or more events. </p>
+    #[serde(rename = "Events")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub events: Option<Vec<Event>>,
     /// <p>An optional pagination token provided by a previous request. If this parameter is specified, the response includes only records beyond the marker, up to the value specified by <code>MaxRecords</code>.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -3742,9 +4058,11 @@ impl FailoverDBClusterMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FailoverDBClusterResult {
+    #[serde(rename = "DBCluster")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster: Option<DBCluster>,
 }
 
@@ -4052,9 +4370,11 @@ impl ModifyDBClusterParameterGroupMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ModifyDBClusterResult {
+    #[serde(rename = "DBCluster")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster: Option<DBCluster>,
 }
 
@@ -4124,9 +4444,11 @@ impl ModifyDBClusterSnapshotAttributeMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ModifyDBClusterSnapshotAttributeResult {
+    #[serde(rename = "DBClusterSnapshotAttributesResult")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster_snapshot_attributes_result: Option<DBClusterSnapshotAttributesResult>,
 }
 
@@ -4227,9 +4549,11 @@ impl ModifyDBInstanceMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ModifyDBInstanceResult {
+    #[serde(rename = "DBInstance")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_instance: Option<DBInstance>,
 }
 
@@ -4291,9 +4615,11 @@ impl ModifyDBSubnetGroupMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ModifyDBSubnetGroupResult {
+    #[serde(rename = "DBSubnetGroup")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_subnet_group: Option<DBSubnetGroup>,
 }
 
@@ -4323,20 +4649,32 @@ impl ModifyDBSubnetGroupResultDeserializer {
     }
 }
 /// <p>The options that are available for a DB instance.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OrderableDBInstanceOption {
     /// <p>A list of Availability Zones for a DB instance.</p>
+    #[serde(rename = "AvailabilityZones")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub availability_zones: Option<Vec<AvailabilityZone>>,
     /// <p>The DB instance class for a DB instance.</p>
+    #[serde(rename = "DBInstanceClass")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_instance_class: Option<String>,
     /// <p>The engine type of a DB instance.</p>
+    #[serde(rename = "Engine")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine: Option<String>,
     /// <p>The engine version of a DB instance.</p>
+    #[serde(rename = "EngineVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine_version: Option<String>,
     /// <p>The license model for a DB instance.</p>
+    #[serde(rename = "LicenseModel")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub license_model: Option<String>,
     /// <p>Indicates whether a DB instance is in a virtual private cloud (VPC).</p>
+    #[serde(rename = "Vpc")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vpc: Option<bool>,
 }
 
@@ -4406,12 +4744,16 @@ impl OrderableDBInstanceOptionsListDeserializer {
     }
 }
 /// <p>Represents the output of <a>DescribeOrderableDBInstanceOptions</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OrderableDBInstanceOptionsMessage {
     /// <p>An optional pagination token provided by a previous request. If this parameter is specified, the response includes only records beyond the marker, up to the value specified by <code>MaxRecords</code>.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>The options that are available for a particular orderable DB instance.</p>
+    #[serde(rename = "OrderableDBInstanceOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub orderable_db_instance_options: Option<Vec<OrderableDBInstanceOption>>,
 }
 
@@ -4446,29 +4788,48 @@ impl OrderableDBInstanceOptionsMessageDeserializer {
     }
 }
 /// <p>Detailed information about an individual parameter.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Parameter {
     /// <p>Specifies the valid range of values for the parameter.</p>
+    #[serde(rename = "AllowedValues")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub allowed_values: Option<String>,
     /// <p>Indicates when to apply parameter updates.</p>
+    #[serde(rename = "ApplyMethod")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub apply_method: Option<String>,
     /// <p>Specifies the engine-specific parameters type.</p>
+    #[serde(rename = "ApplyType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub apply_type: Option<String>,
     /// <p>Specifies the valid data type for the parameter.</p>
+    #[serde(rename = "DataType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub data_type: Option<String>,
     /// <p>Provides a description of the parameter.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p> Indicates whether (<code>true</code>) or not (<code>false</code>) the parameter can be modified. Some parameters have security or operational implications that prevent them from being changed. </p>
+    #[serde(rename = "IsModifiable")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_modifiable: Option<bool>,
     /// <p>The earliest engine version to which the parameter can apply.</p>
+    #[serde(rename = "MinimumEngineVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub minimum_engine_version: Option<String>,
     /// <p>Specifies the name of the parameter.</p>
+    #[serde(rename = "ParameterName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameter_name: Option<String>,
     /// <p>Specifies the value of the parameter.</p>
+    #[serde(rename = "ParameterValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameter_value: Option<String>,
     /// <p>Indicates the source of the parameter value.</p>
+    #[serde(rename = "Source")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source: Option<String>,
 }
 
@@ -4601,12 +4962,16 @@ impl ParametersListSerializer {
 }
 
 /// <p>A list of the log types whose configuration is still pending. These log types are in the process of being activated or deactivated.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PendingCloudwatchLogsExports {
     /// <p>Log types that are in the process of being enabled. After they are enabled, these log types are exported to Amazon CloudWatch Logs.</p>
+    #[serde(rename = "LogTypesToDisable")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub log_types_to_disable: Option<Vec<String>>,
     /// <p>Log types that are in the process of being deactivated. After they are deactivated, these log types aren't exported to CloudWatch Logs.</p>
+    #[serde(rename = "LogTypesToEnable")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub log_types_to_enable: Option<Vec<String>>,
 }
 
@@ -4640,20 +5005,32 @@ impl PendingCloudwatchLogsExportsDeserializer {
     }
 }
 /// <p>Provides information about a pending maintenance action for a resource.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PendingMaintenanceAction {
     /// <p>The type of pending maintenance action that is available for the resource.</p>
+    #[serde(rename = "Action")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action: Option<String>,
     /// <p>The date of the maintenance window when the action is applied. The maintenance action is applied to the resource during its first maintenance window after this date. If this date is specified, any <code>next-maintenance</code> opt-in requests are ignored.</p>
+    #[serde(rename = "AutoAppliedAfterDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_applied_after_date: Option<String>,
     /// <p>The effective date when the pending maintenance action is applied to the resource.</p>
+    #[serde(rename = "CurrentApplyDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub current_apply_date: Option<String>,
     /// <p>A description providing more detail about the maintenance action.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>The date when the maintenance action is automatically applied. The maintenance action is applied to the resource on this date regardless of the maintenance window for the resource. If this date is specified, any <code>immediate</code> opt-in requests are ignored.</p>
+    #[serde(rename = "ForcedApplyDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub forced_apply_date: Option<String>,
     /// <p>Indicates the type of opt-in request that has been received for the resource.</p>
+    #[serde(rename = "OptInStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub opt_in_status: Option<String>,
 }
 
@@ -4742,12 +5119,16 @@ impl PendingMaintenanceActionsDeserializer {
     }
 }
 /// <p>Represents the output of <a>DescribePendingMaintenanceActions</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PendingMaintenanceActionsMessage {
     /// <p>An optional pagination token provided by a previous request. If this parameter is specified, the response includes only records beyond the marker, up to the value specified by <code>MaxRecords</code>.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>The maintenance actions to be applied.</p>
+    #[serde(rename = "PendingMaintenanceActions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pending_maintenance_actions: Option<Vec<ResourcePendingMaintenanceActions>>,
 }
 
@@ -4782,36 +5163,64 @@ impl PendingMaintenanceActionsMessageDeserializer {
     }
 }
 /// <p> One or more modified settings for a DB instance. These modified settings have been requested, but haven't been applied yet.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PendingModifiedValues {
     /// <p> Contains the new <code>AllocatedStorage</code> size for the DB instance that will be applied or is currently being applied. </p>
+    #[serde(rename = "AllocatedStorage")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub allocated_storage: Option<i64>,
     /// <p>Specifies the pending number of days for which automated backups are retained.</p>
+    #[serde(rename = "BackupRetentionPeriod")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub backup_retention_period: Option<i64>,
     /// <p>Specifies the identifier of the certificate authority (CA) certificate for the DB instance.</p>
+    #[serde(rename = "CACertificateIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ca_certificate_identifier: Option<String>,
     /// <p> Contains the new <code>DBInstanceClass</code> for the DB instance that will be applied or is currently being applied. </p>
+    #[serde(rename = "DBInstanceClass")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_instance_class: Option<String>,
     /// <p> Contains the new <code>DBInstanceIdentifier</code> for the DB instance that will be applied or is currently being applied. </p>
+    #[serde(rename = "DBInstanceIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_instance_identifier: Option<String>,
     /// <p>The new DB subnet group for the DB instance. </p>
+    #[serde(rename = "DBSubnetGroupName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_subnet_group_name: Option<String>,
     /// <p>Indicates the database engine version.</p>
+    #[serde(rename = "EngineVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine_version: Option<String>,
     /// <p>Specifies the new Provisioned IOPS value for the DB instance that will be applied or is currently being applied.</p>
+    #[serde(rename = "Iops")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub iops: Option<i64>,
     /// <p>The license model for the DB instance.</p> <p>Valid values: <code>license-included</code>, <code>bring-your-own-license</code>, <code>general-public-license</code> </p>
+    #[serde(rename = "LicenseModel")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub license_model: Option<String>,
     /// <p>Contains the pending or currently in-progress change of the master credentials for the DB instance.</p>
+    #[serde(rename = "MasterUserPassword")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub master_user_password: Option<String>,
     /// <p>Indicates that the Single-AZ DB instance is to change to a Multi-AZ deployment.</p>
+    #[serde(rename = "MultiAZ")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub multi_az: Option<bool>,
     /// <p>A list of the log types whose configuration is still pending. These log types are in the process of being activated or deactivated.</p>
+    #[serde(rename = "PendingCloudwatchLogsExports")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pending_cloudwatch_logs_exports: Option<PendingCloudwatchLogsExports>,
     /// <p>Specifies the pending port for the DB instance.</p>
+    #[serde(rename = "Port")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub port: Option<i64>,
     /// <p>Specifies the storage type to be associated with the DB instance.</p>
+    #[serde(rename = "StorageType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub storage_type: Option<String>,
 }
 
@@ -4925,9 +5334,11 @@ impl RebootDBInstanceMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RebootDBInstanceResult {
+    #[serde(rename = "DBInstance")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_instance: Option<DBInstance>,
 }
 
@@ -5013,12 +5424,16 @@ impl ResetDBClusterParameterGroupMessageSerializer {
 }
 
 /// <p>Represents the output of <a>ApplyPendingMaintenanceAction</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ResourcePendingMaintenanceActions {
     /// <p>A list that provides details about the pending maintenance actions for the resource.</p>
+    #[serde(rename = "PendingMaintenanceActionDetails")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pending_maintenance_action_details: Option<Vec<PendingMaintenanceAction>>,
     /// <p>The Amazon Resource Name (ARN) of the resource that has pending maintenance actions.</p>
+    #[serde(rename = "ResourceIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_identifier: Option<String>,
 }
 
@@ -5145,9 +5560,11 @@ impl RestoreDBClusterFromSnapshotMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RestoreDBClusterFromSnapshotResult {
+    #[serde(rename = "DBCluster")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster: Option<DBCluster>,
 }
 
@@ -5260,9 +5677,11 @@ impl RestoreDBClusterToPointInTimeMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RestoreDBClusterToPointInTimeResult {
+    #[serde(rename = "DBCluster")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster: Option<DBCluster>,
 }
 
@@ -5323,9 +5742,11 @@ impl StartDBClusterMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StartDBClusterResult {
+    #[serde(rename = "DBCluster")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster: Option<DBCluster>,
 }
 
@@ -5370,9 +5791,11 @@ impl StopDBClusterMessageSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StopDBClusterResult {
+    #[serde(rename = "DBCluster")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub db_cluster: Option<DBCluster>,
 }
 
@@ -5406,14 +5829,20 @@ impl StringDeserializer {
     }
 }
 /// <p> Detailed information about a subnet. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Subnet {
     /// <p>Specifies the Availability Zone for the subnet.</p>
+    #[serde(rename = "SubnetAvailabilityZone")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subnet_availability_zone: Option<AvailabilityZone>,
     /// <p>Specifies the identifier of the subnet.</p>
+    #[serde(rename = "SubnetIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subnet_identifier: Option<String>,
     /// <p>Specifies the status of the subnet.</p>
+    #[serde(rename = "SubnetStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subnet_status: Option<String>,
 }
 
@@ -5484,13 +5913,16 @@ impl TStampDeserializer {
     }
 }
 /// <p>Metadata assigned to an Amazon DocumentDB resource consisting of a key-value pair.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Tag {
     /// <p>The required name of the tag. The string value can be from 1 to 128 Unicode characters in length and can't be prefixed with "aws:" or "rds:". The string can contain only the set of Unicode letters, digits, white space, '_', '.', '/', '=', '+', '-' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-]*)$").</p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p>The optional value of the tag. The string value can be from 1 to 256 Unicode characters in length and can't be prefixed with "aws:" or "rds:". The string can contain only the set of Unicode letters, digits, white space, '_', '.', '/', '=', '+', '-' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-]*)$").</p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -5561,10 +5993,12 @@ impl TagListSerializer {
 }
 
 /// <p>Represents the output of <a>ListTagsForResource</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TagListMessage {
     /// <p>A list of one or more tags.</p>
+    #[serde(rename = "TagList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tag_list: Option<Vec<Tag>>,
 }
 
@@ -5589,18 +6023,28 @@ impl TagListMessageDeserializer {
     }
 }
 /// <p>The version of the database engine that a DB instance can be upgraded to.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpgradeTarget {
     /// <p>A value that indicates whether the target version is applied to any source DB instances that have <code>AutoMinorVersionUpgrade</code> set to <code>true</code>.</p>
+    #[serde(rename = "AutoUpgrade")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_upgrade: Option<bool>,
     /// <p>The version of the database engine that a DB instance can be upgraded to.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>The name of the upgrade target database engine.</p>
+    #[serde(rename = "Engine")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine: Option<String>,
     /// <p>The version number of the upgrade target database engine.</p>
+    #[serde(rename = "EngineVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub engine_version: Option<String>,
     /// <p>A value that indicates whether a database engine is upgraded to a major version.</p>
+    #[serde(rename = "IsMajorVersionUpgrade")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_major_version_upgrade: Option<bool>,
 }
 
@@ -5672,12 +6116,16 @@ impl VpcSecurityGroupIdListSerializer {
 }
 
 /// <p>Used as a response element for queries on virtual private cloud (VPC) security group membership.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct VpcSecurityGroupMembership {
     /// <p>The status of the VPC security group.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>The name of the VPC security group.</p>
+    #[serde(rename = "VpcSecurityGroupId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vpc_security_group_id: Option<String>,
 }
 

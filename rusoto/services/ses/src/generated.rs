@@ -37,13 +37,14 @@ use xml::reader::ParserConfig;
 use xml::EventReader;
 
 /// <p>When included in a receipt rule, this action adds a header to the received email.</p> <p>For information about adding a header using a receipt rule, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-action-add-header.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AddHeaderAction {
     /// <p>The name of the header to add. Must be between 1 and 50 characters, inclusive, and consist of alphanumeric (a-z, A-Z, 0-9) characters and dashes only.</p>
+    #[serde(rename = "HeaderName")]
     pub header_name: String,
     /// <p>Must be less than 2048 characters, and must not contain newline characters ("\r" or "\n").</p>
+    #[serde(rename = "HeaderValue")]
     pub header_value: String,
 }
 
@@ -174,19 +175,25 @@ impl BodySerializer {
 }
 
 /// <p>When included in a receipt rule, this action rejects the received email by returning a bounce response to the sender and, optionally, publishes a notification to Amazon Simple Notification Service (Amazon SNS).</p> <p>For information about sending a bounce message in response to a received email, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-action-bounce.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct BounceAction {
     /// <p>Human-readable text to include in the bounce message.</p>
+    #[serde(rename = "Message")]
     pub message: String,
     /// <p>The email address of the sender of the bounced email. This is the address from which the bounce message will be sent.</p>
+    #[serde(rename = "Sender")]
     pub sender: String,
     /// <p>The SMTP reply code, as defined by <a href="https://tools.ietf.org/html/rfc5321">RFC 5321</a>.</p>
+    #[serde(rename = "SmtpReplyCode")]
     pub smtp_reply_code: String,
     /// <p>The SMTP enhanced status code, as defined by <a href="https://tools.ietf.org/html/rfc3463">RFC 3463</a>.</p>
+    #[serde(rename = "StatusCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_code: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the Amazon SNS topic to notify when the bounce action is taken. An example of an Amazon SNS topic ARN is <code>arn:aws:sns:us-west-2:123456789012:MyTopic</code>. For more information about Amazon SNS topics, see the <a href="https://docs.aws.amazon.com/sns/latest/dg/CreateTopic.html">Amazon SNS Developer Guide</a>.</p>
+    #[serde(rename = "TopicArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub topic_arn: Option<String>,
 }
 
@@ -388,14 +395,20 @@ impl BulkEmailDestinationListSerializer {
 }
 
 /// <p>An object that contains the response from the <code>SendBulkTemplatedEmail</code> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct BulkEmailDestinationStatus {
     /// <p>A description of an error that prevented a message being sent using the <code>SendBulkTemplatedEmail</code> operation.</p>
+    #[serde(rename = "Error")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<String>,
     /// <p>The unique message identifier returned from the <code>SendBulkTemplatedEmail</code> operation.</p>
+    #[serde(rename = "MessageId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message_id: Option<String>,
     /// <p><p>The status of a message sent using the <code>SendBulkTemplatedEmail</code> operation.</p> <p>Possible values for this parameter include:</p> <ul> <li> <p> <code>Success</code>: Amazon SES accepted the message, and will attempt to deliver it to the recipients.</p> </li> <li> <p> <code>MessageRejected</code>: The message was rejected because it contained a virus.</p> </li> <li> <p> <code>MailFromDomainNotVerified</code>: The sender&#39;s email address or domain was not verified.</p> </li> <li> <p> <code>ConfigurationSetDoesNotExist</code>: The configuration set you specified does not exist.</p> </li> <li> <p> <code>TemplateDoesNotExist</code>: The template you specified does not exist.</p> </li> <li> <p> <code>AccountSuspended</code>: Your account has been shut down because of issues related to your email sending practices.</p> </li> <li> <p> <code>AccountThrottled</code>: The number of emails you can send has been reduced because your account has exceeded its allocated sending limit.</p> </li> <li> <p> <code>AccountDailyQuotaExceeded</code>: You have reached or exceeded the maximum number of emails you can send from your account in a 24-hour period.</p> </li> <li> <p> <code>InvalidSendingPoolName</code>: The configuration set you specified refers to an IP pool that does not exist.</p> </li> <li> <p> <code>AccountSendingPaused</code>: Email sending for the Amazon SES account was disabled using the <a>UpdateAccountSendingEnabled</a> operation.</p> </li> <li> <p> <code>ConfigurationSetSendingPaused</code>: Email sending for this configuration set was disabled using the <a>UpdateConfigurationSetSendingEnabled</a> operation.</p> </li> <li> <p> <code>InvalidParameterValue</code>: One or more of the parameters you specified when calling this operation was invalid. See the error message for additional information.</p> </li> <li> <p> <code>TransientFailure</code>: Amazon SES was unable to process your request because of a temporary issue.</p> </li> <li> <p> <code>Failed</code>: Amazon SES was unable to process your request. See the error message for additional information.</p> </li> </ul></p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -498,8 +511,8 @@ impl CloneReceiptRuleSetRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CloneReceiptRuleSetResponse {}
 
 struct CloneReceiptRuleSetResponseDeserializer;
@@ -519,11 +532,11 @@ impl CloneReceiptRuleSetResponseDeserializer {
     }
 }
 /// <p>Contains information associated with an Amazon CloudWatch event destination to which email sending events are published.</p> <p>Event destinations, such as Amazon CloudWatch, are associated with configuration sets, which enable you to publish email sending events. For information about using configuration sets, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/monitor-sending-activity.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CloudWatchDestination {
     /// <p>A list of dimensions upon which to categorize your emails when you publish email sending events to Amazon CloudWatch.</p>
+    #[serde(rename = "DimensionConfigurations")]
     pub dimension_configurations: Vec<CloudWatchDimensionConfiguration>,
 }
 
@@ -569,15 +582,17 @@ impl CloudWatchDestinationSerializer {
 }
 
 /// <p>Contains the dimension configuration to use when you publish email sending events to Amazon CloudWatch.</p> <p>For information about publishing email sending events to Amazon CloudWatch, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/monitor-sending-activity.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CloudWatchDimensionConfiguration {
     /// <p><p>The default value of the dimension that is published to Amazon CloudWatch if you do not provide the value of the dimension when you send an email. The default value must:</p> <ul> <li> <p>This value can only contain ASCII letters (a-z, A-Z), numbers (0-9), underscores (_), or dashes (-).</p> </li> <li> <p>Contain less than 256 characters.</p> </li> </ul></p>
+    #[serde(rename = "DefaultDimensionValue")]
     pub default_dimension_value: String,
     /// <p><p>The name of an Amazon CloudWatch dimension associated with an email sending metric. The name must:</p> <ul> <li> <p>This value can only contain ASCII letters (a-z, A-Z), numbers (0-9), underscores (_), or dashes (-).</p> </li> <li> <p>Contain less than 256 characters.</p> </li> </ul></p>
+    #[serde(rename = "DimensionName")]
     pub dimension_name: String,
     /// <p>The place where Amazon SES finds the value of a dimension to publish to Amazon CloudWatch. If you want Amazon SES to use the message tags that you specify using an <code>X-SES-MESSAGE-TAGS</code> header or a parameter to the <code>SendEmail</code>/<code>SendRawEmail</code> API, choose <code>messageTag</code>. If you want Amazon SES to use your own email headers, choose <code>emailHeader</code>.</p>
+    #[serde(rename = "DimensionValueSource")]
     pub dimension_value_source: String,
 }
 
@@ -674,11 +689,11 @@ impl CloudWatchDimensionConfigurationsSerializer {
 }
 
 /// <p>The name of the configuration set.</p> <p>Configuration sets let you create groups of rules that you can apply to the emails you send using Amazon SES. For more information about using configuration sets, see <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/using-configuration-sets.html">Using Amazon SES Configuration Sets</a> in the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ConfigurationSet {
     /// <p><p>The name of the configuration set. The name must meet the following requirements:</p> <ul> <li> <p>Contain only letters (a-z, A-Z), numbers (0-9), underscores (_), or dashes (-).</p> </li> <li> <p>Contain 64 characters or fewer.</p> </li> </ul></p>
+    #[serde(rename = "Name")]
     pub name: String,
 }
 
@@ -826,8 +841,8 @@ impl CreateConfigurationSetEventDestinationRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateConfigurationSetEventDestinationResponse {}
 
 struct CreateConfigurationSetEventDestinationResponseDeserializer;
@@ -872,8 +887,8 @@ impl CreateConfigurationSetRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateConfigurationSetResponse {}
 
 struct CreateConfigurationSetResponseDeserializer;
@@ -927,8 +942,8 @@ impl CreateConfigurationSetTrackingOptionsRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateConfigurationSetTrackingOptionsResponse {}
 
 struct CreateConfigurationSetTrackingOptionsResponseDeserializer;
@@ -1024,8 +1039,8 @@ impl CreateReceiptFilterRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateReceiptFilterResponse {}
 
 struct CreateReceiptFilterResponseDeserializer;
@@ -1074,8 +1089,8 @@ impl CreateReceiptRuleRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateReceiptRuleResponse {}
 
 struct CreateReceiptRuleResponseDeserializer;
@@ -1116,8 +1131,8 @@ impl CreateReceiptRuleSetRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateReceiptRuleSetResponse {}
 
 struct CreateReceiptRuleSetResponseDeserializer;
@@ -1157,8 +1172,8 @@ impl CreateTemplateRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateTemplateResponse {}
 
 struct CreateTemplateResponseDeserializer;
@@ -1200,18 +1215,28 @@ impl CustomRedirectDomainDeserializer {
     }
 }
 /// <p>Contains information about a custom verification email template.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CustomVerificationEmailTemplate {
     /// <p>The URL that the recipient of the verification email is sent to if his or her address is not successfully verified.</p>
+    #[serde(rename = "FailureRedirectionURL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failure_redirection_url: Option<String>,
     /// <p>The email address that the custom verification email is sent from.</p>
+    #[serde(rename = "FromEmailAddress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub from_email_address: Option<String>,
     /// <p>The URL that the recipient of the verification email is sent to if his or her address is successfully verified.</p>
+    #[serde(rename = "SuccessRedirectionURL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub success_redirection_url: Option<String>,
     /// <p>The name of the custom verification email template.</p>
+    #[serde(rename = "TemplateName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub template_name: Option<String>,
     /// <p>The subject line of the custom verification email.</p>
+    #[serde(rename = "TemplateSubject")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub template_subject: Option<String>,
 }
 
@@ -1329,8 +1354,8 @@ impl DeleteConfigurationSetEventDestinationRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteConfigurationSetEventDestinationResponse {}
 
 struct DeleteConfigurationSetEventDestinationResponseDeserializer;
@@ -1374,8 +1399,8 @@ impl DeleteConfigurationSetRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteConfigurationSetResponse {}
 
 struct DeleteConfigurationSetResponseDeserializer;
@@ -1423,8 +1448,8 @@ impl DeleteConfigurationSetTrackingOptionsRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteConfigurationSetTrackingOptionsResponse {}
 
 struct DeleteConfigurationSetTrackingOptionsResponseDeserializer;
@@ -1493,8 +1518,8 @@ impl DeleteIdentityPolicyRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteIdentityPolicyResponse {}
 
 struct DeleteIdentityPolicyResponseDeserializer;
@@ -1535,8 +1560,8 @@ impl DeleteIdentityRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteIdentityResponse {}
 
 struct DeleteIdentityResponseDeserializer;
@@ -1577,8 +1602,8 @@ impl DeleteReceiptFilterRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteReceiptFilterResponse {}
 
 struct DeleteReceiptFilterResponseDeserializer;
@@ -1622,8 +1647,8 @@ impl DeleteReceiptRuleRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteReceiptRuleResponse {}
 
 struct DeleteReceiptRuleResponseDeserializer;
@@ -1664,8 +1689,8 @@ impl DeleteReceiptRuleSetRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteReceiptRuleSetResponse {}
 
 struct DeleteReceiptRuleSetResponseDeserializer;
@@ -1705,8 +1730,8 @@ impl DeleteTemplateRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteTemplateResponse {}
 
 struct DeleteTemplateResponseDeserializer;
@@ -1747,11 +1772,12 @@ impl DeleteVerifiedEmailAddressRequestSerializer {
 }
 
 /// <p>Specifies whether messages that use the configuration set are required to use Transport Layer Security (TLS).</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeliveryOptions {
     /// <p>Specifies whether messages that use the configuration set are required to use Transport Layer Security (TLS). If the value is <code>Require</code>, messages are only delivered if a TLS connection can be established. If the value is <code>Optional</code>, messages can be delivered in plain text if a TLS connection can't be established.</p>
+    #[serde(rename = "TlsPolicy")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tls_policy: Option<String>,
 }
 
@@ -1806,12 +1832,16 @@ impl DescribeActiveReceiptRuleSetRequestSerializer {
 }
 
 /// <p>Represents the metadata and receipt rules for the receipt rule set that is currently active.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeActiveReceiptRuleSetResponse {
     /// <p>The metadata for the currently active receipt rule set. The metadata consists of the rule set name and a timestamp of when the rule set was created.</p>
+    #[serde(rename = "Metadata")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metadata: Option<ReceiptRuleSetMetadata>,
     /// <p>The receipt rules that belong to the active rule set.</p>
+    #[serde(rename = "Rules")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rules: Option<Vec<ReceiptRule>>,
 }
 
@@ -1878,17 +1908,27 @@ impl DescribeConfigurationSetRequestSerializer {
 }
 
 /// <p>Represents the details of a configuration set. Configuration sets enable you to publish email sending events. For information about using configuration sets, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/monitor-sending-activity.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeConfigurationSetResponse {
     /// <p>The configuration set object associated with the specified configuration set.</p>
+    #[serde(rename = "ConfigurationSet")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub configuration_set: Option<ConfigurationSet>,
+    #[serde(rename = "DeliveryOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delivery_options: Option<DeliveryOptions>,
     /// <p>A list of event destinations associated with the configuration set. </p>
+    #[serde(rename = "EventDestinations")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub event_destinations: Option<Vec<EventDestination>>,
     /// <p>An object that represents the reputation settings for the configuration set. </p>
+    #[serde(rename = "ReputationOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub reputation_options: Option<ReputationOptions>,
     /// <p>The name of the custom open and click tracking domain associated with the configuration set.</p>
+    #[serde(rename = "TrackingOptions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tracking_options: Option<TrackingOptions>,
 }
 
@@ -1965,10 +2005,12 @@ impl DescribeReceiptRuleRequestSerializer {
 }
 
 /// <p>Represents the details of a receipt rule.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeReceiptRuleResponse {
     /// <p>A data structure that contains the specified receipt rule's name, actions, recipients, domains, enabled status, scan status, and Transport Layer Security (TLS) policy.</p>
+    #[serde(rename = "Rule")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rule: Option<ReceiptRule>,
 }
 
@@ -2016,12 +2058,16 @@ impl DescribeReceiptRuleSetRequestSerializer {
 }
 
 /// <p>Represents the details of the specified receipt rule set.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DescribeReceiptRuleSetResponse {
     /// <p>The metadata for the receipt rule set, which consists of the rule set name and the timestamp of when the rule set was created.</p>
+    #[serde(rename = "Metadata")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metadata: Option<ReceiptRuleSetMetadata>,
     /// <p>A list of the receipt rules that belong to the specified receipt rule set.</p>
+    #[serde(rename = "Rules")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rules: Option<Vec<ReceiptRule>>,
 }
 
@@ -2167,21 +2213,30 @@ impl SesErrorDeserializer {
     }
 }
 /// <p>Contains information about the event destination that the specified email sending events will be published to.</p> <note> <p>When you create or update an event destination, you must provide one, and only one, destination. The destination can be Amazon CloudWatch, Amazon Kinesis Firehose or Amazon Simple Notification Service (Amazon SNS).</p> </note> <p>Event destinations are associated with configuration sets, which enable you to publish email sending events to Amazon CloudWatch, Amazon Kinesis Firehose, or Amazon Simple Notification Service (Amazon SNS). For information about using configuration sets, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/monitor-sending-activity.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EventDestination {
     /// <p>An object that contains the names, default values, and sources of the dimensions associated with an Amazon CloudWatch event destination.</p>
+    #[serde(rename = "CloudWatchDestination")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cloud_watch_destination: Option<CloudWatchDestination>,
     /// <p>Sets whether Amazon SES publishes events to this destination when you send an email with the associated configuration set. Set to <code>true</code> to enable publishing to this destination; set to <code>false</code> to prevent publishing to this destination. The default value is <code>false</code>.</p>
+    #[serde(rename = "Enabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
     /// <p>An object that contains the delivery stream ARN and the IAM role ARN associated with an Amazon Kinesis Firehose event destination.</p>
+    #[serde(rename = "KinesisFirehoseDestination")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kinesis_firehose_destination: Option<KinesisFirehoseDestination>,
     /// <p>The type of email sending events to publish to the event destination.</p>
+    #[serde(rename = "MatchingEventTypes")]
     pub matching_event_types: Vec<String>,
     /// <p><p>The name of the event destination. The name must:</p> <ul> <li> <p>This value can only contain ASCII letters (a-z, A-Z), numbers (0-9), underscores (_), or dashes (-).</p> </li> <li> <p>Contain less than 64 characters.</p> </li> </ul></p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p>An object that contains the topic ARN associated with an Amazon Simple Notification Service (Amazon SNS) event destination.</p>
+    #[serde(rename = "SNSDestination")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sns_destination: Option<SNSDestination>,
 }
 
@@ -2402,10 +2457,12 @@ impl FromAddressDeserializer {
     }
 }
 /// <p>Represents a request to return the email sending status for your Amazon SES account in the current AWS Region.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetAccountSendingEnabledResponse {
     /// <p>Describes whether email sending is enabled or disabled for your Amazon SES account in the current AWS Region.</p>
+    #[serde(rename = "Enabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
 }
 
@@ -2453,20 +2510,32 @@ impl GetCustomVerificationEmailTemplateRequestSerializer {
 }
 
 /// <p>The content of the custom verification email template.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetCustomVerificationEmailTemplateResponse {
     /// <p>The URL that the recipient of the verification email is sent to if his or her address is not successfully verified.</p>
+    #[serde(rename = "FailureRedirectionURL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failure_redirection_url: Option<String>,
     /// <p>The email address that the custom verification email is sent from.</p>
+    #[serde(rename = "FromEmailAddress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub from_email_address: Option<String>,
     /// <p>The URL that the recipient of the verification email is sent to if his or her address is successfully verified.</p>
+    #[serde(rename = "SuccessRedirectionURL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub success_redirection_url: Option<String>,
     /// <p>The content of the custom verification email.</p>
+    #[serde(rename = "TemplateContent")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub template_content: Option<String>,
     /// <p>The name of the custom verification email template.</p>
+    #[serde(rename = "TemplateName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub template_name: Option<String>,
     /// <p>The subject line of the custom verification email.</p>
+    #[serde(rename = "TemplateSubject")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub template_subject: Option<String>,
 }
 
@@ -2551,10 +2620,11 @@ impl GetIdentityDkimAttributesRequestSerializer {
 }
 
 /// <p>Represents the status of Amazon SES Easy DKIM signing for an identity. For domain identities, this response also contains the DKIM tokens that are required for Easy DKIM signing, and whether Amazon SES successfully verified that these tokens were published.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetIdentityDkimAttributesResponse {
     /// <p>The DKIM attributes for an email address or a domain.</p>
+    #[serde(rename = "DkimAttributes")]
     pub dkim_attributes: ::std::collections::HashMap<String, IdentityDkimAttributes>,
 }
 
@@ -2611,10 +2681,11 @@ impl GetIdentityMailFromDomainAttributesRequestSerializer {
 }
 
 /// <p>Represents the custom MAIL FROM attributes for a list of identities.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetIdentityMailFromDomainAttributesResponse {
     /// <p>A map of identities to custom MAIL FROM attributes.</p>
+    #[serde(rename = "MailFromDomainAttributes")]
     pub mail_from_domain_attributes:
         ::std::collections::HashMap<String, IdentityMailFromDomainAttributes>,
 }
@@ -2671,10 +2742,11 @@ impl GetIdentityNotificationAttributesRequestSerializer {
 }
 
 /// <p>Represents the notification attributes for a list of identities.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetIdentityNotificationAttributesResponse {
     /// <p>A map of Identity to IdentityNotificationAttributes.</p>
+    #[serde(rename = "NotificationAttributes")]
     pub notification_attributes:
         ::std::collections::HashMap<String, IdentityNotificationAttributes>,
 }
@@ -2734,10 +2806,11 @@ impl GetIdentityPoliciesRequestSerializer {
 }
 
 /// <p>Represents the requested sending authorization policies.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetIdentityPoliciesResponse {
     /// <p>A map of policy names to policies.</p>
+    #[serde(rename = "Policies")]
     pub policies: ::std::collections::HashMap<String, String>,
 }
 
@@ -2789,10 +2862,11 @@ impl GetIdentityVerificationAttributesRequestSerializer {
 }
 
 /// <p>The Amazon SES verification status of a list of identities. For domain identities, this response also contains the verification token.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetIdentityVerificationAttributesResponse {
     /// <p>A map of Identities to IdentityVerificationAttributes objects.</p>
+    #[serde(rename = "VerificationAttributes")]
     pub verification_attributes:
         ::std::collections::HashMap<String, IdentityVerificationAttributes>,
 }
@@ -2824,14 +2898,20 @@ impl GetIdentityVerificationAttributesResponseDeserializer {
     }
 }
 /// <p>Represents your Amazon SES daily sending quota, maximum send rate, and the number of emails you have sent in the last 24 hours.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetSendQuotaResponse {
     /// <p>The maximum number of emails the user is allowed to send in a 24-hour interval. A value of -1 signifies an unlimited quota.</p>
+    #[serde(rename = "Max24HourSend")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_24_hour_send: Option<f64>,
     /// <p><p>The maximum number of emails that Amazon SES can accept from the user&#39;s account per second.</p> <note> <p>The rate at which Amazon SES accepts the user&#39;s messages might be less than the maximum send rate.</p> </note></p>
+    #[serde(rename = "MaxSendRate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_send_rate: Option<f64>,
     /// <p>The number of emails sent during the previous 24 hours.</p>
+    #[serde(rename = "SentLast24Hours")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sent_last_24_hours: Option<f64>,
 }
 
@@ -2867,10 +2947,12 @@ impl GetSendQuotaResponseDeserializer {
     }
 }
 /// <p>Represents a list of data points. This list contains aggregated data from the previous two weeks of your sending activity with Amazon SES.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetSendStatisticsResponse {
     /// <p>A list of data points, each of which represents 15 minutes of activity.</p>
+    #[serde(rename = "SendDataPoints")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub send_data_points: Option<Vec<SendDataPoint>>,
 }
 
@@ -2918,9 +3000,11 @@ impl GetTemplateRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetTemplateResponse {
+    #[serde(rename = "Template")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub template: Option<Template>,
 }
 
@@ -2987,14 +3071,18 @@ impl IdentityDeserializer {
     }
 }
 /// <p>Represents the DKIM attributes of a verified email address or a domain.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct IdentityDkimAttributes {
     /// <p>Is true if DKIM signing is enabled for email sent from the identity. It's false otherwise. The default value is true.</p>
+    #[serde(rename = "DkimEnabled")]
     pub dkim_enabled: bool,
     /// <p>A set of character strings that represent the domain's identity. Using these tokens, you need to create DNS CNAME records that point to DKIM public keys that are hosted by Amazon SES. Amazon Web Services eventually detects that you've updated your DNS records. This detection process might take up to 72 hours. After successful detection, Amazon SES is able to DKIM-sign email originating from that domain. (This only applies to domain identities, not email address identities.)</p> <p>For more information about creating DNS records using DKIM tokens, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/easy-dkim.html">Amazon SES Developer Guide</a>.</p>
+    #[serde(rename = "DkimTokens")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dkim_tokens: Option<Vec<String>>,
     /// <p>Describes whether Amazon SES has successfully verified the DKIM DNS records (tokens) published in the domain name's DNS. (This only applies to domain identities, not email address identities.)</p>
+    #[serde(rename = "DkimVerificationStatus")]
     pub dkim_verification_status: String,
 }
 
@@ -3057,14 +3145,17 @@ impl IdentityListSerializer {
 }
 
 /// <p>Represents the custom MAIL FROM domain attributes of a verified identity (email address or domain).</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct IdentityMailFromDomainAttributes {
     /// <p>The action that Amazon SES takes if it cannot successfully read the required MX record when you send an email. A value of <code>UseDefaultValue</code> indicates that if Amazon SES cannot read the required MX record, it uses amazonses.com (or a subdomain of that) as the MAIL FROM domain. A value of <code>RejectMessage</code> indicates that if Amazon SES cannot read the required MX record, Amazon SES returns a <code>MailFromDomainNotVerified</code> error and does not send the email.</p> <p>The custom MAIL FROM setup states that result in this behavior are <code>Pending</code>, <code>Failed</code>, and <code>TemporaryFailure</code>.</p>
+    #[serde(rename = "BehaviorOnMXFailure")]
     pub behavior_on_mx_failure: String,
     /// <p>The custom MAIL FROM domain that the identity is configured to use.</p>
+    #[serde(rename = "MailFromDomain")]
     pub mail_from_domain: String,
     /// <p>The state that indicates whether Amazon SES has successfully read the MX record required for custom MAIL FROM domain setup. If the state is <code>Success</code>, Amazon SES uses the specified custom MAIL FROM domain when the verified identity sends an email. All other states indicate that Amazon SES takes the action described by <code>BehaviorOnMXFailure</code>.</p>
+    #[serde(rename = "MailFromDomainStatus")]
     pub mail_from_domain_status: String,
 }
 
@@ -3105,22 +3196,32 @@ impl IdentityMailFromDomainAttributesDeserializer {
     }
 }
 /// <p>Represents the notification attributes of an identity, including whether an identity has Amazon Simple Notification Service (Amazon SNS) topics set for bounce, complaint, and/or delivery notifications, and whether feedback forwarding is enabled for bounce and complaint notifications.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct IdentityNotificationAttributes {
     /// <p>The Amazon Resource Name (ARN) of the Amazon SNS topic where Amazon SES will publish bounce notifications.</p>
+    #[serde(rename = "BounceTopic")]
     pub bounce_topic: String,
     /// <p>The Amazon Resource Name (ARN) of the Amazon SNS topic where Amazon SES will publish complaint notifications.</p>
+    #[serde(rename = "ComplaintTopic")]
     pub complaint_topic: String,
     /// <p>The Amazon Resource Name (ARN) of the Amazon SNS topic where Amazon SES will publish delivery notifications.</p>
+    #[serde(rename = "DeliveryTopic")]
     pub delivery_topic: String,
     /// <p>Describes whether Amazon SES will forward bounce and complaint notifications as email. <code>true</code> indicates that Amazon SES will forward bounce and complaint notifications as email, while <code>false</code> indicates that bounce and complaint notifications will be published only to the specified bounce and complaint Amazon SNS topics.</p>
+    #[serde(rename = "ForwardingEnabled")]
     pub forwarding_enabled: bool,
     /// <p>Describes whether Amazon SES includes the original email headers in Amazon SNS notifications of type <code>Bounce</code>. A value of <code>true</code> specifies that Amazon SES will include headers in bounce notifications, and a value of <code>false</code> specifies that Amazon SES will not include headers in bounce notifications.</p>
+    #[serde(rename = "HeadersInBounceNotificationsEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub headers_in_bounce_notifications_enabled: Option<bool>,
     /// <p>Describes whether Amazon SES includes the original email headers in Amazon SNS notifications of type <code>Complaint</code>. A value of <code>true</code> specifies that Amazon SES will include headers in complaint notifications, and a value of <code>false</code> specifies that Amazon SES will not include headers in complaint notifications.</p>
+    #[serde(rename = "HeadersInComplaintNotificationsEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub headers_in_complaint_notifications_enabled: Option<bool>,
     /// <p>Describes whether Amazon SES includes the original email headers in Amazon SNS notifications of type <code>Delivery</code>. A value of <code>true</code> specifies that Amazon SES will include headers in delivery notifications, and a value of <code>false</code> specifies that Amazon SES will not include headers in delivery notifications.</p>
+    #[serde(rename = "HeadersInDeliveryNotificationsEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub headers_in_delivery_notifications_enabled: Option<bool>,
 }
 
@@ -3181,12 +3282,15 @@ impl IdentityNotificationAttributesDeserializer {
     }
 }
 /// <p>Represents the verification attributes of a single identity.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct IdentityVerificationAttributes {
     /// <p>The verification status of the identity: "Pending", "Success", "Failed", or "TemporaryFailure".</p>
+    #[serde(rename = "VerificationStatus")]
     pub verification_status: String,
     /// <p>The verification token for a domain identity. Null for email address identities.</p>
+    #[serde(rename = "VerificationToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub verification_token: Option<String>,
 }
 
@@ -3233,13 +3337,14 @@ impl InvocationTypeDeserializer {
     }
 }
 /// <p>Contains the delivery stream ARN and the IAM role ARN associated with an Amazon Kinesis Firehose event destination.</p> <p>Event destinations, such as Amazon Kinesis Firehose, are associated with configuration sets, which enable you to publish email sending events. For information about using configuration sets, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/monitor-sending-activity.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct KinesisFirehoseDestination {
     /// <p>The ARN of the Amazon Kinesis Firehose stream that email sending events should be published to.</p>
+    #[serde(rename = "DeliveryStreamARN")]
     pub delivery_stream_arn: String,
     /// <p>The ARN of the IAM role under which Amazon SES publishes email sending events to the Amazon Kinesis Firehose stream.</p>
+    #[serde(rename = "IAMRoleARN")]
     pub iam_role_arn: String,
 }
 
@@ -3291,15 +3396,19 @@ impl KinesisFirehoseDestinationSerializer {
 }
 
 /// <p>When included in a receipt rule, this action calls an AWS Lambda function and, optionally, publishes a notification to Amazon Simple Notification Service (Amazon SNS).</p> <p>To enable Amazon SES to call your AWS Lambda function or to publish to an Amazon SNS topic of another account, Amazon SES must have permission to access those resources. For information about giving permissions, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-permissions.html">Amazon SES Developer Guide</a>.</p> <p>For information about using AWS Lambda actions in receipt rules, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-action-lambda.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LambdaAction {
     /// <p>The Amazon Resource Name (ARN) of the AWS Lambda function. An example of an AWS Lambda function ARN is <code>arn:aws:lambda:us-west-2:account-id:function:MyFunction</code>. For more information about AWS Lambda, see the <a href="https://docs.aws.amazon.com/lambda/latest/dg/welcome.html">AWS Lambda Developer Guide</a>.</p>
+    #[serde(rename = "FunctionArn")]
     pub function_arn: String,
     /// <p><p>The invocation type of the AWS Lambda function. An invocation type of <code>RequestResponse</code> means that the execution of the function will immediately result in a response, and a value of <code>Event</code> means that the function will be invoked asynchronously. The default value is <code>Event</code>. For information about AWS Lambda invocation types, see the <a href="https://docs.aws.amazon.com/lambda/latest/dg/API_Invoke.html">AWS Lambda Developer Guide</a>.</p> <important> <p>There is a 30-second timeout on <code>RequestResponse</code> invocations. You should use <code>Event</code> invocation in most cases. Use <code>RequestResponse</code> only when you want to make a mail flow decision, such as whether to stop the receipt rule or the receipt rule set.</p> </important></p>
+    #[serde(rename = "InvocationType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub invocation_type: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the Amazon SNS topic to notify when the Lambda action is taken. An example of an Amazon SNS topic ARN is <code>arn:aws:sns:us-west-2:123456789012:MyTopic</code>. For more information about Amazon SNS topics, see the <a href="https://docs.aws.amazon.com/sns/latest/dg/CreateTopic.html">Amazon SNS Developer Guide</a>.</p>
+    #[serde(rename = "TopicArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub topic_arn: Option<String>,
 }
 
@@ -3393,12 +3502,16 @@ impl ListConfigurationSetsRequestSerializer {
 }
 
 /// <p>A list of configuration sets associated with your AWS account. Configuration sets enable you to publish email sending events. For information about using configuration sets, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/monitor-sending-activity.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListConfigurationSetsResponse {
     /// <p>A list of configuration sets.</p>
+    #[serde(rename = "ConfigurationSets")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub configuration_sets: Option<Vec<ConfigurationSet>>,
     /// <p>A token indicating that there are additional configuration sets available to be listed. Pass this token to successive calls of <code>ListConfigurationSets</code>. </p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -3463,12 +3576,16 @@ impl ListCustomVerificationEmailTemplatesRequestSerializer {
 }
 
 /// <p>A paginated list of custom verification email templates.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListCustomVerificationEmailTemplatesResponse {
     /// <p>A list of the custom verification email templates that exist in your account.</p>
+    #[serde(rename = "CustomVerificationEmailTemplates")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub custom_verification_email_templates: Option<Vec<CustomVerificationEmailTemplate>>,
     /// <p>A token indicating that there are additional custom verification email templates available to be listed. Pass this token to a subsequent call to <code>ListTemplates</code> to retrieve the next 50 custom verification email templates.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -3537,12 +3654,15 @@ impl ListIdentitiesRequestSerializer {
 }
 
 /// <p>A list of all identities that you have attempted to verify under your AWS account, regardless of verification status.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListIdentitiesResponse {
     /// <p>A list of identities.</p>
+    #[serde(rename = "Identities")]
     pub identities: Vec<String>,
     /// <p>The token used for pagination.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -3590,10 +3710,11 @@ impl ListIdentityPoliciesRequestSerializer {
 }
 
 /// <p>A list of names of sending authorization policies that apply to an identity.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListIdentityPoliciesResponse {
     /// <p>A list of names of policies that apply to the specified identity.</p>
+    #[serde(rename = "PolicyNames")]
     pub policy_names: Vec<String>,
 }
 
@@ -3640,10 +3761,12 @@ impl ListReceiptFiltersRequestSerializer {
 }
 
 /// <p>A list of IP address filters that exist under your AWS account.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListReceiptFiltersResponse {
     /// <p>A list of IP address filter data structures, which each consist of a name, an IP address range, and whether to allow or block mail from it.</p>
+    #[serde(rename = "Filters")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<ReceiptFilter>>,
 }
 
@@ -3695,12 +3818,16 @@ impl ListReceiptRuleSetsRequestSerializer {
 }
 
 /// <p>A list of receipt rule sets that exist under your AWS account.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListReceiptRuleSetsResponse {
     /// <p>A token indicating that there are additional receipt rule sets available to be listed. Pass this token to successive calls of <code>ListReceiptRuleSets</code> to retrieve up to 100 receipt rule sets at a time.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>The metadata for the currently active receipt rule set. The metadata consists of the rule set name and the timestamp of when the rule set was created.</p>
+    #[serde(rename = "RuleSets")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rule_sets: Option<Vec<ReceiptRuleSetMetadata>>,
 }
 
@@ -3759,12 +3886,16 @@ impl ListTemplatesRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTemplatesResponse {
     /// <p>A token indicating that there are additional email templates available to be listed. Pass this token to a subsequent call to <code>ListTemplates</code> to retrieve the next 50 email templates.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>An array the contains the name and creation time stamp for each template in your Amazon SES account.</p>
+    #[serde(rename = "TemplatesMetadata")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub templates_metadata: Option<Vec<TemplateMetadata>>,
 }
 
@@ -3792,10 +3923,12 @@ impl ListTemplatesResponseDeserializer {
     }
 }
 /// <p>A list of email addresses that you have verified with Amazon SES under your AWS account.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListVerifiedEmailAddressesResponse {
     /// <p>A list of email addresses that have been verified.</p>
+    #[serde(rename = "VerifiedEmailAddresses")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub verified_email_addresses: Option<Vec<String>>,
 }
 
@@ -4139,8 +4272,8 @@ impl PutConfigurationSetDeliveryOptionsRequestSerializer {
 }
 
 /// <p>An HTTP 200 response if the request succeeds, or an error message if the request fails.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PutConfigurationSetDeliveryOptionsResponse {}
 
 struct PutConfigurationSetDeliveryOptionsResponseDeserializer;
@@ -4187,8 +4320,8 @@ impl PutIdentityPolicyRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PutIdentityPolicyResponse {}
 
 struct PutIdentityPolicyResponseDeserializer;
@@ -4232,23 +4365,36 @@ impl RawMessageSerializer {
 }
 
 /// <p>An action that Amazon SES can take when it receives an email on behalf of one or more email addresses or domains that you own. An instance of this data type can represent only one action.</p> <p>For information about setting up receipt rules, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-receipt-rules.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReceiptAction {
     /// <p>Adds a header to the received email.</p>
+    #[serde(rename = "AddHeaderAction")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub add_header_action: Option<AddHeaderAction>,
     /// <p>Rejects the received email by returning a bounce response to the sender and, optionally, publishes a notification to Amazon Simple Notification Service (Amazon SNS).</p>
+    #[serde(rename = "BounceAction")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bounce_action: Option<BounceAction>,
     /// <p>Calls an AWS Lambda function, and optionally, publishes a notification to Amazon SNS.</p>
+    #[serde(rename = "LambdaAction")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lambda_action: Option<LambdaAction>,
     /// <p>Saves the received message to an Amazon Simple Storage Service (Amazon S3) bucket and, optionally, publishes a notification to Amazon SNS.</p>
+    #[serde(rename = "S3Action")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub s3_action: Option<S3Action>,
     /// <p>Publishes the email content within a notification to Amazon SNS.</p>
+    #[serde(rename = "SNSAction")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sns_action: Option<SNSAction>,
     /// <p>Terminates the evaluation of the receipt rule set and optionally publishes a notification to Amazon SNS.</p>
+    #[serde(rename = "StopAction")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stop_action: Option<StopAction>,
     /// <p>Calls Amazon WorkMail and, optionally, publishes a notification to Amazon Amazon SNS.</p>
+    #[serde(rename = "WorkmailAction")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub workmail_action: Option<WorkmailAction>,
 }
 
@@ -4393,13 +4539,14 @@ impl ReceiptActionsListSerializer {
 }
 
 /// <p>A receipt IP address filter enables you to specify whether to accept or reject mail originating from an IP address or range of IP addresses.</p> <p>For information about setting up IP address filters, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-ip-filters.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReceiptFilter {
     /// <p>A structure that provides the IP addresses to block or allow, and whether to block or allow incoming mail from them.</p>
+    #[serde(rename = "IpFilter")]
     pub ip_filter: ReceiptIpFilter,
     /// <p><p>The name of the IP address filter. The name must:</p> <ul> <li> <p>This value can only contain ASCII letters (a-z, A-Z), numbers (0-9), underscores (_), or dashes (-).</p> </li> <li> <p>Start and end with a letter or number.</p> </li> <li> <p>Contain less than 64 characters.</p> </li> </ul></p>
+    #[serde(rename = "Name")]
     pub name: String,
 }
 
@@ -4483,13 +4630,14 @@ impl ReceiptFilterPolicyDeserializer {
     }
 }
 /// <p>A receipt IP address filter enables you to specify whether to accept or reject mail originating from an IP address or range of IP addresses.</p> <p>For information about setting up IP address filters, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-ip-filters.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReceiptIpFilter {
     /// <p>A single IP address or a range of IP addresses that you want to block or allow, specified in Classless Inter-Domain Routing (CIDR) notation. An example of a single email address is 10.0.0.1. An example of a range of IP addresses is 10.0.0.1/24. For more information about CIDR notation, see <a href="https://tools.ietf.org/html/rfc2317">RFC 2317</a>.</p>
+    #[serde(rename = "Cidr")]
     pub cidr: String,
     /// <p>Indicates whether to block or allow incoming mail from the specified IP addresses.</p>
+    #[serde(rename = "Policy")]
     pub policy: String,
 }
 
@@ -4530,21 +4678,31 @@ impl ReceiptIpFilterSerializer {
 }
 
 /// <p>Receipt rules enable you to specify which actions Amazon SES should take when it receives mail on behalf of one or more email addresses or domains that you own.</p> <p>Each receipt rule defines a set of email addresses or domains that it applies to. If the email addresses or domains match at least one recipient address of the message, Amazon SES executes all of the receipt rule's actions on the message.</p> <p>For information about setting up receipt rules, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-receipt-rules.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReceiptRule {
     /// <p>An ordered list of actions to perform on messages that match at least one of the recipient email addresses or domains specified in the receipt rule.</p>
+    #[serde(rename = "Actions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub actions: Option<Vec<ReceiptAction>>,
     /// <p>If <code>true</code>, the receipt rule is active. The default value is <code>false</code>.</p>
+    #[serde(rename = "Enabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
     /// <p><p>The name of the receipt rule. The name must:</p> <ul> <li> <p>This value can only contain ASCII letters (a-z, A-Z), numbers (0-9), underscores (_), or dashes (-).</p> </li> <li> <p>Start and end with a letter or number.</p> </li> <li> <p>Contain less than 64 characters.</p> </li> </ul></p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p>The recipient domains and email addresses that the receipt rule applies to. If this field is not specified, this rule will match all recipients under all verified domains.</p>
+    #[serde(rename = "Recipients")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub recipients: Option<Vec<String>>,
     /// <p>If <code>true</code>, then messages that this receipt rule applies to are scanned for spam and viruses. The default value is <code>false</code>.</p>
+    #[serde(rename = "ScanEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scan_enabled: Option<bool>,
     /// <p>Specifies whether Amazon SES should require that incoming email is delivered over a connection encrypted with Transport Layer Security (TLS). If this parameter is set to <code>Require</code>, Amazon SES will bounce emails that are not received over TLS. The default is <code>Optional</code>.</p>
+    #[serde(rename = "TlsPolicy")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tls_policy: Option<String>,
 }
 
@@ -4647,12 +4805,16 @@ impl ReceiptRuleNamesListSerializer {
 }
 
 /// <p>Information about a receipt rule set.</p> <p>A receipt rule set is a collection of rules that specify what Amazon SES should do with mail it receives on behalf of your account's verified domains.</p> <p>For information about setting up receipt rule sets, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-receipt-rule-set.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReceiptRuleSetMetadata {
     /// <p>The date and time the receipt rule set was created.</p>
+    #[serde(rename = "CreatedTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub created_timestamp: Option<String>,
     /// <p><p>The name of the receipt rule set. The name must:</p> <ul> <li> <p>This value can only contain ASCII letters (a-z, A-Z), numbers (0-9), underscores (_), or dashes (-).</p> </li> <li> <p>Start and end with a letter or number.</p> </li> <li> <p>Contain less than 64 characters.</p> </li> </ul></p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
@@ -4860,8 +5022,8 @@ impl ReorderReceiptRuleSetRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReorderReceiptRuleSetResponse {}
 
 struct ReorderReceiptRuleSetResponseDeserializer;
@@ -4881,14 +5043,20 @@ impl ReorderReceiptRuleSetResponseDeserializer {
     }
 }
 /// <p>Contains information about the reputation settings for a configuration set.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReputationOptions {
     /// <p>The date and time at which the reputation metrics for the configuration set were last reset. Resetting these metrics is known as a <i>fresh start</i>.</p> <p>When you disable email sending for a configuration set using <a>UpdateConfigurationSetSendingEnabled</a> and later re-enable it, the reputation metrics for the configuration set (but not for the entire Amazon SES account) are reset.</p> <p>If email sending for the configuration set has never been disabled and later re-enabled, the value of this attribute is <code>null</code>.</p>
+    #[serde(rename = "LastFreshStart")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_fresh_start: Option<String>,
     /// <p>Describes whether or not Amazon SES publishes reputation metrics for the configuration set, such as bounce and complaint rates, to Amazon CloudWatch.</p> <p>If the value is <code>true</code>, reputation metrics are published. If the value is <code>false</code>, reputation metrics are not published. The default value is <code>false</code>.</p>
+    #[serde(rename = "ReputationMetricsEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub reputation_metrics_enabled: Option<bool>,
     /// <p>Describes whether email sending is enabled or disabled for the configuration set. If the value is <code>true</code>, then Amazon SES will send emails that use the configuration set. If the value is <code>false</code>, Amazon SES will not send emails that use the configuration set. The default value is <code>true</code>. You can change this setting using <a>UpdateConfigurationSetSendingEnabled</a>.</p>
+    #[serde(rename = "SendingEnabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sending_enabled: Option<bool>,
 }
 
@@ -4924,17 +5092,23 @@ impl ReputationOptionsDeserializer {
     }
 }
 /// <p>When included in a receipt rule, this action saves the received message to an Amazon Simple Storage Service (Amazon S3) bucket and, optionally, publishes a notification to Amazon Simple Notification Service (Amazon SNS).</p> <p>To enable Amazon SES to write emails to your Amazon S3 bucket, use an AWS KMS key to encrypt your emails, or publish to an Amazon SNS topic of another account, Amazon SES must have permission to access those resources. For information about giving permissions, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-permissions.html">Amazon SES Developer Guide</a>.</p> <note> <p>When you save your emails to an Amazon S3 bucket, the maximum email size (including headers) is 30 MB. Emails larger than that will bounce.</p> </note> <p>For information about specifying Amazon S3 actions in receipt rules, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-action-s3.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct S3Action {
     /// <p>The name of the Amazon S3 bucket that incoming email will be saved to.</p>
+    #[serde(rename = "BucketName")]
     pub bucket_name: String,
     /// <p><p>The customer master key that Amazon SES should use to encrypt your emails before saving them to the Amazon S3 bucket. You can use the default master key or a custom master key you created in AWS KMS as follows:</p> <ul> <li> <p>To use the default master key, provide an ARN in the form of <code>arn:aws:kms:REGION:ACCOUNT-ID-WITHOUT-HYPHENS:alias/aws/ses</code>. For example, if your AWS account ID is 123456789012 and you want to use the default master key in the US West (Oregon) region, the ARN of the default master key would be <code>arn:aws:kms:us-west-2:123456789012:alias/aws/ses</code>. If you use the default master key, you don&#39;t need to perform any extra steps to give Amazon SES permission to use the key.</p> </li> <li> <p>To use a custom master key you created in AWS KMS, provide the ARN of the master key and ensure that you add a statement to your key&#39;s policy to give Amazon SES permission to use it. For more information about giving permissions, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-permissions.html">Amazon SES Developer Guide</a>.</p> </li> </ul> <p>For more information about key policies, see the <a href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html">AWS KMS Developer Guide</a>. If you do not specify a master key, Amazon SES will not encrypt your emails.</p> <important> <p>Your mail is encrypted by Amazon SES using the Amazon S3 encryption client before the mail is submitted to Amazon S3 for storage. It is not encrypted using Amazon S3 server-side encryption. This means that you must use the Amazon S3 encryption client to decrypt the email after retrieving it from Amazon S3, as the service has no access to use your AWS KMS keys for decryption. This encryption client is currently available with the <a href="http://aws.amazon.com/sdk-for-java/">AWS SDK for Java</a> and <a href="http://aws.amazon.com/sdk-for-ruby/">AWS SDK for Ruby</a> only. For more information about client-side encryption using AWS KMS master keys, see the <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingClientSideEncryption.html">Amazon S3 Developer Guide</a>.</p> </important></p>
+    #[serde(rename = "KmsKeyArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kms_key_arn: Option<String>,
     /// <p>The key prefix of the Amazon S3 bucket. The key prefix is similar to a directory name that enables you to store similar data under the same directory in a bucket.</p>
+    #[serde(rename = "ObjectKeyPrefix")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub object_key_prefix: Option<String>,
     /// <p>The ARN of the Amazon SNS topic to notify when the message is saved to the Amazon S3 bucket. An example of an Amazon SNS topic ARN is <code>arn:aws:sns:us-west-2:123456789012:MyTopic</code>. For more information about Amazon SNS topics, see the <a href="https://docs.aws.amazon.com/sns/latest/dg/CreateTopic.html">Amazon SNS Developer Guide</a>.</p>
+    #[serde(rename = "TopicArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub topic_arn: Option<String>,
 }
 
@@ -5019,13 +5193,15 @@ impl S3KeyPrefixDeserializer {
     }
 }
 /// <p>When included in a receipt rule, this action publishes a notification to Amazon Simple Notification Service (Amazon SNS). This action includes a complete copy of the email content in the Amazon SNS notifications. Amazon SNS notifications for all other actions simply provide information about the email. They do not include the email content itself.</p> <p>If you own the Amazon SNS topic, you don't need to do anything to give Amazon SES permission to publish emails to it. However, if you don't own the Amazon SNS topic, you need to attach a policy to the topic to give Amazon SES permissions to access it. For information about giving permissions, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-permissions.html">Amazon SES Developer Guide</a>.</p> <important> <p>You can only publish emails that are 150 KB or less (including the header) to Amazon SNS. Larger emails will bounce. If you anticipate emails larger than 150 KB, use the S3 action instead.</p> </important> <p>For information about using a receipt rule to publish an Amazon SNS notification, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-action-sns.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SNSAction {
     /// <p>The encoding to use for the email within the Amazon SNS notification. UTF-8 is easier to use, but may not preserve all special characters when a message was encoded with a different encoding format. Base64 preserves all special characters. The default value is UTF-8.</p>
+    #[serde(rename = "Encoding")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub encoding: Option<String>,
     /// <p>The Amazon Resource Name (ARN) of the Amazon SNS topic to notify. An example of an Amazon SNS topic ARN is <code>arn:aws:sns:us-west-2:123456789012:MyTopic</code>. For more information about Amazon SNS topics, see the <a href="https://docs.aws.amazon.com/sns/latest/dg/CreateTopic.html">Amazon SNS Developer Guide</a>.</p>
+    #[serde(rename = "TopicArn")]
     pub topic_arn: String,
 }
 
@@ -5081,11 +5257,11 @@ impl SNSActionEncodingDeserializer {
     }
 }
 /// <p>Contains the topic ARN associated with an Amazon Simple Notification Service (Amazon SNS) event destination.</p> <p>Event destinations, such as Amazon SNS, are associated with configuration sets, which enable you to publish email sending events. For information about using configuration sets, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/monitor-sending-activity.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SNSDestination {
     /// <p>The ARN of the Amazon SNS topic that email sending events will be published to. An example of an Amazon SNS topic ARN is <code>arn:aws:sns:us-west-2:123456789012:MyTopic</code>. For more information about Amazon SNS topics, see the <a href="https://docs.aws.amazon.com/sns/latest/dg/CreateTopic.html">Amazon SNS Developer Guide</a>.</p>
+    #[serde(rename = "TopicARN")]
     pub topic_arn: String,
 }
 
@@ -5175,10 +5351,12 @@ impl SendBounceRequestSerializer {
 }
 
 /// <p>Represents a unique message ID.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SendBounceResponse {
     /// <p>The message ID of the bounce message.</p>
+    #[serde(rename = "MessageId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message_id: Option<String>,
 }
 
@@ -5285,10 +5463,11 @@ impl SendBulkTemplatedEmailRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SendBulkTemplatedEmailResponse {
     /// <p>The unique message identifier returned from the <code>SendBulkTemplatedEmail</code> action.</p>
+    #[serde(rename = "Status")]
     pub status: Vec<BulkEmailDestinationStatus>,
 }
 
@@ -5350,10 +5529,12 @@ impl SendCustomVerificationEmailRequestSerializer {
 }
 
 /// <p>The response received when attempting to send the custom verification email.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SendCustomVerificationEmailResponse {
     /// <p>The unique message identifier returned from the <code>SendCustomVerificationEmail</code> operation.</p>
+    #[serde(rename = "MessageId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message_id: Option<String>,
 }
 
@@ -5381,18 +5562,28 @@ impl SendCustomVerificationEmailResponseDeserializer {
     }
 }
 /// <p>Represents sending statistics data. Each <code>SendDataPoint</code> contains statistics for a 15-minute period of sending activity. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SendDataPoint {
     /// <p>Number of emails that have bounced.</p>
+    #[serde(rename = "Bounces")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bounces: Option<i64>,
     /// <p>Number of unwanted emails that were rejected by recipients.</p>
+    #[serde(rename = "Complaints")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub complaints: Option<i64>,
     /// <p>Number of emails that have been sent.</p>
+    #[serde(rename = "DeliveryAttempts")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delivery_attempts: Option<i64>,
     /// <p>Number of emails rejected by Amazon SES.</p>
+    #[serde(rename = "Rejects")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rejects: Option<i64>,
     /// <p>Time of the data point.</p>
+    #[serde(rename = "Timestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<String>,
 }
 
@@ -5517,10 +5708,11 @@ impl SendEmailRequestSerializer {
 }
 
 /// <p>Represents a unique message ID.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SendEmailResponse {
     /// <p>The unique message identifier returned from the <code>SendEmail</code> action. </p>
+    #[serde(rename = "MessageId")]
     pub message_id: String,
 }
 
@@ -5614,10 +5806,11 @@ impl SendRawEmailRequestSerializer {
 }
 
 /// <p>Represents a unique message ID.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SendRawEmailResponse {
     /// <p>The unique message identifier returned from the <code>SendRawEmail</code> action. </p>
+    #[serde(rename = "MessageId")]
     pub message_id: String,
 }
 
@@ -5719,10 +5912,11 @@ impl SendTemplatedEmailRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SendTemplatedEmailResponse {
     /// <p>The unique message identifier returned from the <code>SendTemplatedEmail</code> action. </p>
+    #[serde(rename = "MessageId")]
     pub message_id: String,
 }
 
@@ -5783,8 +5977,8 @@ impl SetActiveReceiptRuleSetRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetActiveReceiptRuleSetResponse {}
 
 struct SetActiveReceiptRuleSetResponseDeserializer;
@@ -5828,8 +6022,8 @@ impl SetIdentityDkimEnabledRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetIdentityDkimEnabledResponse {}
 
 struct SetIdentityDkimEnabledResponseDeserializer;
@@ -5880,8 +6074,8 @@ impl SetIdentityFeedbackForwardingEnabledRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetIdentityFeedbackForwardingEnabledResponse {}
 
 struct SetIdentityFeedbackForwardingEnabledResponseDeserializer;
@@ -5935,8 +6129,8 @@ impl SetIdentityHeadersInNotificationsEnabledRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetIdentityHeadersInNotificationsEnabledResponse {}
 
 struct SetIdentityHeadersInNotificationsEnabledResponseDeserializer;
@@ -5990,8 +6184,8 @@ impl SetIdentityMailFromDomainRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetIdentityMailFromDomainResponse {}
 
 struct SetIdentityMailFromDomainResponseDeserializer;
@@ -6043,8 +6237,8 @@ impl SetIdentityNotificationTopicRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetIdentityNotificationTopicResponse {}
 
 struct SetIdentityNotificationTopicResponseDeserializer;
@@ -6093,8 +6287,8 @@ impl SetReceiptRulePositionRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SetReceiptRulePositionResponse {}
 
 struct SetReceiptRulePositionResponseDeserializer;
@@ -6114,13 +6308,15 @@ impl SetReceiptRulePositionResponseDeserializer {
     }
 }
 /// <p>When included in a receipt rule, this action terminates the evaluation of the receipt rule set and, optionally, publishes a notification to Amazon Simple Notification Service (Amazon SNS).</p> <p>For information about setting a stop action in a receipt rule, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-action-stop.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StopAction {
     /// <p>The scope of the StopAction. The only acceptable value is <code>RuleSet</code>.</p>
+    #[serde(rename = "Scope")]
     pub scope: String,
     /// <p>The Amazon Resource Name (ARN) of the Amazon SNS topic to notify when the stop action is taken. An example of an Amazon SNS topic ARN is <code>arn:aws:sns:us-west-2:123456789012:MyTopic</code>. For more information about Amazon SNS topics, see the <a href="https://docs.aws.amazon.com/sns/latest/dg/CreateTopic.html">Amazon SNS Developer Guide</a>.</p>
+    #[serde(rename = "TopicArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub topic_arn: Option<String>,
 }
 
@@ -6209,17 +6405,23 @@ impl SuccessRedirectionURLDeserializer {
     }
 }
 /// <p>The content of the email, composed of a subject line, an HTML part, and a text-only part.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Template {
     /// <p>The HTML body of the email.</p>
+    #[serde(rename = "HtmlPart")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub html_part: Option<String>,
     /// <p>The subject line of the email.</p>
+    #[serde(rename = "SubjectPart")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subject_part: Option<String>,
     /// <p>The name of the template. You will refer to this name when you send email using the <code>SendTemplatedEmail</code> or <code>SendBulkTemplatedEmail</code> operations.</p>
+    #[serde(rename = "TemplateName")]
     pub template_name: String,
     /// <p>The email body that will be visible to recipients whose email clients do not display HTML.</p>
+    #[serde(rename = "TextPart")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub text_part: Option<String>,
 }
 
@@ -6287,12 +6489,16 @@ impl TemplateContentDeserializer {
     }
 }
 /// <p>Contains information about an email template.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TemplateMetadata {
     /// <p>The time and date the template was created.</p>
+    #[serde(rename = "CreatedTimestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub created_timestamp: Option<String>,
     /// <p>The name of the template.</p>
+    #[serde(rename = "Name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
@@ -6371,10 +6577,12 @@ impl TestRenderTemplateRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TestRenderTemplateResponse {
     /// <p>The complete MIME message rendered by applying the data in the TemplateData parameter to the template specified in the TemplateName parameter.</p>
+    #[serde(rename = "RenderedTemplate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rendered_template: Option<String>,
 }
 
@@ -6437,11 +6645,12 @@ impl TlsPolicyDeserializer {
     }
 }
 /// <p>A domain that is used to redirect email recipients to an Amazon SES-operated domain. This domain captures open and click events generated by Amazon SES emails.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/configure-custom-open-click-domains.html">Configuring Custom Domains to Handle Open and Click Tracking</a> in the <i>Amazon SES Developer Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TrackingOptions {
     /// <p>The custom subdomain that will be used to redirect email recipients to the Amazon SES event tracking domain.</p>
+    #[serde(rename = "CustomRedirectDomain")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub custom_redirect_domain: Option<String>,
 }
 
@@ -6545,8 +6754,8 @@ impl UpdateConfigurationSetEventDestinationRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateConfigurationSetEventDestinationResponse {}
 
 struct UpdateConfigurationSetEventDestinationResponseDeserializer;
@@ -6662,8 +6871,8 @@ impl UpdateConfigurationSetTrackingOptionsRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateConfigurationSetTrackingOptionsResponse {}
 
 struct UpdateConfigurationSetTrackingOptionsResponseDeserializer;
@@ -6763,8 +6972,8 @@ impl UpdateReceiptRuleRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateReceiptRuleResponse {}
 
 struct UpdateReceiptRuleResponseDeserializer;
@@ -6802,8 +7011,8 @@ impl UpdateTemplateRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateTemplateResponse {}
 
 struct UpdateTemplateResponseDeserializer;
@@ -6907,10 +7116,11 @@ impl VerifyDomainDkimRequestSerializer {
 }
 
 /// <p>Returns CNAME records that you must publish to the DNS server of your domain to set up Easy DKIM with Amazon SES.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct VerifyDomainDkimResponse {
     /// <p>A set of character strings that represent the domain's identity. If the identity is an email address, the tokens represent the domain of that address.</p> <p>Using these tokens, you need to create DNS CNAME records that point to DKIM public keys that are hosted by Amazon SES. Amazon Web Services eventually detects that you've updated your DNS records. This detection process might take up to 72 hours. After successful detection, Amazon SES is able to DKIM-sign email originating from that domain. (This only applies to domain identities, not email address identities.)</p> <p>For more information about creating DNS records using DKIM tokens, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/easy-dkim.html">Amazon SES Developer Guide</a>.</p>
+    #[serde(rename = "DkimTokens")]
     pub dkim_tokens: Vec<String>,
 }
 
@@ -6962,10 +7172,11 @@ impl VerifyDomainIdentityRequestSerializer {
 }
 
 /// <p>Returns a TXT record that you must publish to the DNS server of your domain to complete domain verification with Amazon SES.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct VerifyDomainIdentityResponse {
     /// <p>A TXT record that you must place in the DNS settings of the domain to complete domain verification with Amazon SES.</p> <p>As Amazon SES searches for the TXT record, the domain's verification status is "Pending". When Amazon SES detects the record, the domain's verification status changes to "Success". If Amazon SES is unable to detect the record within 72 hours, the domain's verification status changes to "Failed." In that case, if you still want to verify the domain, you must restart the verification process from the beginning.</p>
+    #[serde(rename = "VerificationToken")]
     pub verification_token: String,
 }
 
@@ -7035,8 +7246,8 @@ impl VerifyEmailIdentityRequestSerializer {
 }
 
 /// <p>An empty element returned on a successful request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct VerifyEmailIdentityResponse {}
 
 struct VerifyEmailIdentityResponseDeserializer;
@@ -7056,13 +7267,15 @@ impl VerifyEmailIdentityResponseDeserializer {
     }
 }
 /// <p>When included in a receipt rule, this action calls Amazon WorkMail and, optionally, publishes a notification to Amazon Simple Notification Service (Amazon SNS). You will typically not use this action directly because Amazon WorkMail adds the rule automatically during its setup procedure.</p> <p>For information using a receipt rule to call Amazon WorkMail, see the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-action-workmail.html">Amazon SES Developer Guide</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct WorkmailAction {
     /// <p>The ARN of the Amazon WorkMail organization. An example of an Amazon WorkMail organization ARN is <code>arn:aws:workmail:us-west-2:123456789012:organization/m-68755160c4cb4e29a2b2f8fb58f359d7</code>. For information about Amazon WorkMail organizations, see the <a href="https://docs.aws.amazon.com/workmail/latest/adminguide/organizations_overview.html">Amazon WorkMail Administrator Guide</a>.</p>
+    #[serde(rename = "OrganizationArn")]
     pub organization_arn: String,
     /// <p>The Amazon Resource Name (ARN) of the Amazon SNS topic to notify when the WorkMail action is called. An example of an Amazon SNS topic ARN is <code>arn:aws:sns:us-west-2:123456789012:MyTopic</code>. For more information about Amazon SNS topics, see the <a href="https://docs.aws.amazon.com/sns/latest/dg/CreateTopic.html">Amazon SNS Developer Guide</a>.</p>
+    #[serde(rename = "TopicArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub topic_arn: Option<String>,
 }
 

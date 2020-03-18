@@ -108,16 +108,21 @@ impl AttributeNameListSerializer {
 }
 
 /// <p>Gives a detailed description of the result of an action on each entry in the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct BatchResultErrorEntry {
     /// <p>An error code representing why the action failed on this entry.</p>
+    #[serde(rename = "Code")]
     pub code: String,
     /// <p>The <code>Id</code> of an entry in a batch request.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>A message explaining why the action failed on this entry.</p>
+    #[serde(rename = "Message")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
     /// <p>Specifies whether the error happened due to the producer.</p>
+    #[serde(rename = "SenderFault")]
     pub sender_fault: bool,
 }
 
@@ -307,12 +312,14 @@ impl ChangeMessageVisibilityBatchRequestEntryListSerializer {
 }
 
 /// <p>For each message in the batch, the response contains a <code> <a>ChangeMessageVisibilityBatchResultEntry</a> </code> tag if the message succeeds or a <code> <a>BatchResultErrorEntry</a> </code> tag if the message fails.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ChangeMessageVisibilityBatchResult {
     /// <p>A list of <code> <a>BatchResultErrorEntry</a> </code> items.</p>
+    #[serde(rename = "Failed")]
     pub failed: Vec<BatchResultErrorEntry>,
     /// <p>A list of <code> <a>ChangeMessageVisibilityBatchResultEntry</a> </code> items.</p>
+    #[serde(rename = "Successful")]
     pub successful: Vec<ChangeMessageVisibilityBatchResultEntry>,
 }
 
@@ -351,10 +358,11 @@ impl ChangeMessageVisibilityBatchResultDeserializer {
     }
 }
 /// <p>Encloses the <code>Id</code> of an entry in <code> <a>ChangeMessageVisibilityBatch</a>.</code> </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ChangeMessageVisibilityBatchResultEntry {
     /// <p>Represents a message whose visibility timeout has been changed successfully.</p>
+    #[serde(rename = "Id")]
     pub id: String,
 }
 
@@ -479,10 +487,12 @@ impl CreateQueueRequestSerializer {
 }
 
 /// <p>Returns the <code>QueueUrl</code> attribute of the created queue.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateQueueResult {
     /// <p>The URL of the created Amazon SQS queue.</p>
+    #[serde(rename = "QueueUrl")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub queue_url: Option<String>,
 }
 
@@ -571,12 +581,14 @@ impl DeleteMessageBatchRequestEntryListSerializer {
 }
 
 /// <p>For each message in the batch, the response contains a <code> <a>DeleteMessageBatchResultEntry</a> </code> tag if the message is deleted or a <code> <a>BatchResultErrorEntry</a> </code> tag if the message can't be deleted.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteMessageBatchResult {
     /// <p>A list of <code> <a>BatchResultErrorEntry</a> </code> items.</p>
+    #[serde(rename = "Failed")]
     pub failed: Vec<BatchResultErrorEntry>,
     /// <p>A list of <code> <a>DeleteMessageBatchResultEntry</a> </code> items.</p>
+    #[serde(rename = "Successful")]
     pub successful: Vec<DeleteMessageBatchResultEntry>,
 }
 
@@ -615,10 +627,11 @@ impl DeleteMessageBatchResultDeserializer {
     }
 }
 /// <p>Encloses the <code>Id</code> of an entry in <code> <a>DeleteMessageBatch</a>.</code> </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteMessageBatchResultEntry {
     /// <p>Represents a successfully deleted message.</p>
+    #[serde(rename = "Id")]
     pub id: String,
 }
 
@@ -752,10 +765,12 @@ impl GetQueueAttributesRequestSerializer {
 }
 
 /// <p>A list of returned queue attributes.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetQueueAttributesResult {
     /// <p>A map of attributes to their respective values.</p>
+    #[serde(rename = "Attributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<::std::collections::HashMap<String, String>>,
 }
 
@@ -814,10 +829,12 @@ impl GetQueueUrlRequestSerializer {
 }
 
 /// <p>For more information, see <a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-api-responses.html">Interpreting Responses</a> in the <i>Amazon Simple Queue Service Developer Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetQueueUrlResult {
     /// <p>The URL of the queue.</p>
+    #[serde(rename = "QueueUrl")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub queue_url: Option<String>,
 }
 
@@ -861,10 +878,11 @@ impl ListDeadLetterSourceQueuesRequestSerializer {
 }
 
 /// <p>A list of your dead letter source queues.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListDeadLetterSourceQueuesResult {
     /// <p>A list of source queue URLs that have the <code>RedrivePolicy</code> queue attribute configured with a dead-letter queue.</p>
+    #[serde(rename = "queueUrls")]
     pub queue_urls: Vec<String>,
 }
 
@@ -911,10 +929,12 @@ impl ListQueueTagsRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListQueueTagsResult {
     /// <p>The list of all tags added to the specified queue.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<::std::collections::HashMap<String, String>>,
 }
 
@@ -960,10 +980,12 @@ impl ListQueuesRequestSerializer {
 }
 
 /// <p>A list of your queues.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListQueuesResult {
     /// <p>A list of queue URLs, up to 1,000 entries.</p>
+    #[serde(rename = "QueueUrls")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub queue_urls: Option<Vec<String>>,
 }
 
@@ -988,22 +1010,36 @@ impl ListQueuesResultDeserializer {
     }
 }
 /// <p>An Amazon SQS message.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Message {
     /// <p>A map of the attributes requested in <code> <a>ReceiveMessage</a> </code> to their respective values. Supported attributes:</p> <ul> <li> <p> <code>ApproximateReceiveCount</code> </p> </li> <li> <p> <code>ApproximateFirstReceiveTimestamp</code> </p> </li> <li> <p> <code>MessageDeduplicationId</code> </p> </li> <li> <p> <code>MessageGroupId</code> </p> </li> <li> <p> <code>SenderId</code> </p> </li> <li> <p> <code>SentTimestamp</code> </p> </li> <li> <p> <code>SequenceNumber</code> </p> </li> </ul> <p> <code>ApproximateFirstReceiveTimestamp</code> and <code>SentTimestamp</code> are each returned as an integer representing the <a href="http://en.wikipedia.org/wiki/Unix_time">epoch time</a> in milliseconds.</p>
+    #[serde(rename = "Attributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<::std::collections::HashMap<String, String>>,
     /// <p>The message's contents (not URL-encoded).</p>
+    #[serde(rename = "Body")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub body: Option<String>,
     /// <p>An MD5 digest of the non-URL-encoded message body string.</p>
+    #[serde(rename = "MD5OfBody")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub md5_of_body: Option<String>,
     /// <p>An MD5 digest of the non-URL-encoded message attribute string. You can use this attribute to verify that Amazon SQS received the message correctly. Amazon SQS URL-decodes the message before creating the MD5 digest. For information about MD5, see <a href="https://www.ietf.org/rfc/rfc1321.txt">RFC1321</a>.</p>
+    #[serde(rename = "MD5OfMessageAttributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub md5_of_message_attributes: Option<String>,
     /// <p>Each message attribute consists of a <code>Name</code>, <code>Type</code>, and <code>Value</code>. For more information, see <a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-message-attributes.html">Amazon SQS Message Attributes</a> in the <i>Amazon Simple Queue Service Developer Guide</i>.</p>
+    #[serde(rename = "MessageAttributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message_attributes: Option<::std::collections::HashMap<String, MessageAttributeValue>>,
     /// <p>A unique identifier for the message. A <code>MessageId</code>is considered unique across all AWS accounts for an extended period of time.</p>
+    #[serde(rename = "MessageId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message_id: Option<String>,
     /// <p>An identifier associated with the act of receiving the message. A new receipt handle is returned every time you receive a message. When deleting a message, you provide the last received receipt handle to delete the message.</p>
+    #[serde(rename = "ReceiptHandle")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub receipt_handle: Option<String>,
 }
 
@@ -1067,19 +1103,37 @@ impl MessageAttributeNameListSerializer {
 }
 
 /// <p>The user-specified message attribute value. For string data types, the <code>Value</code> attribute has the same restrictions on the content as the message body. For more information, see <code> <a>SendMessage</a>.</code> </p> <p> <code>Name</code>, <code>type</code>, <code>value</code> and the message body must not be empty or null. All parts of the message attribute, including <code>Name</code>, <code>Type</code>, and <code>Value</code>, are part of the message size restriction (256 KB or 262,144 bytes).</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MessageAttributeValue {
     /// <p>Not implemented. Reserved for future use.</p>
+    #[serde(rename = "BinaryListValues")]
+    #[serde(
+        deserialize_with = "::rusoto_core::serialization::SerdeBlobList::deserialize_blob_list",
+        serialize_with = "::rusoto_core::serialization::SerdeBlobList::serialize_blob_list",
+        default
+    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub binary_list_values: Option<Vec<bytes::Bytes>>,
     /// <p>Binary type attributes can store any binary data, such as compressed data, encrypted data, or images.</p>
+    #[serde(rename = "BinaryValue")]
+    #[serde(
+        deserialize_with = "::rusoto_core::serialization::SerdeBlob::deserialize_blob",
+        serialize_with = "::rusoto_core::serialization::SerdeBlob::serialize_blob",
+        default
+    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub binary_value: Option<bytes::Bytes>,
     /// <p>Amazon SQS supports the following logical data types: <code>String</code>, <code>Number</code>, and <code>Binary</code>. For the <code>Number</code> data type, you must use <code>StringValue</code>.</p> <p>You can also append custom labels. For more information, see <a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-message-attributes.html">Amazon SQS Message Attributes</a> in the <i>Amazon Simple Queue Service Developer Guide</i>.</p>
+    #[serde(rename = "DataType")]
     pub data_type: String,
     /// <p>Not implemented. Reserved for future use.</p>
+    #[serde(rename = "StringListValues")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub string_list_values: Option<Vec<String>>,
     /// <p>Strings are Unicode with UTF-8 binary encoding. For a list of code values, see <a href="http://en.wikipedia.org/wiki/ASCII#ASCII_printable_characters">ASCII Printable Characters</a>.</p>
+    #[serde(rename = "StringValue")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub string_value: Option<String>,
 }
 
@@ -1487,10 +1541,12 @@ impl ReceiveMessageRequestSerializer {
 }
 
 /// <p>A list of received messages.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReceiveMessageResult {
     /// <p>A list of messages.</p>
+    #[serde(rename = "Messages")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub messages: Option<Vec<Message>>,
 }
 
@@ -1639,12 +1695,14 @@ impl SendMessageBatchRequestEntryListSerializer {
 }
 
 /// <p>For each message in the batch, the response contains a <code> <a>SendMessageBatchResultEntry</a> </code> tag if the message succeeds or a <code> <a>BatchResultErrorEntry</a> </code> tag if the message fails.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SendMessageBatchResult {
     /// <p>A list of <code> <a>BatchResultErrorEntry</a> </code> items with error details about each message that can't be enqueued.</p>
+    #[serde(rename = "Failed")]
     pub failed: Vec<BatchResultErrorEntry>,
     /// <p>A list of <code> <a>SendMessageBatchResultEntry</a> </code> items.</p>
+    #[serde(rename = "Successful")]
     pub successful: Vec<SendMessageBatchResultEntry>,
 }
 
@@ -1679,20 +1737,29 @@ impl SendMessageBatchResultDeserializer {
     }
 }
 /// <p>Encloses a <code>MessageId</code> for a successfully-enqueued message in a <code> <a>SendMessageBatch</a>.</code> </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SendMessageBatchResultEntry {
     /// <p>An identifier for the message in this batch.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>An MD5 digest of the non-URL-encoded message attribute string. You can use this attribute to verify that Amazon SQS received the message correctly. Amazon SQS URL-decodes the message before creating the MD5 digest. For information about MD5, see <a href="https://www.ietf.org/rfc/rfc1321.txt">RFC1321</a>.</p>
+    #[serde(rename = "MD5OfMessageAttributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub md5_of_message_attributes: Option<String>,
     /// <p>An MD5 digest of the non-URL-encoded message attribute string. You can use this attribute to verify that Amazon SQS received the message correctly. Amazon SQS URL-decodes the message before creating the MD5 digest. For information about MD5, see <a href="https://www.ietf.org/rfc/rfc1321.txt">RFC1321</a>.</p>
+    #[serde(rename = "MD5OfMessageBody")]
     pub md5_of_message_body: String,
     /// <p>An MD5 digest of the non-URL-encoded message system attribute string. You can use this attribute to verify that Amazon SQS received the message correctly. Amazon SQS URL-decodes the message before creating the MD5 digest. For information about MD5, see <a href="https://www.ietf.org/rfc/rfc1321.txt">RFC1321</a>.</p>
+    #[serde(rename = "MD5OfMessageSystemAttributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub md5_of_message_system_attributes: Option<String>,
     /// <p>An identifier for the message.</p>
+    #[serde(rename = "MessageId")]
     pub message_id: String,
     /// <p>This parameter applies only to FIFO (first-in-first-out) queues.</p> <p>The large, non-consecutive number that Amazon SQS assigns to each message.</p> <p>The length of <code>SequenceNumber</code> is 128 bits. As <code>SequenceNumber</code> continues to increase for a particular <code>MessageGroupId</code>.</p>
+    #[serde(rename = "SequenceNumber")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sequence_number: Option<String>,
 }
 
@@ -1831,18 +1898,28 @@ impl SendMessageRequestSerializer {
 }
 
 /// <p>The <code>MD5OfMessageBody</code> and <code>MessageId</code> elements.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SendMessageResult {
     /// <p>An MD5 digest of the non-URL-encoded message attribute string. You can use this attribute to verify that Amazon SQS received the message correctly. Amazon SQS URL-decodes the message before creating the MD5 digest. For information about MD5, see <a href="https://www.ietf.org/rfc/rfc1321.txt">RFC1321</a>.</p>
+    #[serde(rename = "MD5OfMessageAttributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub md5_of_message_attributes: Option<String>,
     /// <p>An MD5 digest of the non-URL-encoded message attribute string. You can use this attribute to verify that Amazon SQS received the message correctly. Amazon SQS URL-decodes the message before creating the MD5 digest. For information about MD5, see <a href="https://www.ietf.org/rfc/rfc1321.txt">RFC1321</a>.</p>
+    #[serde(rename = "MD5OfMessageBody")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub md5_of_message_body: Option<String>,
     /// <p>An MD5 digest of the non-URL-encoded message system attribute string. You can use this attribute to verify that Amazon SQS received the message correctly. Amazon SQS URL-decodes the message before creating the MD5 digest.</p>
+    #[serde(rename = "MD5OfMessageSystemAttributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub md5_of_message_system_attributes: Option<String>,
     /// <p>An attribute containing the <code>MessageId</code> of the message sent to the queue. For more information, see <a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-queue-message-identifiers.html">Queue and Message Identifiers</a> in the <i>Amazon Simple Queue Service Developer Guide</i>. </p>
+    #[serde(rename = "MessageId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message_id: Option<String>,
     /// <p>This parameter applies only to FIFO (first-in-first-out) queues.</p> <p>The large, non-consecutive number that Amazon SQS assigns to each message.</p> <p>The length of <code>SequenceNumber</code> is 128 bits. <code>SequenceNumber</code> continues to increase for a particular <code>MessageGroupId</code>.</p>
+    #[serde(rename = "SequenceNumber")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sequence_number: Option<String>,
 }
 

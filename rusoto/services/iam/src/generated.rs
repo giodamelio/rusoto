@@ -37,20 +37,30 @@ use xml::reader::ParserConfig;
 use xml::EventReader;
 
 /// <p>An object that contains details about when a principal in the reported AWS Organizations entity last attempted to access an AWS service. A principal can be an IAM user, an IAM role, or the AWS account root user within the reported Organizations entity.</p> <p>This data type is a response element in the <a>GetOrganizationsAccessReport</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AccessDetail {
     /// <p>The path of the Organizations entity (root, organizational unit, or account) from which an authenticated principal last attempted to access the service. AWS does not report unauthenticated requests.</p> <p>This field is null if no principals (IAM users, IAM roles, or root users) in the reported Organizations entity attempted to access the service within the <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#service-last-accessed-reporting-period">reporting period</a>.</p>
+    #[serde(rename = "EntityPath")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub entity_path: Option<String>,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when an authenticated principal most recently attempted to access the service. AWS does not report unauthenticated requests.</p> <p>This field is null if no principals in the reported Organizations entity attempted to access the service within the <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#service-last-accessed-reporting-period">reporting period</a>.</p>
+    #[serde(rename = "LastAuthenticatedTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_authenticated_time: Option<String>,
     /// <p>The Region where the last service access attempt occurred.</p> <p>This field is null if no principals in the reported Organizations entity attempted to access the service within the <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#service-last-accessed-reporting-period">reporting period</a>.</p>
+    #[serde(rename = "Region")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
     /// <p>The name of the service in which access was attempted.</p>
+    #[serde(rename = "ServiceName")]
     pub service_name: String,
     /// <p>The namespace of the service in which access was attempted.</p> <p>To learn the service namespace of a service, go to <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_actions-resources-contextkeys.html">Actions, Resources, and Condition Keys for AWS Services</a> in the <i>IAM User Guide</i>. Choose the name of the service to view details for that service. In the first paragraph, find the service prefix. For example, <code>(service prefix: a4b)</code>. For more information about service namespaces, see <a href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces">AWS Service Namespaces</a> in the <i>AWS General Reference</i>.</p>
+    #[serde(rename = "ServiceNamespace")]
     pub service_namespace: String,
     /// <p>The number of accounts with authenticated principals (root users, IAM users, and IAM roles) that attempted to access the service in the reporting period.</p>
+    #[serde(rename = "TotalAuthenticatedEntities")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub total_authenticated_entities: Option<i64>,
 }
 
@@ -116,18 +126,24 @@ impl AccessDetailsDeserializer {
     }
 }
 /// <p><p>Contains information about an AWS access key.</p> <p> This data type is used as a response element in the <a>CreateAccessKey</a> and <a>ListAccessKeys</a> operations. </p> <note> <p>The <code>SecretAccessKey</code> value is returned only in response to <a>CreateAccessKey</a>. You can get a secret access key only when you first create an access key; you cannot recover the secret access key later. If you lose a secret access key, you must create a new access key.</p> </note></p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AccessKey {
     /// <p>The ID for this access key.</p>
+    #[serde(rename = "AccessKeyId")]
     pub access_key_id: String,
     /// <p>The date when the access key was created.</p>
+    #[serde(rename = "CreateDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub create_date: Option<String>,
     /// <p>The secret key used to sign requests.</p>
+    #[serde(rename = "SecretAccessKey")]
     pub secret_access_key: String,
     /// <p>The status of the access key. <code>Active</code> means that the key is valid for API calls, while <code>Inactive</code> means it is not. </p>
+    #[serde(rename = "Status")]
     pub status: String,
     /// <p>The name of the IAM user that the access key is associated with.</p>
+    #[serde(rename = "UserName")]
     pub user_name: String,
 }
 
@@ -175,14 +191,17 @@ impl AccessKeyIdTypeDeserializer {
     }
 }
 /// <p>Contains information about the last time an AWS access key was used since IAM began tracking this information on April 22, 2015.</p> <p>This data type is used as a response element in the <a>GetAccessKeyLastUsed</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AccessKeyLastUsed {
     /// <p><p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the access key was most recently used. This field is null in the following situations:</p> <ul> <li> <p>The user does not have an access key.</p> </li> <li> <p>An access key exists but has not been used since IAM began tracking this information.</p> </li> <li> <p>There is no sign-in data associated with the user.</p> </li> </ul></p>
+    #[serde(rename = "LastUsedDate")]
     pub last_used_date: String,
     /// <p>The AWS Region where this access key was most recently used. The value for this field is "N/A" in the following situations:</p> <ul> <li> <p>The user does not have an access key.</p> </li> <li> <p>An access key exists but has not been used since IAM began tracking this information.</p> </li> <li> <p>There is no sign-in data associated with the user.</p> </li> </ul> <p>For more information about AWS Regions, see <a href="https://docs.aws.amazon.com/general/latest/gr/rande.html">Regions and Endpoints</a> in the Amazon Web Services General Reference.</p>
+    #[serde(rename = "Region")]
     pub region: String,
     /// <p><p>The name of the AWS service with which this access key was most recently used. The value of this field is &quot;N/A&quot; in the following situations:</p> <ul> <li> <p>The user does not have an access key.</p> </li> <li> <p>An access key exists but has not been used since IAM started tracking this information.</p> </li> <li> <p>There is no sign-in data associated with the user.</p> </li> </ul></p>
+    #[serde(rename = "ServiceName")]
     pub service_name: String,
 }
 
@@ -211,16 +230,24 @@ impl AccessKeyLastUsedDeserializer {
     }
 }
 /// <p>Contains information about an AWS access key, without its secret key.</p> <p>This data type is used as a response element in the <a>ListAccessKeys</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AccessKeyMetadata {
     /// <p>The ID for this access key.</p>
+    #[serde(rename = "AccessKeyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub access_key_id: Option<String>,
     /// <p>The date when the access key was created.</p>
+    #[serde(rename = "CreateDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub create_date: Option<String>,
     /// <p>The status of the access key. <code>Active</code> means that the key is valid for API calls; <code>Inactive</code> means it is not.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// <p>The name of the IAM user that the key is associated with.</p>
+    #[serde(rename = "UserName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_name: Option<String>,
 }
 
@@ -506,12 +533,16 @@ impl AttachUserPolicyRequestSerializer {
 }
 
 /// <p>Contains information about an attached permissions boundary.</p> <p>An attached permissions boundary is a managed policy that has been attached to a user or role to set the permissions boundary.</p> <p>For more information about permissions boundaries, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html">Permissions Boundaries for IAM Identities </a> in the <i>IAM User Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AttachedPermissionsBoundary {
     /// <p> The ARN of the policy used to set the permissions boundary for the user or role.</p>
+    #[serde(rename = "PermissionsBoundaryArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permissions_boundary_arn: Option<String>,
     /// <p> The permissions boundary usage type that indicates what type of IAM resource is used as the permissions boundary for an entity. This data type can only have a value of <code>Policy</code>.</p>
+    #[serde(rename = "PermissionsBoundaryType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permissions_boundary_type: Option<String>,
 }
 
@@ -565,11 +596,15 @@ impl AttachedPoliciesListTypeDeserializer {
     }
 }
 /// <p>Contains information about an attached policy.</p> <p>An attached policy is a managed policy that has been attached to a user, group, or role. This data type is used as a response element in the <a>ListAttachedGroupPolicies</a>, <a>ListAttachedRolePolicies</a>, <a>ListAttachedUserPolicies</a>, and <a>GetAccountAuthorizationDetails</a> operations. </p> <p>For more information about managed policies, refer to <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html">Managed Policies and Inline Policies</a> in the <i>IAM User Guide</i>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AttachedPolicy {
+    #[serde(rename = "PolicyArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_arn: Option<String>,
     /// <p>The friendly name of the attached policy.</p>
+    #[serde(rename = "PolicyName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_name: Option<String>,
 }
 
@@ -883,10 +918,11 @@ impl CreateAccessKeyRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>CreateAccessKey</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateAccessKeyResponse {
     /// <p>A structure with details about the access key.</p>
+    #[serde(rename = "AccessKey")]
     pub access_key: AccessKey,
 }
 
@@ -958,10 +994,11 @@ impl CreateGroupRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>CreateGroup</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateGroupResponse {
     /// <p>A structure containing details about the new group.</p>
+    #[serde(rename = "Group")]
     pub group: Group,
 }
 
@@ -1012,10 +1049,11 @@ impl CreateInstanceProfileRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>CreateInstanceProfile</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateInstanceProfileResponse {
     /// <p>A structure containing details about the new instance profile.</p>
+    #[serde(rename = "InstanceProfile")]
     pub instance_profile: InstanceProfile,
 }
 
@@ -1074,10 +1112,11 @@ impl CreateLoginProfileRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>CreateLoginProfile</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateLoginProfileResponse {
     /// <p>A structure containing the user name and password create date.</p>
+    #[serde(rename = "LoginProfile")]
     pub login_profile: LoginProfile,
 }
 
@@ -1141,10 +1180,12 @@ impl CreateOpenIDConnectProviderRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>CreateOpenIDConnectProvider</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateOpenIDConnectProviderResponse {
     /// <p>The Amazon Resource Name (ARN) of the new IAM OpenID Connect provider that is created. For more information, see <a>OpenIDConnectProviderListEntry</a>. </p>
+    #[serde(rename = "OpenIDConnectProviderArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub open_id_connect_provider_arn: Option<String>,
 }
 
@@ -1210,10 +1251,12 @@ impl CreatePolicyRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>CreatePolicy</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreatePolicyResponse {
     /// <p>A structure containing details about the new policy.</p>
+    #[serde(rename = "Policy")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy: Option<Policy>,
 }
 
@@ -1267,10 +1310,12 @@ impl CreatePolicyVersionRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>CreatePolicyVersion</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreatePolicyVersionResponse {
     /// <p>A structure containing details about the new policy version.</p>
+    #[serde(rename = "PolicyVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_version: Option<PolicyVersion>,
 }
 
@@ -1354,10 +1399,11 @@ impl CreateRoleRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>CreateRole</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateRoleResponse {
     /// <p>A structure containing details about the new role.</p>
+    #[serde(rename = "Role")]
     pub role: Role,
 }
 
@@ -1406,10 +1452,12 @@ impl CreateSAMLProviderRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>CreateSAMLProvider</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateSAMLProviderResponse {
     /// <p>The Amazon Resource Name (ARN) of the new SAML provider resource in IAM.</p>
+    #[serde(rename = "SAMLProviderArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub saml_provider_arn: Option<String>,
 }
 
@@ -1469,10 +1517,12 @@ impl CreateServiceLinkedRoleRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateServiceLinkedRoleResponse {
     /// <p>A <a>Role</a> object that contains details about the newly created role.</p>
+    #[serde(rename = "Role")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role: Option<Role>,
 }
 
@@ -1521,10 +1571,12 @@ impl CreateServiceSpecificCredentialRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateServiceSpecificCredentialResponse {
     /// <p><p>A structure that contains information about the newly created service-specific credential.</p> <important> <p>This is the only time that the password for this credential set is available. It cannot be recovered later. Instead, you must reset the password with <a>ResetServiceSpecificCredential</a>.</p> </important></p>
+    #[serde(rename = "ServiceSpecificCredential")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub service_specific_credential: Option<ServiceSpecificCredential>,
 }
 
@@ -1593,10 +1645,12 @@ impl CreateUserRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>CreateUser</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateUserResponse {
     /// <p>A structure with details about the new IAM user.</p>
+    #[serde(rename = "User")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user: Option<User>,
 }
 
@@ -1647,10 +1701,11 @@ impl CreateVirtualMFADeviceRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>CreateVirtualMFADevice</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateVirtualMFADeviceResponse {
     /// <p>A structure containing details about the new virtual MFA device.</p>
+    #[serde(rename = "VirtualMFADevice")]
     pub virtual_mfa_device: VirtualMFADevice,
 }
 
@@ -2063,10 +2118,11 @@ impl DeleteServiceLinkedRoleRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteServiceLinkedRoleResponse {
     /// <p>The deletion task identifier that you can use to check the status of the deletion. This identifier is returned in the format <code>task/aws-service-role/&lt;service-principal-name&gt;/&lt;role-name&gt;/&lt;task-uuid&gt;</code>.</p>
+    #[serde(rename = "DeletionTaskId")]
     pub deletion_task_id: String,
 }
 
@@ -2233,12 +2289,16 @@ impl DeleteVirtualMFADeviceRequestSerializer {
 }
 
 /// <p>The reason that the service-linked role deletion failed.</p> <p>This data type is used as a response element in the <a>GetServiceLinkedRoleDeletionStatus</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeletionTaskFailureReasonType {
     /// <p>A short description of the reason that the service-linked role deletion failed.</p>
+    #[serde(rename = "Reason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub reason: Option<String>,
     /// <p>A list of objects that contains details about the service-linked role deletion failure, if that information is returned by the service. If the service-linked role has active sessions or if any resources that were used by the role have not been deleted from the linked service, the role can't be deleted. This parameter includes a list of the resources that are associated with the role and the Region in which the resources are being used.</p>
+    #[serde(rename = "RoleUsageList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role_usage_list: Option<Vec<RoleUsageType>>,
 }
 
@@ -2396,12 +2456,15 @@ impl EnableMFADeviceRequestSerializer {
 }
 
 /// <p>An object that contains details about when the IAM entities (users or roles) were last used in an attempt to access the specified AWS service.</p> <p>This data type is a response element in the <a>GetServiceLastAccessedDetailsWithEntities</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EntityDetails {
     /// <p>The <code>EntityInfo</code> object that contains details about the entity (user or role).</p>
+    #[serde(rename = "EntityInfo")]
     pub entity_info: EntityInfo,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the authenticated entity last attempted to access AWS. AWS does not report unauthenticated requests.</p> <p>This field is null if no IAM entities attempted to access the service within the <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#service-last-accessed-reporting-period">reporting period</a>.</p>
+    #[serde(rename = "LastAuthenticated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_authenticated: Option<String>,
 }
 
@@ -2447,17 +2510,23 @@ impl EntityDetailsListTypeDeserializer {
     }
 }
 /// <p>Contains details about the specified entity (user or role).</p> <p>This data type is an element of the <a>EntityDetails</a> object.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EntityInfo {
+    #[serde(rename = "Arn")]
     pub arn: String,
     /// <p>The identifier of the entity (user or role).</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The name of the entity (user or role).</p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p>The path to the entity (user or role). For more information about paths, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "Path")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     /// <p>The type of entity (user or role).</p>
+    #[serde(rename = "Type")]
     pub type_: String,
 }
 
@@ -2515,12 +2584,14 @@ impl EntityNameTypeDeserializer {
     }
 }
 /// <p>Contains information about the reason that the operation failed.</p> <p>This data type is used as a response element in the <a>GetOrganizationsAccessReport</a>, <a>GetServiceLastAccessedDetails</a>, and <a>GetServiceLastAccessedDetailsWithEntities</a> operations.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ErrorDetails {
     /// <p>The error code associated with the operation failure.</p>
+    #[serde(rename = "Code")]
     pub code: String,
     /// <p>Detailed information about the reason that the operation failed.</p>
+    #[serde(rename = "Message")]
     pub message: String,
 }
 
@@ -2580,26 +2651,42 @@ impl EvalDecisionSourceTypeDeserializer {
     }
 }
 /// <p>Contains the results of a simulation.</p> <p>This data type is used by the return parameter of <code> <a>SimulateCustomPolicy</a> </code> and <code> <a>SimulatePrincipalPolicy</a> </code>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EvaluationResult {
     /// <p>The name of the API operation tested on the indicated resource.</p>
+    #[serde(rename = "EvalActionName")]
     pub eval_action_name: String,
     /// <p>The result of the simulation.</p>
+    #[serde(rename = "EvalDecision")]
     pub eval_decision: String,
     /// <p>Additional details about the results of the cross-account evaluation decision. This parameter is populated for only cross-account simulations. It contains a brief summary of how each policy type contributes to the final evaluation decision.</p> <p>If the simulation evaluates policies within the same account and includes a resource ARN, then the parameter is present but the response is empty. If the simulation evaluates policies within the same account and specifies all resources (<code>*</code>), then the parameter is not returned.</p> <p>When you make a cross-account request, AWS evaluates the request in the trusting account and the trusted account. The request is allowed only if both evaluations return <code>true</code>. For more information about how policies are evaluated, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-basics">Evaluating Policies Within a Single Account</a>.</p> <p>If an AWS Organizations SCP included in the evaluation denies access, the simulation ends. In this case, policy evaluation does not proceed any further and this parameter is not returned.</p>
+    #[serde(rename = "EvalDecisionDetails")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub eval_decision_details: Option<::std::collections::HashMap<String, String>>,
     /// <p>The ARN of the resource that the indicated API operation was tested on.</p>
+    #[serde(rename = "EvalResourceName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub eval_resource_name: Option<String>,
     /// <p>A list of the statements in the input policies that determine the result for this scenario. Remember that even if multiple statements allow the operation on the resource, if only one statement denies that operation, then the explicit deny overrides any allow. In addition, the deny statement is the only entry included in the result.</p>
+    #[serde(rename = "MatchedStatements")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub matched_statements: Option<Vec<Statement>>,
     /// <p>A list of context keys that are required by the included input policies but that were not provided by one of the input parameters. This list is used when the resource in a simulation is "*", either explicitly, or when the <code>ResourceArns</code> parameter blank. If you include a list of resources, then any missing context values are instead included under the <code>ResourceSpecificResults</code> section. To discover the context keys used by a set of policies, you can call <a>GetContextKeysForCustomPolicy</a> or <a>GetContextKeysForPrincipalPolicy</a>.</p>
+    #[serde(rename = "MissingContextValues")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub missing_context_values: Option<Vec<String>>,
     /// <p>A structure that details how Organizations and its service control policies affect the results of the simulation. Only applies if the simulated user's account is part of an organization.</p>
+    #[serde(rename = "OrganizationsDecisionDetail")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub organizations_decision_detail: Option<OrganizationsDecisionDetail>,
     /// <p>Contains information about the effect that a permissions boundary has on a policy simulation when the boundary is applied to an IAM entity.</p>
+    #[serde(rename = "PermissionsBoundaryDecisionDetail")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permissions_boundary_decision_detail: Option<PermissionsBoundaryDecisionDetail>,
     /// <p>The individual results of the simulation of the API operation specified in EvalActionName on each resource.</p>
+    #[serde(rename = "ResourceSpecificResults")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_specific_results: Option<Vec<ResourceSpecificResult>>,
 }
 
@@ -2705,12 +2792,16 @@ impl ExistingUserNameTypeDeserializer {
     }
 }
 /// <p>Contains the response to a successful <a>GenerateCredentialReport</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GenerateCredentialReportResponse {
     /// <p>Information about the credential report.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>Information about the state of the credential report.</p>
+    #[serde(rename = "State")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub state: Option<String>,
 }
 
@@ -2771,10 +2862,12 @@ impl GenerateOrganizationsAccessReportRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GenerateOrganizationsAccessReportResponse {
     /// <p>The job identifier that you can use in the <a>GetOrganizationsAccessReport</a> operation.</p>
+    #[serde(rename = "JobId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub job_id: Option<String>,
 }
 
@@ -2820,10 +2913,12 @@ impl GenerateServiceLastAccessedDetailsRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GenerateServiceLastAccessedDetailsResponse {
     /// <p>The job ID that you can use in the <a>GetServiceLastAccessedDetails</a> or <a>GetServiceLastAccessedDetailsWithEntities</a> operations.</p>
+    #[serde(rename = "JobId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub job_id: Option<String>,
 }
 
@@ -2870,12 +2965,16 @@ impl GetAccessKeyLastUsedRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetAccessKeyLastUsed</a> request. It is also returned as a member of the <a>AccessKeyMetaData</a> structure returned by the <a>ListAccessKeys</a> action.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetAccessKeyLastUsedResponse {
     /// <p>Contains information about the last time the access key was used.</p>
+    #[serde(rename = "AccessKeyLastUsed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub access_key_last_used: Option<AccessKeyLastUsed>,
     /// <p><p>The name of the AWS IAM user that owns this access key.</p> <p/></p>
+    #[serde(rename = "UserName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_name: Option<String>,
 }
 
@@ -2945,20 +3044,32 @@ impl GetAccountAuthorizationDetailsRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetAccountAuthorizationDetails</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetAccountAuthorizationDetailsResponse {
     /// <p>A list containing information about IAM groups.</p>
+    #[serde(rename = "GroupDetailList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub group_detail_list: Option<Vec<GroupDetail>>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>A list containing information about managed policies.</p>
+    #[serde(rename = "Policies")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policies: Option<Vec<ManagedPolicyDetail>>,
     /// <p>A list containing information about IAM roles.</p>
+    #[serde(rename = "RoleDetailList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role_detail_list: Option<Vec<RoleDetail>>,
     /// <p>A list containing information about IAM users.</p>
+    #[serde(rename = "UserDetailList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_detail_list: Option<Vec<UserDetail>>,
 }
 
@@ -3013,10 +3124,11 @@ impl GetAccountAuthorizationDetailsResponseDeserializer {
     }
 }
 /// <p>Contains the response to a successful <a>GetAccountPasswordPolicy</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetAccountPasswordPolicyResponse {
     /// <p>A structure that contains details about the account's password policy.</p>
+    #[serde(rename = "PasswordPolicy")]
     pub password_policy: PasswordPolicy,
 }
 
@@ -3044,10 +3156,12 @@ impl GetAccountPasswordPolicyResponseDeserializer {
     }
 }
 /// <p>Contains the response to a successful <a>GetAccountSummary</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetAccountSummaryResponse {
     /// <p>A set of key–value pairs containing information about IAM entity usage and IAM quotas.</p>
+    #[serde(rename = "SummaryMap")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub summary_map: Option<::std::collections::HashMap<String, i64>>,
 }
 
@@ -3101,10 +3215,12 @@ impl GetContextKeysForCustomPolicyRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetContextKeysForPrincipalPolicy</a> or <a>GetContextKeysForCustomPolicy</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetContextKeysForPolicyResponse {
     /// <p>The list of context keys that are referenced in the input policies.</p>
+    #[serde(rename = "ContextKeyNames")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub context_key_names: Option<Vec<String>>,
 }
 
@@ -3168,14 +3284,25 @@ impl GetContextKeysForPrincipalPolicyRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetCredentialReport</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetCredentialReportResponse {
     /// <p>Contains the credential report. The report is Base64-encoded.</p>
+    #[serde(rename = "Content")]
+    #[serde(
+        deserialize_with = "::rusoto_core::serialization::SerdeBlob::deserialize_blob",
+        serialize_with = "::rusoto_core::serialization::SerdeBlob::serialize_blob",
+        default
+    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub content: Option<bytes::Bytes>,
     /// <p> The date and time when the credential report was created, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>.</p>
+    #[serde(rename = "GeneratedTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub generated_time: Option<String>,
     /// <p>The format (MIME type) of the credential report.</p>
+    #[serde(rename = "ReportFormat")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub report_format: Option<String>,
 }
 
@@ -3237,14 +3364,17 @@ impl GetGroupPolicyRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetGroupPolicy</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetGroupPolicyResponse {
     /// <p>The group the policy is associated with.</p>
+    #[serde(rename = "GroupName")]
     pub group_name: String,
     /// <p>The policy document.</p> <p>IAM stores policies in JSON format. However, resources that were created using AWS CloudFormation templates can be formatted in YAML. AWS CloudFormation always converts a YAML policy to JSON format before submitting it to IAM.</p>
+    #[serde(rename = "PolicyDocument")]
     pub policy_document: String,
     /// <p>The name of the policy.</p>
+    #[serde(rename = "PolicyName")]
     pub policy_name: String,
 }
 
@@ -3304,16 +3434,22 @@ impl GetGroupRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetGroup</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetGroupResponse {
     /// <p>A structure that contains details about the group.</p>
+    #[serde(rename = "Group")]
     pub group: Group,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>A list of users in the group.</p>
+    #[serde(rename = "Users")]
     pub users: Vec<User>,
 }
 
@@ -3372,10 +3508,11 @@ impl GetInstanceProfileRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetInstanceProfile</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetInstanceProfileResponse {
     /// <p>A structure containing details about the instance profile.</p>
+    #[serde(rename = "InstanceProfile")]
     pub instance_profile: InstanceProfile,
 }
 
@@ -3423,10 +3560,11 @@ impl GetLoginProfileRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetLoginProfile</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetLoginProfileResponse {
     /// <p>A structure containing the user name and password create date for the user.</p>
+    #[serde(rename = "LoginProfile")]
     pub login_profile: LoginProfile,
 }
 
@@ -3477,16 +3615,24 @@ impl GetOpenIDConnectProviderRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetOpenIDConnectProvider</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetOpenIDConnectProviderResponse {
     /// <p>A list of client IDs (also known as audiences) that are associated with the specified IAM OIDC provider resource object. For more information, see <a>CreateOpenIDConnectProvider</a>.</p>
+    #[serde(rename = "ClientIDList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub client_id_list: Option<Vec<String>>,
     /// <p>The date and time when the IAM OIDC provider resource object was created in the AWS account.</p>
+    #[serde(rename = "CreateDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub create_date: Option<String>,
     /// <p>A list of certificate thumbprints that are associated with the specified IAM OIDC provider resource object. For more information, see <a>CreateOpenIDConnectProvider</a>. </p>
+    #[serde(rename = "ThumbprintList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub thumbprint_list: Option<Vec<String>>,
     /// <p>The URL that the IAM OIDC provider resource object is associated with. For more information, see <a>CreateOpenIDConnectProvider</a>.</p>
+    #[serde(rename = "Url")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub url: Option<String>,
 }
 
@@ -3563,25 +3709,41 @@ impl GetOrganizationsAccessReportRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetOrganizationsAccessReportResponse {
     /// <p>An object that contains details about the most recent attempt to access the service.</p>
+    #[serde(rename = "AccessDetails")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub access_details: Option<Vec<AccessDetail>>,
+    #[serde(rename = "ErrorDetails")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub error_details: Option<ErrorDetails>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the generated report job was completed or failed.</p> <p>This field is null if the job is still in progress, as indicated by a job status value of <code>IN_PROGRESS</code>.</p>
+    #[serde(rename = "JobCompletionDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub job_completion_date: Option<String>,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the report job was created.</p>
+    #[serde(rename = "JobCreationDate")]
     pub job_creation_date: String,
     /// <p>The status of the job.</p>
+    #[serde(rename = "JobStatus")]
     pub job_status: String,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>The number of services that the applicable SCPs allow account principals to access.</p>
+    #[serde(rename = "NumberOfServicesAccessible")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub number_of_services_accessible: Option<i64>,
     /// <p>The number of services that account principals are allowed but did not attempt to access.</p>
+    #[serde(rename = "NumberOfServicesNotAccessed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub number_of_services_not_accessed: Option<i64>,
 }
 
@@ -3671,10 +3833,12 @@ impl GetPolicyRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetPolicy</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetPolicyResponse {
     /// <p>A structure containing details about the policy.</p>
+    #[serde(rename = "Policy")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy: Option<Policy>,
 }
 
@@ -3720,10 +3884,12 @@ impl GetPolicyVersionRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetPolicyVersion</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetPolicyVersionResponse {
     /// <p>A structure containing details about the policy version.</p>
+    #[serde(rename = "PolicyVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_version: Option<PolicyVersion>,
 }
 
@@ -3776,14 +3942,17 @@ impl GetRolePolicyRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetRolePolicy</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetRolePolicyResponse {
     /// <p>The policy document.</p> <p>IAM stores policies in JSON format. However, resources that were created using AWS CloudFormation templates can be formatted in YAML. AWS CloudFormation always converts a YAML policy to JSON format before submitting it to IAM.</p>
+    #[serde(rename = "PolicyDocument")]
     pub policy_document: String,
     /// <p>The name of the policy.</p>
+    #[serde(rename = "PolicyName")]
     pub policy_name: String,
     /// <p>The role the policy is associated with.</p>
+    #[serde(rename = "RoleName")]
     pub role_name: String,
 }
 
@@ -3833,10 +4002,11 @@ impl GetRoleRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetRole</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetRoleResponse {
     /// <p>A structure containing details about the IAM role.</p>
+    #[serde(rename = "Role")]
     pub role: Role,
 }
 
@@ -3882,14 +4052,20 @@ impl GetSAMLProviderRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetSAMLProvider</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetSAMLProviderResponse {
     /// <p>The date and time when the SAML provider was created.</p>
+    #[serde(rename = "CreateDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub create_date: Option<String>,
     /// <p>The XML metadata document that includes information about an identity provider.</p>
+    #[serde(rename = "SAMLMetadataDocument")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub saml_metadata_document: Option<String>,
     /// <p>The expiration date and time for the SAML provider.</p>
+    #[serde(rename = "ValidUntil")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub valid_until: Option<String>,
 }
 
@@ -3957,10 +4133,12 @@ impl GetSSHPublicKeyRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetSSHPublicKey</a> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetSSHPublicKeyResponse {
     /// <p>A structure containing details about the SSH public key.</p>
+    #[serde(rename = "SSHPublicKey")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssh_public_key: Option<SSHPublicKey>,
 }
 
@@ -4013,10 +4191,11 @@ impl GetServerCertificateRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetServerCertificate</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetServerCertificateResponse {
     /// <p>A structure containing details about the server certificate.</p>
+    #[serde(rename = "ServerCertificate")]
     pub server_certificate: ServerCertificate,
 }
 
@@ -4073,22 +4252,32 @@ impl GetServiceLastAccessedDetailsRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetServiceLastAccessedDetailsResponse {
     /// <p>An object that contains details about the reason the operation failed.</p>
+    #[serde(rename = "Error")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ErrorDetails>,
     /// <p><p/> <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p></p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the generated report job was completed or failed.</p> <p>This field is null if the job is still in progress, as indicated by a job status value of <code>IN_PROGRESS</code>.</p>
+    #[serde(rename = "JobCompletionDate")]
     pub job_completion_date: String,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the report job was created.</p>
+    #[serde(rename = "JobCreationDate")]
     pub job_creation_date: String,
     /// <p>The status of the job.</p>
+    #[serde(rename = "JobStatus")]
     pub job_status: String,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p> A <code>ServiceLastAccessed</code> object that contains details about the most recent attempt to access the service.</p>
+    #[serde(rename = "ServicesLastAccessed")]
     pub services_last_accessed: Vec<ServiceLastAccessed>,
 }
 
@@ -4183,22 +4372,32 @@ impl GetServiceLastAccessedDetailsWithEntitiesRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetServiceLastAccessedDetailsWithEntitiesResponse {
     /// <p>An <code>EntityDetailsList</code> object that contains details about when an IAM entity (user or role) used group or policy permissions in an attempt to access the specified AWS service.</p>
+    #[serde(rename = "EntityDetailsList")]
     pub entity_details_list: Vec<EntityDetails>,
     /// <p>An object that contains details about the reason the operation failed.</p>
+    #[serde(rename = "Error")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ErrorDetails>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the generated report job was completed or failed.</p> <p>This field is null if the job is still in progress, as indicated by a job status value of <code>IN_PROGRESS</code>.</p>
+    #[serde(rename = "JobCompletionDate")]
     pub job_completion_date: String,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the report job was created.</p>
+    #[serde(rename = "JobCreationDate")]
     pub job_creation_date: String,
     /// <p>The status of the job.</p>
+    #[serde(rename = "JobStatus")]
     pub job_status: String,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -4276,12 +4475,15 @@ impl GetServiceLinkedRoleDeletionStatusRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetServiceLinkedRoleDeletionStatusResponse {
     /// <p>An object that contains details about the reason the deletion failed.</p>
+    #[serde(rename = "Reason")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub reason: Option<DeletionTaskFailureReasonType>,
     /// <p>The status of the deletion.</p>
+    #[serde(rename = "Status")]
     pub status: String,
 }
 
@@ -4337,14 +4539,17 @@ impl GetUserPolicyRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetUserPolicy</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetUserPolicyResponse {
     /// <p>The policy document.</p> <p>IAM stores policies in JSON format. However, resources that were created using AWS CloudFormation templates can be formatted in YAML. AWS CloudFormation always converts a YAML policy to JSON format before submitting it to IAM.</p>
+    #[serde(rename = "PolicyDocument")]
     pub policy_document: String,
     /// <p>The name of the policy.</p>
+    #[serde(rename = "PolicyName")]
     pub policy_name: String,
     /// <p>The user the policy is associated with.</p>
+    #[serde(rename = "UserName")]
     pub user_name: String,
 }
 
@@ -4397,10 +4602,11 @@ impl GetUserRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>GetUser</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetUserResponse {
     /// <p><p>A structure containing details about the IAM user.</p> <important> <p>Due to a service issue, password last used data does not include password use from May 3, 2018 22:50 PDT to May 23, 2018 14:08 PDT. This affects <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_finding-unused.html">last sign-in</a> dates shown in the IAM console and password last used dates in the <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_getting-report.html">IAM credential report</a>, and returned by this GetUser API. If users signed in during the affected time, the password last used date that is returned is the date the user last signed in before May 3, 2018. For users that signed in after May 23, 2018 14:08 PDT, the returned password last used date is accurate.</p> <p>You can use password last used information to identify unused credentials for deletion. For example, you might delete users who did not sign in to AWS in the last 90 days. In cases like this, we recommend that you adjust your evaluation window to include dates after May 23, 2018. Alternatively, if your users use access keys to access AWS programmatically you can refer to access key last used information because it is accurate for all dates. </p> </important></p>
+    #[serde(rename = "User")]
     pub user: User,
 }
 
@@ -4423,18 +4629,23 @@ impl GetUserResponseDeserializer {
     }
 }
 /// <p><p>Contains information about an IAM group entity.</p> <p>This data type is used as a response element in the following operations:</p> <ul> <li> <p> <a>CreateGroup</a> </p> </li> <li> <p> <a>GetGroup</a> </p> </li> <li> <p> <a>ListGroups</a> </p> </li> </ul></p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Group {
     /// <p> The Amazon Resource Name (ARN) specifying the group. For more information about ARNs and how to use them in policies, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "Arn")]
     pub arn: String,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the group was created.</p>
+    #[serde(rename = "CreateDate")]
     pub create_date: String,
     /// <p> The stable and unique string identifying the group. For more information about IDs, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "GroupId")]
     pub group_id: String,
     /// <p>The friendly name that identifies the group.</p>
+    #[serde(rename = "GroupName")]
     pub group_name: String,
     /// <p>The path to the group. For more information about paths, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "Path")]
     pub path: String,
 }
 
@@ -4466,21 +4677,35 @@ impl GroupDeserializer {
     }
 }
 /// <p>Contains information about an IAM group, including all of the group's policies.</p> <p>This data type is used as a response element in the <a>GetAccountAuthorizationDetails</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GroupDetail {
+    #[serde(rename = "Arn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arn: Option<String>,
     /// <p>A list of the managed policies attached to the group.</p>
+    #[serde(rename = "AttachedManagedPolicies")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attached_managed_policies: Option<Vec<AttachedPolicy>>,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the group was created.</p>
+    #[serde(rename = "CreateDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub create_date: Option<String>,
     /// <p>The stable and unique string identifying the group. For more information about IDs, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "GroupId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub group_id: Option<String>,
     /// <p>The friendly name that identifies the group.</p>
+    #[serde(rename = "GroupName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub group_name: Option<String>,
     /// <p>A list of the inline policies embedded in the group.</p>
+    #[serde(rename = "GroupPolicyList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub group_policy_list: Option<Vec<PolicyDetail>>,
     /// <p>The path to the group. For more information about paths, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "Path")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
 }
 
@@ -4602,20 +4827,26 @@ impl IdTypeDeserializer {
     }
 }
 /// <p><p>Contains information about an instance profile.</p> <p>This data type is used as a response element in the following operations:</p> <ul> <li> <p> <a>CreateInstanceProfile</a> </p> </li> <li> <p> <a>GetInstanceProfile</a> </p> </li> <li> <p> <a>ListInstanceProfiles</a> </p> </li> <li> <p> <a>ListInstanceProfilesForRole</a> </p> </li> </ul></p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InstanceProfile {
     /// <p> The Amazon Resource Name (ARN) specifying the instance profile. For more information about ARNs and how to use them in policies, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "Arn")]
     pub arn: String,
     /// <p>The date when the instance profile was created.</p>
+    #[serde(rename = "CreateDate")]
     pub create_date: String,
     /// <p> The stable and unique string identifying the instance profile. For more information about IDs, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "InstanceProfileId")]
     pub instance_profile_id: String,
     /// <p>The name identifying the instance profile.</p>
+    #[serde(rename = "InstanceProfileName")]
     pub instance_profile_name: String,
     /// <p> The path to the instance profile. For more information about paths, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "Path")]
     pub path: String,
     /// <p>The role associated with the instance profile.</p>
+    #[serde(rename = "Roles")]
     pub roles: Vec<Role>,
 }
 
@@ -4762,14 +4993,19 @@ impl ListAccessKeysRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListAccessKeys</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListAccessKeysResponse {
     /// <p>A list of objects containing metadata about the access keys.</p>
+    #[serde(rename = "AccessKeyMetadata")]
     pub access_key_metadata: Vec<AccessKeyMetadata>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -4833,14 +5069,19 @@ impl ListAccountAliasesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListAccountAliases</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListAccountAliasesResponse {
     /// <p>A list of aliases associated with the account. AWS supports only one alias per account.</p>
+    #[serde(rename = "AccountAliases")]
     pub account_aliases: Vec<String>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -4915,14 +5156,20 @@ impl ListAttachedGroupPoliciesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListAttachedGroupPolicies</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListAttachedGroupPoliciesResponse {
     /// <p>A list of the attached policies.</p>
+    #[serde(rename = "AttachedPolicies")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attached_policies: Option<Vec<AttachedPolicy>>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -4998,14 +5245,20 @@ impl ListAttachedRolePoliciesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListAttachedRolePolicies</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListAttachedRolePoliciesResponse {
     /// <p>A list of the attached policies.</p>
+    #[serde(rename = "AttachedPolicies")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attached_policies: Option<Vec<AttachedPolicy>>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -5081,14 +5334,20 @@ impl ListAttachedUserPoliciesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListAttachedUserPolicies</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListAttachedUserPoliciesResponse {
     /// <p>A list of the attached policies.</p>
+    #[serde(rename = "AttachedPolicies")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attached_policies: Option<Vec<AttachedPolicy>>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -5174,18 +5433,28 @@ impl ListEntitiesForPolicyRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListEntitiesForPolicy</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListEntitiesForPolicyResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>A list of IAM groups that the policy is attached to.</p>
+    #[serde(rename = "PolicyGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_groups: Option<Vec<PolicyGroup>>,
     /// <p>A list of IAM roles that the policy is attached to.</p>
+    #[serde(rename = "PolicyRoles")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_roles: Option<Vec<PolicyRole>>,
     /// <p>A list of IAM users that the policy is attached to.</p>
+    #[serde(rename = "PolicyUsers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_users: Option<Vec<PolicyUser>>,
 }
 
@@ -5263,14 +5532,19 @@ impl ListGroupPoliciesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListGroupPolicies</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListGroupPoliciesResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>A list of policy names.</p> <p>This parameter allows (through its <a href="http://wikipedia.org/wiki/regex">regex pattern</a>) a string of characters consisting of upper and lowercase alphanumeric characters with no spaces. You can also include any of the following characters: _+=,.@-</p>
+    #[serde(rename = "PolicyNames")]
     pub policy_names: Vec<String>,
 }
 
@@ -5340,14 +5614,19 @@ impl ListGroupsForUserRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListGroupsForUser</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListGroupsForUserResponse {
     /// <p>A list of groups.</p>
+    #[serde(rename = "Groups")]
     pub groups: Vec<Group>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -5416,14 +5695,19 @@ impl ListGroupsRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListGroups</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListGroupsResponse {
     /// <p>A list of groups.</p>
+    #[serde(rename = "Groups")]
     pub groups: Vec<Group>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -5486,14 +5770,19 @@ impl ListInstanceProfilesForRoleRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListInstanceProfilesForRole</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListInstanceProfilesForRoleResponse {
     /// <p>A list of instance profiles.</p>
+    #[serde(rename = "InstanceProfiles")]
     pub instance_profiles: Vec<InstanceProfile>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -5566,14 +5855,19 @@ impl ListInstanceProfilesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListInstanceProfiles</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListInstanceProfilesResponse {
     /// <p>A list of instance profiles.</p>
+    #[serde(rename = "InstanceProfiles")]
     pub instance_profiles: Vec<InstanceProfile>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -5646,14 +5940,19 @@ impl ListMFADevicesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListMFADevices</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListMFADevicesResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>A list of MFA devices.</p>
+    #[serde(rename = "MFADevices")]
     pub mfa_devices: Vec<MFADevice>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -5704,10 +6003,12 @@ impl ListOpenIDConnectProvidersRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListOpenIDConnectProviders</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListOpenIDConnectProvidersResponse {
     /// <p>The list of IAM OIDC provider resource objects defined in the AWS account.</p>
+    #[serde(rename = "OpenIDConnectProviderList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub open_id_connect_provider_list: Option<Vec<OpenIDConnectProviderListEntry>>,
 }
 
@@ -5739,12 +6040,16 @@ impl ListOpenIDConnectProvidersResponseDeserializer {
     }
 }
 /// <p>Contains details about the permissions policies that are attached to the specified identity (user, group, or role).</p> <p>This data type is used as a response element in the <a>ListPoliciesGrantingServiceAccess</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListPoliciesGrantingServiceAccessEntry {
     /// <p>The <code>PoliciesGrantingServiceAccess</code> object that contains details about the policy.</p>
+    #[serde(rename = "Policies")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policies: Option<Vec<PolicyGrantingServiceAccess>>,
     /// <p>The namespace of the service that was accessed.</p> <p>To learn the service namespace of a service, go to <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_actions-resources-contextkeys.html">Actions, Resources, and Condition Keys for AWS Services</a> in the <i>IAM User Guide</i>. Choose the name of the service to view details for that service. In the first paragraph, find the service prefix. For example, <code>(service prefix: a4b)</code>. For more information about service namespaces, see <a href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces">AWS Service Namespaces</a> in the <i>AWS General Reference</i>.</p>
+    #[serde(rename = "ServiceNamespace")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub service_namespace: Option<String>,
 }
 
@@ -5813,14 +6118,19 @@ impl ListPoliciesGrantingServiceAccessRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListPoliciesGrantingServiceAccessResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>A <code>ListPoliciesGrantingServiceAccess</code> object that contains details about the permissions policies attached to the specified identity (user, group, or role).</p>
+    #[serde(rename = "PoliciesGrantingServiceAccess")]
     pub policies_granting_service_access: Vec<ListPoliciesGrantingServiceAccessEntry>,
 }
 
@@ -5903,14 +6213,20 @@ impl ListPoliciesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListPolicies</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListPoliciesResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>A list of policies.</p>
+    #[serde(rename = "Policies")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policies: Option<Vec<Policy>>,
 }
 
@@ -5995,14 +6311,20 @@ impl ListPolicyVersionsRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListPolicyVersions</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListPolicyVersionsResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>A list of policy versions.</p> <p>For more information about managed policy versions, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-versions.html">Versioning for Managed Policies</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "Versions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub versions: Option<Vec<PolicyVersion>>,
 }
 
@@ -6072,14 +6394,19 @@ impl ListRolePoliciesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListRolePolicies</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListRolePoliciesResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>A list of policy names.</p>
+    #[serde(rename = "PolicyNames")]
     pub policy_names: Vec<String>,
 }
 
@@ -6148,14 +6475,19 @@ impl ListRoleTagsRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListRoleTagsResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can use the <code>Marker</code> request parameter to make a subsequent pagination request that retrieves more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when more results are available. Check <code>IsTruncated</code> after every call to ensure that you receive all of your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>The list of tags currently that is attached to the role. Each tag consists of a key name and an associated value. If no tags are attached to the specified role, the response contains an empty list.</p>
+    #[serde(rename = "Tags")]
     pub tags: Vec<Tag>,
 }
 
@@ -6220,14 +6552,19 @@ impl ListRolesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListRoles</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListRolesResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>A list of roles.</p>
+    #[serde(rename = "Roles")]
     pub roles: Vec<Role>,
 }
 
@@ -6275,10 +6612,12 @@ impl ListSAMLProvidersRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListSAMLProviders</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListSAMLProvidersResponse {
     /// <p>The list of SAML provider resource objects defined in IAM for this AWS account.</p>
+    #[serde(rename = "SAMLProviderList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub saml_provider_list: Option<Vec<SAMLProviderListEntry>>,
 }
 
@@ -6342,14 +6681,20 @@ impl ListSSHPublicKeysRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListSSHPublicKeys</a> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListSSHPublicKeysResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>A list of the SSH public keys assigned to IAM user.</p>
+    #[serde(rename = "SSHPublicKeys")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssh_public_keys: Option<Vec<SSHPublicKeyMetadata>>,
 }
 
@@ -6419,14 +6764,19 @@ impl ListServerCertificatesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListServerCertificates</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListServerCertificatesResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>A list of server certificates.</p>
+    #[serde(rename = "ServerCertificateMetadataList")]
     pub server_certificate_metadata_list: Vec<ServerCertificateMetadata>,
 }
 
@@ -6493,10 +6843,12 @@ impl ListServiceSpecificCredentialsRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListServiceSpecificCredentialsResponse {
     /// <p>A list of structures that each contain details about a service-specific credential.</p>
+    #[serde(rename = "ServiceSpecificCredentials")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub service_specific_credentials: Option<Vec<ServiceSpecificCredentialMetadata>>,
 }
 
@@ -6560,14 +6912,19 @@ impl ListSigningCertificatesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListSigningCertificates</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListSigningCertificatesResponse {
     /// <p>A list of the user's signing certificate information.</p>
+    #[serde(rename = "Certificates")]
     pub certificates: Vec<SigningCertificate>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -6637,14 +6994,19 @@ impl ListUserPoliciesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListUserPolicies</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListUserPoliciesResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>A list of policy names.</p>
+    #[serde(rename = "PolicyNames")]
     pub policy_names: Vec<String>,
 }
 
@@ -6713,14 +7075,19 @@ impl ListUserTagsRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListUserTagsResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can use the <code>Marker</code> request parameter to make a subsequent pagination request that retrieves more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when more results are available. Check <code>IsTruncated</code> after every call to ensure that you receive all of your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>The list of tags that are currently attached to the user. Each tag consists of a key name and an associated value. If no tags are attached to the specified user, the response contains an empty list.</p>
+    #[serde(rename = "Tags")]
     pub tags: Vec<Tag>,
 }
 
@@ -6785,14 +7152,19 @@ impl ListUsersRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListUsers</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListUsersResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p>A list of users.</p>
+    #[serde(rename = "Users")]
     pub users: Vec<User>,
 }
 
@@ -6857,14 +7229,19 @@ impl ListVirtualMFADevicesRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>ListVirtualMFADevices</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListVirtualMFADevicesResponse {
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
     /// <p> The list of virtual MFA devices in the current account that match the <code>AssignmentStatus</code> value that was passed in the request.</p>
+    #[serde(rename = "VirtualMFADevices")]
     pub virtual_mfa_devices: Vec<VirtualMFADevice>,
 }
 
@@ -6905,14 +7282,18 @@ impl ListVirtualMFADevicesResponseDeserializer {
     }
 }
 /// <p>Contains the user name and password create date for a user.</p> <p> This data type is used as a response element in the <a>CreateLoginProfile</a> and <a>GetLoginProfile</a> operations. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LoginProfile {
     /// <p>The date when the password for the user was created.</p>
+    #[serde(rename = "CreateDate")]
     pub create_date: String,
     /// <p>Specifies whether the user is required to set a new password on next sign-in.</p>
+    #[serde(rename = "PasswordResetRequired")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub password_reset_required: Option<bool>,
     /// <p>The name of the user, which can be used for signing in to the AWS Management Console.</p>
+    #[serde(rename = "UserName")]
     pub user_name: String,
 }
 
@@ -6944,14 +7325,17 @@ impl LoginProfileDeserializer {
     }
 }
 /// <p>Contains information about an MFA device.</p> <p>This data type is used as a response element in the <a>ListMFADevices</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct MFADevice {
     /// <p>The date when the MFA device was enabled for the user.</p>
+    #[serde(rename = "EnableDate")]
     pub enable_date: String,
     /// <p>The serial number that uniquely identifies the MFA device. For virtual MFA devices, the serial number is the device ARN.</p>
+    #[serde(rename = "SerialNumber")]
     pub serial_number: String,
     /// <p>The user with whom the MFA device is associated.</p>
+    #[serde(rename = "UserName")]
     pub user_name: String,
 }
 
@@ -6981,31 +7365,55 @@ impl MFADeviceDeserializer {
     }
 }
 /// <p>Contains information about a managed policy, including the policy's ARN, versions, and the number of principal entities (users, groups, and roles) that the policy is attached to.</p> <p>This data type is used as a response element in the <a>GetAccountAuthorizationDetails</a> operation.</p> <p>For more information about managed policies, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html">Managed Policies and Inline Policies</a> in the <i>IAM User Guide</i>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ManagedPolicyDetail {
+    #[serde(rename = "Arn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arn: Option<String>,
     /// <p>The number of principal entities (users, groups, and roles) that the policy is attached to.</p>
+    #[serde(rename = "AttachmentCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attachment_count: Option<i64>,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the policy was created.</p>
+    #[serde(rename = "CreateDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub create_date: Option<String>,
     /// <p>The identifier for the version of the policy that is set as the default (operative) version.</p> <p>For more information about policy versions, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-versions.html">Versioning for Managed Policies</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "DefaultVersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_version_id: Option<String>,
     /// <p>A friendly description of the policy.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>Specifies whether the policy can be attached to an IAM user, group, or role.</p>
+    #[serde(rename = "IsAttachable")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_attachable: Option<bool>,
     /// <p>The path to the policy.</p> <p>For more information about paths, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "Path")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     /// <p>The number of entities (users and roles) for which the policy is used as the permissions boundary. </p> <p>For more information about permissions boundaries, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html">Permissions Boundaries for IAM Identities </a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "PermissionsBoundaryUsageCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permissions_boundary_usage_count: Option<i64>,
     /// <p>The stable and unique string identifying the policy.</p> <p>For more information about IDs, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "PolicyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_id: Option<String>,
     /// <p>The friendly name (not ARN) identifying the policy.</p>
+    #[serde(rename = "PolicyName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_name: Option<String>,
     /// <p>A list containing information about the versions of the policy.</p>
+    #[serde(rename = "PolicyVersionList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_version_list: Option<Vec<PolicyVersion>>,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the policy was last updated.</p> <p>When a policy has only one version, this field contains the date and time when the policy was created. When a policy has more than one version, this field contains the date and time when the most recent policy version was created.</p>
+    #[serde(rename = "UpdateDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub update_date: Option<String>,
 }
 
@@ -7152,9 +7560,11 @@ impl MinimumPasswordLengthTypeDeserializer {
     }
 }
 /// <p>Contains the Amazon Resource Name (ARN) for an IAM OpenID Connect provider.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OpenIDConnectProviderListEntry {
+    #[serde(rename = "Arn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arn: Option<String>,
 }
 
@@ -7211,10 +7621,12 @@ impl OpenIDConnectProviderUrlTypeDeserializer {
     }
 }
 /// <p>Contains information about the effect that Organizations has on a policy simulation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OrganizationsDecisionDetail {
     /// <p>Specifies whether the simulated operation is allowed by the Organizations service control policies that impact the simulated user's account.</p>
+    #[serde(rename = "AllowedByOrganizations")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub allowed_by_organizations: Option<bool>,
 }
 
@@ -7255,28 +7667,48 @@ impl OrganizationsEntityPathTypeDeserializer {
     }
 }
 /// <p>Contains information about the account password policy.</p> <p> This data type is used as a response element in the <a>GetAccountPasswordPolicy</a> operation. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PasswordPolicy {
     /// <p>Specifies whether IAM users are allowed to change their own password.</p>
+    #[serde(rename = "AllowUsersToChangePassword")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub allow_users_to_change_password: Option<bool>,
     /// <p>Indicates whether passwords in the account expire. Returns true if <code>MaxPasswordAge</code> contains a value greater than 0. Returns false if MaxPasswordAge is 0 or not present.</p>
+    #[serde(rename = "ExpirePasswords")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expire_passwords: Option<bool>,
     /// <p>Specifies whether IAM users are prevented from setting a new password after their password has expired.</p>
+    #[serde(rename = "HardExpiry")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub hard_expiry: Option<bool>,
     /// <p>The number of days that an IAM user password is valid.</p>
+    #[serde(rename = "MaxPasswordAge")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_password_age: Option<i64>,
     /// <p>Minimum length to require for IAM user passwords.</p>
+    #[serde(rename = "MinimumPasswordLength")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub minimum_password_length: Option<i64>,
     /// <p>Specifies the number of previous passwords that IAM users are prevented from reusing.</p>
+    #[serde(rename = "PasswordReusePrevention")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub password_reuse_prevention: Option<i64>,
     /// <p>Specifies whether to require lowercase characters for IAM user passwords.</p>
+    #[serde(rename = "RequireLowercaseCharacters")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub require_lowercase_characters: Option<bool>,
     /// <p>Specifies whether to require numbers for IAM user passwords.</p>
+    #[serde(rename = "RequireNumbers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub require_numbers: Option<bool>,
     /// <p>Specifies whether to require symbols for IAM user passwords.</p>
+    #[serde(rename = "RequireSymbols")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub require_symbols: Option<bool>,
     /// <p>Specifies whether to require uppercase characters for IAM user passwords.</p>
+    #[serde(rename = "RequireUppercaseCharacters")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub require_uppercase_characters: Option<bool>,
 }
 
@@ -7390,10 +7822,12 @@ impl PermissionsBoundaryAttachmentTypeDeserializer {
     }
 }
 /// <p>Contains information about the effect that a permissions boundary has on a policy simulation when the boundary is applied to an IAM entity.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PermissionsBoundaryDecisionDetail {
     /// <p>Specifies whether an action is allowed by a permissions boundary that is applied to an IAM entity (user or role). A value of <code>true</code> means that the permissions boundary does not deny the action. This means that the policy includes an <code>Allow</code> statement that matches the request. In this case, if an identity-based policy also allows the action, the request is allowed. A value of <code>false</code> means that either the requested action is not allowed (implicitly denied) or that the action is explicitly denied by the permissions boundary. In both of these cases, the action is not allowed, regardless of the identity-based policy.</p>
+    #[serde(rename = "AllowedByPermissionsBoundary")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub allowed_by_permissions_boundary: Option<bool>,
 }
 
@@ -7424,29 +7858,51 @@ impl PermissionsBoundaryDecisionDetailDeserializer {
     }
 }
 /// <p>Contains information about a managed policy.</p> <p>This data type is used as a response element in the <a>CreatePolicy</a>, <a>GetPolicy</a>, and <a>ListPolicies</a> operations. </p> <p>For more information about managed policies, refer to <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html">Managed Policies and Inline Policies</a> in the <i>IAM User Guide</i>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Policy {
+    #[serde(rename = "Arn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arn: Option<String>,
     /// <p>The number of entities (users, groups, and roles) that the policy is attached to.</p>
+    #[serde(rename = "AttachmentCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attachment_count: Option<i64>,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the policy was created.</p>
+    #[serde(rename = "CreateDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub create_date: Option<String>,
     /// <p>The identifier for the version of the policy that is set as the default version.</p>
+    #[serde(rename = "DefaultVersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_version_id: Option<String>,
     /// <p>A friendly description of the policy.</p> <p>This element is included in the response to the <a>GetPolicy</a> operation. It is not included in the response to the <a>ListPolicies</a> operation. </p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>Specifies whether the policy can be attached to an IAM user, group, or role.</p>
+    #[serde(rename = "IsAttachable")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_attachable: Option<bool>,
     /// <p>The path to the policy.</p> <p>For more information about paths, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "Path")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     /// <p>The number of entities (users and roles) for which the policy is used to set the permissions boundary. </p> <p>For more information about permissions boundaries, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html">Permissions Boundaries for IAM Identities </a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "PermissionsBoundaryUsageCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permissions_boundary_usage_count: Option<i64>,
     /// <p>The stable and unique string identifying the policy.</p> <p>For more information about IDs, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "PolicyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_id: Option<String>,
     /// <p>The friendly name (not ARN) identifying the policy.</p>
+    #[serde(rename = "PolicyName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_name: Option<String>,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the policy was last updated.</p> <p>When a policy has only one version, this field contains the date and time when the policy was created. When a policy has more than one version, this field contains the date and time when the most recent policy version was created.</p>
+    #[serde(rename = "UpdateDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub update_date: Option<String>,
 }
 
@@ -7524,12 +7980,16 @@ impl PolicyDescriptionTypeDeserializer {
     }
 }
 /// <p>Contains information about an IAM policy, including the policy document.</p> <p>This data type is used as a response element in the <a>GetAccountAuthorizationDetails</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PolicyDetail {
     /// <p>The policy document.</p>
+    #[serde(rename = "PolicyDocument")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_document: Option<String>,
     /// <p>The name of the policy.</p>
+    #[serde(rename = "PolicyName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_name: Option<String>,
 }
 
@@ -7617,17 +8077,25 @@ impl PolicyEvaluationDecisionTypeDeserializer {
     }
 }
 /// <p>Contains details about the permissions policies that are attached to the specified identity (user, group, or role).</p> <p>This data type is an element of the <a>ListPoliciesGrantingServiceAccessEntry</a> object.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PolicyGrantingServiceAccess {
     /// <p>The name of the entity (user or role) to which the inline policy is attached.</p> <p>This field is null for managed policies. For more information about these policy types, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html">Managed Policies and Inline Policies</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "EntityName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub entity_name: Option<String>,
     /// <p>The type of entity (user or role) that used the policy to access the service to which the inline policy is attached.</p> <p>This field is null for managed policies. For more information about these policy types, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html">Managed Policies and Inline Policies</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "EntityType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub entity_type: Option<String>,
+    #[serde(rename = "PolicyArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub policy_arn: Option<String>,
     /// <p>The policy name.</p>
+    #[serde(rename = "PolicyName")]
     pub policy_name: String,
     /// <p>The policy type. For more information about these policy types, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html">Managed Policies and Inline Policies</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "PolicyType")]
     pub policy_type: String,
 }
 
@@ -7693,12 +8161,16 @@ impl PolicyGrantingServiceAccessListTypeDeserializer {
     }
 }
 /// <p>Contains information about a group that a managed policy is attached to.</p> <p>This data type is used as a response element in the <a>ListEntitiesForPolicy</a> operation. </p> <p>For more information about managed policies, refer to <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html">Managed Policies and Inline Policies</a> in the <i>IAM User Guide</i>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PolicyGroup {
     /// <p>The stable and unique string identifying the group. For more information about IDs, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "GroupId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub group_id: Option<String>,
     /// <p>The name (friendly name, not ARN) identifying the group.</p>
+    #[serde(rename = "GroupName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub group_name: Option<String>,
 }
 
@@ -7820,12 +8292,16 @@ impl PolicyPathTypeDeserializer {
     }
 }
 /// <p>Contains information about a role that a managed policy is attached to.</p> <p>This data type is used as a response element in the <a>ListEntitiesForPolicy</a> operation. </p> <p>For more information about managed policies, refer to <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html">Managed Policies and Inline Policies</a> in the <i>IAM User Guide</i>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PolicyRole {
     /// <p>The stable and unique string identifying the role. For more information about IDs, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "RoleId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role_id: Option<String>,
     /// <p>The name (friendly name, not ARN) identifying the role.</p>
+    #[serde(rename = "RoleName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role_name: Option<String>,
 }
 
@@ -7890,12 +8366,16 @@ impl PolicyTypeDeserializer {
     }
 }
 /// <p>Contains information about a user that a managed policy is attached to.</p> <p>This data type is used as a response element in the <a>ListEntitiesForPolicy</a> operation. </p> <p>For more information about managed policies, refer to <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html">Managed Policies and Inline Policies</a> in the <i>IAM User Guide</i>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PolicyUser {
     /// <p>The stable and unique string identifying the user. For more information about IDs, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "UserId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_id: Option<String>,
     /// <p>The name (friendly name, not ARN) identifying the user.</p>
+    #[serde(rename = "UserName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_name: Option<String>,
 }
 
@@ -7938,16 +8418,24 @@ impl PolicyUserListTypeDeserializer {
     }
 }
 /// <p>Contains information about a version of a managed policy.</p> <p>This data type is used as a response element in the <a>CreatePolicyVersion</a>, <a>GetPolicyVersion</a>, <a>ListPolicyVersions</a>, and <a>GetAccountAuthorizationDetails</a> operations. </p> <p>For more information about managed policies, refer to <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html">Managed Policies and Inline Policies</a> in the <i>IAM User Guide</i>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PolicyVersion {
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the policy version was created.</p>
+    #[serde(rename = "CreateDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub create_date: Option<String>,
     /// <p>The policy document.</p> <p>The policy document is returned in the response to the <a>GetPolicyVersion</a> and <a>GetAccountAuthorizationDetails</a> operations. It is not returned in the response to the <a>CreatePolicyVersion</a> or <a>ListPolicyVersions</a> operations. </p> <p>The policy document returned in this structure is URL-encoded compliant with <a href="https://tools.ietf.org/html/rfc3986">RFC 3986</a>. You can use a URL decoding method to convert the policy back to plain JSON text. For example, if you use Java, you can use the <code>decode</code> method of the <code>java.net.URLDecoder</code> utility class in the Java SDK. Other languages and SDKs provide similar functionality.</p>
+    #[serde(rename = "Document")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub document: Option<String>,
     /// <p>Specifies whether the policy version is set as the policy's default version.</p>
+    #[serde(rename = "IsDefaultVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_default_version: Option<bool>,
     /// <p>The identifier for the policy version.</p> <p>Policy version identifiers always begin with <code>v</code> (always lowercase). When a policy is created, the first policy version is <code>v1</code>. </p>
+    #[serde(rename = "VersionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -7998,12 +8486,16 @@ impl PolicyVersionIdTypeDeserializer {
     }
 }
 /// <p>Contains the row and column of a location of a <code>Statement</code> element in a policy document.</p> <p>This data type is used as a member of the <code> <a>Statement</a> </code> type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Position {
     /// <p>The column in the line containing the specified position in the document.</p>
+    #[serde(rename = "Column")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub column: Option<i64>,
     /// <p>The line containing the specified position in the document.</p>
+    #[serde(rename = "Line")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub line: Option<i64>,
 }
 
@@ -8376,10 +8868,12 @@ impl ResetServiceSpecificCredentialRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ResetServiceSpecificCredentialResponse {
     /// <p><p>A structure with details about the updated service-specific credential, including the new password.</p> <important> <p>This is the <b>only</b> time that you can access the password. You cannot recover the password later, but you can reset it again.</p> </important></p>
+    #[serde(rename = "ServiceSpecificCredential")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub service_specific_credential: Option<ServiceSpecificCredential>,
 }
 
@@ -8433,20 +8927,30 @@ impl ResourceNameTypeDeserializer {
     }
 }
 /// <p>Contains the result of the simulation of a single API operation call on a single resource.</p> <p>This data type is used by a member of the <a>EvaluationResult</a> data type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ResourceSpecificResult {
     /// <p>Additional details about the results of the evaluation decision on a single resource. This parameter is returned only for cross-account simulations. This parameter explains how each policy type contributes to the resource-specific evaluation decision.</p>
+    #[serde(rename = "EvalDecisionDetails")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub eval_decision_details: Option<::std::collections::HashMap<String, String>>,
     /// <p>The result of the simulation of the simulated API operation on the resource specified in <code>EvalResourceName</code>.</p>
+    #[serde(rename = "EvalResourceDecision")]
     pub eval_resource_decision: String,
     /// <p>The name of the simulated resource, in Amazon Resource Name (ARN) format.</p>
+    #[serde(rename = "EvalResourceName")]
     pub eval_resource_name: String,
     /// <p>A list of the statements in the input policies that determine the result for this part of the simulation. Remember that even if multiple statements allow the operation on the resource, if <i>any</i> statement denies that operation, then the explicit deny overrides any allow. In addition, the deny statement is the only entry included in the result.</p>
+    #[serde(rename = "MatchedStatements")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub matched_statements: Option<Vec<Statement>>,
     /// <p>A list of context keys that are required by the included input policies but that were not provided by one of the input parameters. This list is used when a list of ARNs is included in the <code>ResourceArns</code> parameter instead of "*". If you do not specify individual resources, by setting <code>ResourceArns</code> to "*" or by not including the <code>ResourceArns</code> parameter, then any missing context values are instead included under the <code>EvaluationResults</code> section. To discover the context keys used by a set of policies, you can call <a>GetContextKeysForCustomPolicy</a> or <a>GetContextKeysForPrincipalPolicy</a>.</p>
+    #[serde(rename = "MissingContextValues")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub missing_context_values: Option<Vec<String>>,
     /// <p>Contains information about the effect that a permissions boundary has on a policy simulation when that boundary is applied to an IAM entity.</p>
+    #[serde(rename = "PermissionsBoundaryDecisionDetail")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permissions_boundary_decision_detail: Option<PermissionsBoundaryDecisionDetail>,
 }
 
@@ -8569,30 +9073,47 @@ impl ResyncMFADeviceRequestSerializer {
 }
 
 /// <p>Contains information about an IAM role. This structure is returned as a response element in several API operations that interact with roles.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Role {
     /// <p> The Amazon Resource Name (ARN) specifying the role. For more information about ARNs and how to use them in policies, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i> guide. </p>
+    #[serde(rename = "Arn")]
     pub arn: String,
     /// <p>The policy that grants an entity permission to assume the role.</p>
+    #[serde(rename = "AssumeRolePolicyDocument")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub assume_role_policy_document: Option<String>,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the role was created.</p>
+    #[serde(rename = "CreateDate")]
     pub create_date: String,
     /// <p>A description of the role that you provide.</p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>The maximum session duration (in seconds) for the specified role. Anyone who uses the AWS CLI, or API to assume the role can specify the duration using the optional <code>DurationSeconds</code> API parameter or <code>duration-seconds</code> CLI parameter.</p>
+    #[serde(rename = "MaxSessionDuration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_session_duration: Option<i64>,
     /// <p> The path to the role. For more information about paths, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "Path")]
     pub path: String,
     /// <p>The ARN of the policy used to set the permissions boundary for the role.</p> <p>For more information about permissions boundaries, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html">Permissions Boundaries for IAM Identities </a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "PermissionsBoundary")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permissions_boundary: Option<AttachedPermissionsBoundary>,
     /// <p> The stable and unique string identifying the role. For more information about IDs, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "RoleId")]
     pub role_id: String,
     /// <p>Contains information about the last time that an IAM role was used. This includes the date and time and the Region in which the role was last used. Activity is only reported for the trailing 400 days. This period can be shorter if your Region began supporting these features within the last year. The role might have been used more than 400 days ago. For more information, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#access-advisor_tracking-period">Regions Where Data Is Tracked</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "RoleLastUsed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role_last_used: Option<RoleLastUsed>,
     /// <p>The friendly name that identifies the role.</p>
+    #[serde(rename = "RoleName")]
     pub role_name: String,
     /// <p>A list of tags that are attached to the specified role. For more information about tagging, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags.html">Tagging IAM Identities</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
 }
 
@@ -8673,31 +9194,55 @@ impl RoleDescriptionTypeDeserializer {
     }
 }
 /// <p>Contains information about an IAM role, including all of the role's policies.</p> <p>This data type is used as a response element in the <a>GetAccountAuthorizationDetails</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RoleDetail {
+    #[serde(rename = "Arn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arn: Option<String>,
     /// <p>The trust policy that grants permission to assume the role.</p>
+    #[serde(rename = "AssumeRolePolicyDocument")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub assume_role_policy_document: Option<String>,
     /// <p>A list of managed policies attached to the role. These policies are the role's access (permissions) policies.</p>
+    #[serde(rename = "AttachedManagedPolicies")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attached_managed_policies: Option<Vec<AttachedPolicy>>,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the role was created.</p>
+    #[serde(rename = "CreateDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub create_date: Option<String>,
     /// <p>A list of instance profiles that contain this role.</p>
+    #[serde(rename = "InstanceProfileList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub instance_profile_list: Option<Vec<InstanceProfile>>,
     /// <p>The path to the role. For more information about paths, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "Path")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     /// <p>The ARN of the policy used to set the permissions boundary for the role.</p> <p>For more information about permissions boundaries, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html">Permissions Boundaries for IAM Identities </a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "PermissionsBoundary")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permissions_boundary: Option<AttachedPermissionsBoundary>,
     /// <p>The stable and unique string identifying the role. For more information about IDs, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "RoleId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role_id: Option<String>,
     /// <p>Contains information about the last time that an IAM role was used. This includes the date and time and the Region in which the role was last used. Activity is only reported for the trailing 400 days. This period can be shorter if your Region began supporting these features within the last year. The role might have been used more than 400 days ago. For more information, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#access-advisor_tracking-period">Regions Where Data Is Tracked</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "RoleLastUsed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role_last_used: Option<RoleLastUsed>,
     /// <p>The friendly name that identifies the role.</p>
+    #[serde(rename = "RoleName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role_name: Option<String>,
     /// <p>A list of inline policies embedded in the role. These policies are the role's access (permissions) policies.</p>
+    #[serde(rename = "RolePolicyList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role_policy_list: Option<Vec<PolicyDetail>>,
     /// <p>A list of tags that are attached to the specified role. For more information about tagging, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags.html">Tagging IAM Identities</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
 }
 
@@ -8795,12 +9340,16 @@ impl RoleDetailListTypeDeserializer {
     }
 }
 /// <p>Contains information about the last time that an IAM role was used. This includes the date and time and the Region in which the role was last used. Activity is only reported for the trailing 400 days. This period can be shorter if your Region began supporting these features within the last year. The role might have been used more than 400 days ago. For more information, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#access-advisor_tracking-period">Regions Where Data Is Tracked</a> in the <i>IAM User Guide</i>.</p> <p>This data type is returned as a response element in the <a>GetRole</a> and <a>GetAccountAuthorizationDetails</a> operations.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RoleLastUsed {
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a> that the role was last used.</p> <p>This field is null if the role has not been used within the IAM tracking period. For more information about the tracking period, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#access-advisor_tracking-period">Regions Where Data Is Tracked</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "LastUsedDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_used_date: Option<String>,
     /// <p>The name of the AWS Region in which the role was last used.</p>
+    #[serde(rename = "Region")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
 }
 
@@ -8883,12 +9432,16 @@ impl RoleUsageListTypeDeserializer {
     }
 }
 /// <p>An object that contains details about how a service-linked role is used, if that information is returned by the service.</p> <p>This data type is used as a response element in the <a>GetServiceLinkedRoleDeletionStatus</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct RoleUsageType {
     /// <p>The name of the Region where the service-linked role is being used.</p>
+    #[serde(rename = "Region")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
     /// <p>The name of the resource that is using the service-linked role.</p>
+    #[serde(rename = "Resources")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resources: Option<Vec<String>>,
 }
 
@@ -8927,14 +9480,20 @@ impl SAMLMetadataDocumentTypeDeserializer {
     }
 }
 /// <p>Contains the list of SAML providers for this account.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SAMLProviderListEntry {
     /// <p>The Amazon Resource Name (ARN) of the SAML provider.</p>
+    #[serde(rename = "Arn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arn: Option<String>,
     /// <p>The date and time when the SAML provider was created.</p>
+    #[serde(rename = "CreateDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub create_date: Option<String>,
     /// <p>The expiration date and time for the SAML provider.</p>
+    #[serde(rename = "ValidUntil")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub valid_until: Option<String>,
 }
 
@@ -8982,20 +9541,27 @@ impl SAMLProviderListTypeDeserializer {
     }
 }
 /// <p>Contains information about an SSH public key.</p> <p>This data type is used as a response element in the <a>GetSSHPublicKey</a> and <a>UploadSSHPublicKey</a> operations. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SSHPublicKey {
     /// <p>The MD5 message digest of the SSH public key.</p>
+    #[serde(rename = "Fingerprint")]
     pub fingerprint: String,
     /// <p>The SSH public key.</p>
+    #[serde(rename = "SSHPublicKeyBody")]
     pub ssh_public_key_body: String,
     /// <p>The unique identifier for the SSH public key.</p>
+    #[serde(rename = "SSHPublicKeyId")]
     pub ssh_public_key_id: String,
     /// <p>The status of the SSH public key. <code>Active</code> means that the key can be used for authentication with an AWS CodeCommit repository. <code>Inactive</code> means that the key cannot be used.</p>
+    #[serde(rename = "Status")]
     pub status: String,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the SSH public key was uploaded.</p>
+    #[serde(rename = "UploadDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub upload_date: Option<String>,
     /// <p>The name of the IAM user associated with the SSH public key.</p>
+    #[serde(rename = "UserName")]
     pub user_name: String,
 }
 
@@ -9055,16 +9621,20 @@ impl SSHPublicKeyListTypeDeserializer {
     }
 }
 /// <p>Contains information about an SSH public key, without the key's body or fingerprint.</p> <p>This data type is used as a response element in the <a>ListSSHPublicKeys</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SSHPublicKeyMetadata {
     /// <p>The unique identifier for the SSH public key.</p>
+    #[serde(rename = "SSHPublicKeyId")]
     pub ssh_public_key_id: String,
     /// <p>The status of the SSH public key. <code>Active</code> means that the key can be used for authentication with an AWS CodeCommit repository. <code>Inactive</code> means that the key cannot be used.</p>
+    #[serde(rename = "Status")]
     pub status: String,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the SSH public key was uploaded.</p>
+    #[serde(rename = "UploadDate")]
     pub upload_date: String,
     /// <p>The name of the IAM user associated with the SSH public key.</p>
+    #[serde(rename = "UserName")]
     pub user_name: String,
 }
 
@@ -9108,14 +9678,18 @@ impl SerialNumberTypeDeserializer {
     }
 }
 /// <p>Contains information about a server certificate.</p> <p> This data type is used as a response element in the <a>GetServerCertificate</a> operation. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ServerCertificate {
     /// <p>The contents of the public key certificate.</p>
+    #[serde(rename = "CertificateBody")]
     pub certificate_body: String,
     /// <p>The contents of the public key certificate chain.</p>
+    #[serde(rename = "CertificateChain")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub certificate_chain: Option<String>,
     /// <p>The meta information of the server certificate, such as its name, path, ID, and ARN.</p>
+    #[serde(rename = "ServerCertificateMetadata")]
     pub server_certificate_metadata: ServerCertificateMetadata,
 }
 
@@ -9152,20 +9726,28 @@ impl ServerCertificateDeserializer {
     }
 }
 /// <p>Contains information about a server certificate without its certificate body, certificate chain, and private key.</p> <p> This data type is used as a response element in the <a>UploadServerCertificate</a> and <a>ListServerCertificates</a> operations. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ServerCertificateMetadata {
     /// <p> The Amazon Resource Name (ARN) specifying the server certificate. For more information about ARNs and how to use them in policies, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "Arn")]
     pub arn: String,
     /// <p>The date on which the certificate is set to expire.</p>
+    #[serde(rename = "Expiration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expiration: Option<String>,
     /// <p> The path to the server certificate. For more information about paths, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "Path")]
     pub path: String,
     /// <p> The stable and unique string identifying the server certificate. For more information about IDs, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "ServerCertificateId")]
     pub server_certificate_id: String,
     /// <p>The name that identifies the server certificate.</p>
+    #[serde(rename = "ServerCertificateName")]
     pub server_certificate_name: String,
     /// <p>The date when the server certificate was uploaded.</p>
+    #[serde(rename = "UploadDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub upload_date: Option<String>,
 }
 
@@ -9244,18 +9826,26 @@ impl ServerCertificateNameTypeDeserializer {
     }
 }
 /// <p>Contains details about the most recent attempt to access the service.</p> <p>This data type is used as a response element in the <a>GetServiceLastAccessedDetails</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ServiceLastAccessed {
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when an authenticated entity most recently attempted to access the service. AWS does not report unauthenticated requests.</p> <p>This field is null if no IAM entities attempted to access the service within the <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#service-last-accessed-reporting-period">reporting period</a>.</p>
+    #[serde(rename = "LastAuthenticated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_authenticated: Option<String>,
     /// <p>The ARN of the authenticated entity (user or role) that last attempted to access the service. AWS does not report unauthenticated requests.</p> <p>This field is null if no IAM entities attempted to access the service within the <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#service-last-accessed-reporting-period">reporting period</a>.</p>
+    #[serde(rename = "LastAuthenticatedEntity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_authenticated_entity: Option<String>,
     /// <p>The name of the service in which access was attempted.</p>
+    #[serde(rename = "ServiceName")]
     pub service_name: String,
     /// <p>The namespace of the service in which access was attempted.</p> <p>To learn the service namespace of a service, go to <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_actions-resources-contextkeys.html">Actions, Resources, and Condition Keys for AWS Services</a> in the <i>IAM User Guide</i>. Choose the name of the service to view details for that service. In the first paragraph, find the service prefix. For example, <code>(service prefix: a4b)</code>. For more information about service namespaces, see <a href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces">AWS Service Namespaces</a> in the <i>AWS General Reference</i>.</p>
+    #[serde(rename = "ServiceNamespace")]
     pub service_namespace: String,
     /// <p>The total number of authenticated principals (root user, IAM users, or IAM roles) that have attempted to access the service.</p> <p>This field is null if no principals attempted to access the service within the <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#service-last-accessed-reporting-period">reporting period</a>.</p>
+    #[serde(rename = "TotalAuthenticatedEntities")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub total_authenticated_entities: Option<i64>,
 }
 
@@ -9357,22 +9947,29 @@ impl ServicePasswordDeserializer {
     }
 }
 /// <p>Contains the details of a service-specific credential.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ServiceSpecificCredential {
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the service-specific credential were created.</p>
+    #[serde(rename = "CreateDate")]
     pub create_date: String,
     /// <p>The name of the service associated with the service-specific credential.</p>
+    #[serde(rename = "ServiceName")]
     pub service_name: String,
     /// <p>The generated password for the service-specific credential.</p>
+    #[serde(rename = "ServicePassword")]
     pub service_password: String,
     /// <p>The unique identifier for the service-specific credential.</p>
+    #[serde(rename = "ServiceSpecificCredentialId")]
     pub service_specific_credential_id: String,
     /// <p>The generated user name for the service-specific credential. This value is generated by combining the IAM user's name combined with the ID number of the AWS account, as in <code>jane-at-123456789012</code>, for example. This value cannot be configured by the user.</p>
+    #[serde(rename = "ServiceUserName")]
     pub service_user_name: String,
     /// <p>The status of the service-specific credential. <code>Active</code> means that the key is valid for API calls, while <code>Inactive</code> means it is not.</p>
+    #[serde(rename = "Status")]
     pub status: String,
     /// <p>The name of the IAM user associated with the service-specific credential.</p>
+    #[serde(rename = "UserName")]
     pub user_name: String,
 }
 
@@ -9435,20 +10032,26 @@ impl ServiceSpecificCredentialIdDeserializer {
     }
 }
 /// <p>Contains additional details about a service-specific credential.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ServiceSpecificCredentialMetadata {
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the service-specific credential were created.</p>
+    #[serde(rename = "CreateDate")]
     pub create_date: String,
     /// <p>The name of the service associated with the service-specific credential.</p>
+    #[serde(rename = "ServiceName")]
     pub service_name: String,
     /// <p>The unique identifier for the service-specific credential.</p>
+    #[serde(rename = "ServiceSpecificCredentialId")]
     pub service_specific_credential_id: String,
     /// <p>The generated user name for the service-specific credential.</p>
+    #[serde(rename = "ServiceUserName")]
     pub service_user_name: String,
     /// <p>The status of the service-specific credential. <code>Active</code> means that the key is valid for API calls, while <code>Inactive</code> means it is not.</p>
+    #[serde(rename = "Status")]
     pub status: String,
     /// <p>The name of the IAM user associated with the service-specific credential.</p>
+    #[serde(rename = "UserName")]
     pub user_name: String,
 }
 
@@ -9591,18 +10194,24 @@ impl SetSecurityTokenServicePreferencesRequestSerializer {
 }
 
 /// <p>Contains information about an X.509 signing certificate.</p> <p>This data type is used as a response element in the <a>UploadSigningCertificate</a> and <a>ListSigningCertificates</a> operations. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SigningCertificate {
     /// <p>The contents of the signing certificate.</p>
+    #[serde(rename = "CertificateBody")]
     pub certificate_body: String,
     /// <p>The ID for the signing certificate.</p>
+    #[serde(rename = "CertificateId")]
     pub certificate_id: String,
     /// <p>The status of the signing certificate. <code>Active</code> means that the key is valid for API calls, while <code>Inactive</code> means it is not.</p>
+    #[serde(rename = "Status")]
     pub status: String,
     /// <p>The date when the signing certificate was uploaded.</p>
+    #[serde(rename = "UploadDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub upload_date: Option<String>,
     /// <p>The name of the user the signing certificate is associated with.</p>
+    #[serde(rename = "UserName")]
     pub user_name: String,
 }
 
@@ -9730,14 +10339,20 @@ impl SimulateCustomPolicyRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>SimulatePrincipalPolicy</a> or <a>SimulateCustomPolicy</a> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SimulatePolicyResponse {
     /// <p>The results of the simulation.</p>
+    #[serde(rename = "EvaluationResults")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub evaluation_results: Option<Vec<EvaluationResult>>,
     /// <p>A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the <code>Marker</code> request parameter to retrieve more items. Note that IAM might return fewer than the <code>MaxItems</code> number of results even when there are more results available. We recommend that you check <code>IsTruncated</code> after every call to ensure that you receive all your results.</p>
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
     /// <p>When <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value to use for the <code>Marker</code> parameter in a subsequent pagination request.</p>
+    #[serde(rename = "Marker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 }
 
@@ -9884,16 +10499,24 @@ impl SimulationPolicyListTypeSerializer {
 }
 
 /// <p>Contains a reference to a <code>Statement</code> element in a policy document that determines the result of the simulation.</p> <p>This data type is used by the <code>MatchedStatements</code> member of the <code> <a>EvaluationResult</a> </code> type.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Statement {
     /// <p>The row and column of the end of a <code>Statement</code> in an IAM policy.</p>
+    #[serde(rename = "EndPosition")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub end_position: Option<Position>,
     /// <p>The identifier of the policy that was provided as an input.</p>
+    #[serde(rename = "SourcePolicyId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_policy_id: Option<String>,
     /// <p>The type of the policy.</p>
+    #[serde(rename = "SourcePolicyType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub source_policy_type: Option<String>,
     /// <p>The row and column of the beginning of the <code>Statement</code> in an IAM policy.</p>
+    #[serde(rename = "StartPosition")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub start_position: Option<Position>,
 }
 
@@ -10017,13 +10640,14 @@ impl SummaryValueTypeDeserializer {
     }
 }
 /// <p>A structure that represents user-provided metadata that can be associated with a resource such as an IAM user or role. For more information about tagging, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags.html">Tagging IAM Identities</a> in the <i>IAM User Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Tag {
     /// <p>The key name that can be used to look up or retrieve the associated value. For example, <code>Department</code> or <code>Cost Center</code> are common choices.</p>
+    #[serde(rename = "Key")]
     pub key: String,
     /// <p><p>The value associated with this tag. For example, tags with a key name of <code>Department</code> could have values such as <code>Human Resources</code>, <code>Accounting</code>, and <code>Support</code>. Tags with a key name of <code>Cost Center</code> might have values that consist of the number associated with the different cost centers in your company. Typically, many resources have tags with the same key name but with different values.</p> <note> <p>AWS always interprets the tag <code>Value</code> as a single string. If you need to store an array, you can store comma-separated values in the string. However, you must interpret the value in your code.</p> </note></p>
+    #[serde(rename = "Value")]
     pub value: String,
 }
 
@@ -10513,10 +11137,12 @@ impl UpdateRoleDescriptionRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateRoleDescriptionResponse {
     /// <p>A structure that contains details about the modified role.</p>
+    #[serde(rename = "Role")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role: Option<Role>,
 }
 
@@ -10572,8 +11198,8 @@ impl UpdateRoleRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateRoleResponse {}
 
 struct UpdateRoleResponseDeserializer;
@@ -10622,10 +11248,12 @@ impl UpdateSAMLProviderRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>UpdateSAMLProvider</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateSAMLProviderResponse {
     /// <p>The Amazon Resource Name (ARN) of the SAML provider that was updated.</p>
+    #[serde(rename = "SAMLProviderArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub saml_provider_arn: Option<String>,
 }
 
@@ -10836,10 +11464,12 @@ impl UploadSSHPublicKeyRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>UploadSSHPublicKey</a> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UploadSSHPublicKeyResponse {
     /// <p>Contains information about the SSH public key.</p>
+    #[serde(rename = "SSHPublicKey")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssh_public_key: Option<SSHPublicKey>,
 }
 
@@ -10911,10 +11541,12 @@ impl UploadServerCertificateRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>UploadServerCertificate</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UploadServerCertificateResponse {
     /// <p>The meta information of the uploaded server certificate without its certificate body, certificate chain, and private key.</p>
+    #[serde(rename = "ServerCertificateMetadata")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub server_certificate_metadata: Option<ServerCertificateMetadata>,
 }
 
@@ -10973,10 +11605,11 @@ impl UploadSigningCertificateRequestSerializer {
 }
 
 /// <p>Contains the response to a successful <a>UploadSigningCertificate</a> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UploadSigningCertificateResponse {
     /// <p>Information about the certificate.</p>
+    #[serde(rename = "Certificate")]
     pub certificate: SigningCertificate,
 }
 
@@ -11004,24 +11637,35 @@ impl UploadSigningCertificateResponseDeserializer {
     }
 }
 /// <p><p>Contains information about an IAM user entity.</p> <p>This data type is used as a response element in the following operations:</p> <ul> <li> <p> <a>CreateUser</a> </p> </li> <li> <p> <a>GetUser</a> </p> </li> <li> <p> <a>ListUsers</a> </p> </li> </ul></p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct User {
     /// <p>The Amazon Resource Name (ARN) that identifies the user. For more information about ARNs and how to use ARNs in policies, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>. </p>
+    #[serde(rename = "Arn")]
     pub arn: String,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the user was created.</p>
+    #[serde(rename = "CreateDate")]
     pub create_date: String,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the user's password was last used to sign in to an AWS website. For a list of AWS websites that capture a user's last sign-in time, see the <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/credential-reports.html">Credential Reports</a> topic in the <i>IAM User Guide</i>. If a password is used more than once in a five-minute span, only the first use is returned in this field. If the field is null (no value), then it indicates that they never signed in with a password. This can be because:</p> <ul> <li> <p>The user never had a password.</p> </li> <li> <p>A password exists but has not been used since IAM started tracking this information on October 20, 2014.</p> </li> </ul> <p>A null value does not mean that the user <i>never</i> had a password. Also, if the user does not currently have a password but had one in the past, then this field contains the date and time the most recent password was used.</p> <p>This value is returned only in the <a>GetUser</a> and <a>ListUsers</a> operations. </p>
+    #[serde(rename = "PasswordLastUsed")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub password_last_used: Option<String>,
     /// <p>The path to the user. For more information about paths, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "Path")]
     pub path: String,
     /// <p>The ARN of the policy used to set the permissions boundary for the user.</p> <p>For more information about permissions boundaries, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html">Permissions Boundaries for IAM Identities </a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "PermissionsBoundary")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permissions_boundary: Option<AttachedPermissionsBoundary>,
     /// <p>A list of tags that are associated with the specified user. For more information about tagging, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags.html">Tagging IAM Identities</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
     /// <p>The stable and unique string identifying the user. For more information about IDs, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "UserId")]
     pub user_id: String,
     /// <p>The friendly name identifying the user.</p>
+    #[serde(rename = "UserName")]
     pub user_name: String,
 }
 
@@ -11071,27 +11715,47 @@ impl UserDeserializer {
     }
 }
 /// <p>Contains information about an IAM user, including all the user's policies and all the IAM groups the user is in.</p> <p>This data type is used as a response element in the <a>GetAccountAuthorizationDetails</a> operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UserDetail {
+    #[serde(rename = "Arn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arn: Option<String>,
     /// <p>A list of the managed policies attached to the user.</p>
+    #[serde(rename = "AttachedManagedPolicies")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attached_managed_policies: Option<Vec<AttachedPolicy>>,
     /// <p>The date and time, in <a href="http://www.iso.org/iso/iso8601">ISO 8601 date-time format</a>, when the user was created.</p>
+    #[serde(rename = "CreateDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub create_date: Option<String>,
     /// <p>A list of IAM groups that the user is in.</p>
+    #[serde(rename = "GroupList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub group_list: Option<Vec<String>>,
     /// <p>The path to the user. For more information about paths, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "Path")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     /// <p>The ARN of the policy used to set the permissions boundary for the user.</p> <p>For more information about permissions boundaries, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html">Permissions Boundaries for IAM Identities </a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "PermissionsBoundary")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub permissions_boundary: Option<AttachedPermissionsBoundary>,
     /// <p>A list of tags that are associated with the specified user. For more information about tagging, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags.html">Tagging IAM Identities</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
     /// <p>The stable and unique string identifying the user. For more information about IDs, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html">IAM Identifiers</a> in the <i>IAM User Guide</i>.</p>
+    #[serde(rename = "UserId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_id: Option<String>,
     /// <p>The friendly name identifying the user.</p>
+    #[serde(rename = "UserName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_name: Option<String>,
     /// <p>A list of the inline policies embedded in the user.</p>
+    #[serde(rename = "UserPolicyList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_policy_list: Option<Vec<PolicyDetail>>,
 }
 
@@ -11201,18 +11865,37 @@ impl UserNameTypeDeserializer {
     }
 }
 /// <p>Contains information about a virtual MFA device.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct VirtualMFADevice {
     /// <p> The base32 seed defined as specified in <a href="https://tools.ietf.org/html/rfc3548.txt">RFC3548</a>. The <code>Base32StringSeed</code> is base64-encoded. </p>
+    #[serde(rename = "Base32StringSeed")]
+    #[serde(
+        deserialize_with = "::rusoto_core::serialization::SerdeBlob::deserialize_blob",
+        serialize_with = "::rusoto_core::serialization::SerdeBlob::serialize_blob",
+        default
+    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub base_32_string_seed: Option<bytes::Bytes>,
     /// <p>The date and time on which the virtual MFA device was enabled.</p>
+    #[serde(rename = "EnableDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enable_date: Option<String>,
     /// <p> A QR code PNG image that encodes <code>otpauth://totp/$virtualMFADeviceName@$AccountName?secret=$Base32String</code> where <code>$virtualMFADeviceName</code> is one of the create call arguments. <code>AccountName</code> is the user name if set (otherwise, the account ID otherwise), and <code>Base32String</code> is the seed in base32 format. The <code>Base32String</code> value is base64-encoded. </p>
+    #[serde(rename = "QRCodePNG")]
+    #[serde(
+        deserialize_with = "::rusoto_core::serialization::SerdeBlob::deserialize_blob",
+        serialize_with = "::rusoto_core::serialization::SerdeBlob::serialize_blob",
+        default
+    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub qr_code_png: Option<bytes::Bytes>,
     /// <p>The serial number associated with <code>VirtualMFADevice</code>.</p>
+    #[serde(rename = "SerialNumber")]
     pub serial_number: String,
     /// <p>The IAM user associated with this virtual MFA device.</p>
+    #[serde(rename = "User")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user: Option<User>,
 }
 

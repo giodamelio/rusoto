@@ -37,10 +37,14 @@ use xml::reader::ParserConfig;
 use xml::EventReader;
 
 /// <p>A discrete item that contains the description and URL of an artifact (such as a PDF).</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Artifact {
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+    #[serde(rename = "URL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub url: Option<String>,
 }
 
@@ -108,9 +112,11 @@ impl CancelJobInputSerializer {
 }
 
 /// <p>Output structure for the CancelJob operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CancelJobOutput {
+    #[serde(rename = "Success")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub success: Option<bool>,
 }
 
@@ -176,14 +182,26 @@ impl CreateJobInputSerializer {
 }
 
 /// <p>Output structure for the CreateJob operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateJobOutput {
+    #[serde(rename = "ArtifactList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub artifact_list: Option<Vec<Artifact>>,
+    #[serde(rename = "JobId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub job_id: Option<String>,
+    #[serde(rename = "JobType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub job_type: Option<String>,
+    #[serde(rename = "Signature")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub signature: Option<String>,
+    #[serde(rename = "SignatureFileContents")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub signature_file_contents: Option<String>,
+    #[serde(rename = "WarningMessage")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub warning_message: Option<String>,
 }
 
@@ -347,10 +365,14 @@ impl GetShippingLabelInputSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetShippingLabelOutput {
+    #[serde(rename = "ShippingLabelURL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub shipping_label_url: Option<String>,
+    #[serde(rename = "Warning")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub warning: Option<String>,
 }
 
@@ -403,24 +425,56 @@ impl GetStatusInputSerializer {
 }
 
 /// <p>Output structure for the GetStatus operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetStatusOutput {
+    #[serde(rename = "ArtifactList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub artifact_list: Option<Vec<Artifact>>,
+    #[serde(rename = "Carrier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub carrier: Option<String>,
+    #[serde(rename = "CreationDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub creation_date: Option<String>,
+    #[serde(rename = "CurrentManifest")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub current_manifest: Option<String>,
+    #[serde(rename = "ErrorCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub error_count: Option<i64>,
+    #[serde(rename = "JobId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub job_id: Option<String>,
+    #[serde(rename = "JobType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub job_type: Option<String>,
+    #[serde(rename = "LocationCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location_code: Option<String>,
+    #[serde(rename = "LocationMessage")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location_message: Option<String>,
+    #[serde(rename = "LogBucket")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub log_bucket: Option<String>,
+    #[serde(rename = "LogKey")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub log_key: Option<String>,
+    #[serde(rename = "ProgressCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub progress_code: Option<String>,
+    #[serde(rename = "ProgressMessage")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub progress_message: Option<String>,
+    #[serde(rename = "Signature")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub signature: Option<String>,
+    #[serde(rename = "SignatureFileContents")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub signature_file_contents: Option<String>,
+    #[serde(rename = "TrackingNumber")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tracking_number: Option<String>,
 }
 
@@ -537,12 +591,20 @@ impl IsTruncatedDeserializer {
     }
 }
 /// <p>Representation of a job returned by the ListJobs operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Job {
+    #[serde(rename = "CreationDate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub creation_date: Option<String>,
+    #[serde(rename = "IsCanceled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_canceled: Option<bool>,
+    #[serde(rename = "JobId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub job_id: Option<String>,
+    #[serde(rename = "JobType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub job_type: Option<String>,
 }
 
@@ -656,10 +718,14 @@ impl ListJobsInputSerializer {
 }
 
 /// <p>Output structure for the ListJobs operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListJobsOutput {
+    #[serde(rename = "IsTruncated")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_truncated: Option<bool>,
+    #[serde(rename = "Jobs")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub jobs: Option<Vec<Job>>,
 }
 
@@ -839,11 +905,17 @@ impl UpdateJobInputSerializer {
 }
 
 /// <p>Output structure for the UpateJob operation.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateJobOutput {
+    #[serde(rename = "ArtifactList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub artifact_list: Option<Vec<Artifact>>,
+    #[serde(rename = "Success")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub success: Option<bool>,
+    #[serde(rename = "WarningMessage")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub warning_message: Option<String>,
 }
 

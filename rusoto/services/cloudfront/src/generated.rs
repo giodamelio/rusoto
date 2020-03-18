@@ -39,14 +39,18 @@ use xml::EventReader;
 use xml::EventWriter;
 
 /// <p>A complex type that lists the AWS accounts, if any, that you included in the <code>TrustedSigners</code> complex type for this distribution. These are the accounts that you want to allow to create signed URLs for private content.</p> <p>The <code>Signer</code> complex type lists the AWS account number of the trusted signer or <code>self</code> if the signer is the AWS account that created the distribution. The <code>Signer</code> element also includes the IDs of any active CloudFront key pairs that are associated with the trusted signer's AWS account. If no <code>KeyPairId</code> element appears for a <code>Signer</code>, that signer can't create signed URLs. </p> <p>For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html">Serving Private Content through CloudFront</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ActiveTrustedSigners {
     /// <p>Enabled is <code>true</code> if any of the AWS accounts listed in the <code>TrustedSigners</code> complex type for this distribution have active CloudFront key pairs. If not, <code>Enabled</code> is <code>false</code>.</p>
+    #[serde(rename = "Enabled")]
     pub enabled: bool,
     /// <p>A complex type that contains one <code>Signer</code> complex type for each trusted signer that is specified in the <code>TrustedSigners</code> complex type.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<Signer>>,
     /// <p>The number of trusted signers specified in the <code>TrustedSigners</code> complex type.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -77,12 +81,16 @@ impl ActiveTrustedSignersDeserializer {
     }
 }
 /// <p>AWS services in China customers must file for an Internet Content Provider (ICP) recordal if they want to serve content publicly on an alternate domain name, also known as a CNAME, that they've added to CloudFront. AliasICPRecordal provides the ICP recordal status for CNAMEs associated with distributions. The status is returned in the CloudFront response; you can't configure it yourself.</p> <p>For more information about ICP recordals, see <a href="https://docs.amazonaws.cn/en_us/aws/latest/userguide/accounts-and-credentials.html"> Signup, Accounts, and Credentials</a> in <i>Getting Started with AWS services in China</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AliasICPRecordal {
     /// <p>A domain name associated with a distribution. </p>
+    #[serde(rename = "CNAME")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cname: Option<String>,
     /// <p><p>The Internet Content Provider (ICP) recordal status for a CNAME. The ICPRecordalStatus is set to APPROVED for all CNAMEs (aliases) in regions outside of China. </p> <p>The status values returned are the following:</p> <ul> <li> <p> <b>APPROVED</b> indicates that the associated CNAME has a valid ICP recordal number. Multiple CNAMEs can be associated with a distribution, and CNAMEs can correspond to different ICP recordals. To be marked as APPROVED, that is, valid to use with China region, a CNAME must have one ICP recordal number associated with it.</p> </li> <li> <p> <b>SUSPENDED</b> indicates that the associated CNAME does not have a valid ICP recordal number.</p> </li> <li> <p> <b>PENDING</b> indicates that CloudFront can&#39;t determine the ICP recordal status of the CNAME associated with the distribution because there was an error in trying to determine the status. You can try again to see if the error is resolved in which case CloudFront returns an APPROVED or SUSPENDED status.</p> </li> </ul></p>
+    #[serde(rename = "ICPRecordalStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub icp_recordal_status: Option<String>,
 }
 
@@ -169,13 +177,15 @@ impl AliasListSerializer {
 }
 
 /// <p>A complex type that contains information about CNAMEs (alternate domain names), if any, for this distribution. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Aliases {
     /// <p>A complex type that contains the CNAME aliases, if any, that you want to associate with this distribution.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<String>>,
     /// <p>The number of CNAME aliases, if any, that you want to associate with this distribution.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -229,14 +239,17 @@ impl AliasesSerializer {
 }
 
 /// <p>A complex type that controls which HTTP methods CloudFront processes and forwards to your Amazon S3 bucket or your custom origin. There are three choices:</p> <ul> <li> <p>CloudFront forwards only <code>GET</code> and <code>HEAD</code> requests.</p> </li> <li> <p>CloudFront forwards only <code>GET</code>, <code>HEAD</code>, and <code>OPTIONS</code> requests.</p> </li> <li> <p>CloudFront forwards <code>GET, HEAD, OPTIONS, PUT, PATCH, POST</code>, and <code>DELETE</code> requests.</p> </li> </ul> <p>If you pick the third choice, you may need to restrict access to your Amazon S3 bucket or to your custom origin so users can't perform operations that you don't want them to. For example, you might not want users to have permissions to delete objects from your origin.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AllowedMethods {
+    #[serde(rename = "CachedMethods")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cached_methods: Option<CachedMethods>,
     /// <p>A complex type that contains the HTTP methods that you want CloudFront to process and forward to your origin.</p>
+    #[serde(rename = "Items")]
     pub items: Vec<String>,
     /// <p>The number of HTTP methods that you want CloudFront to forward to your origin. Valid values are 2 (for <code>GET</code> and <code>HEAD</code> requests), 3 (for <code>GET</code>, <code>HEAD</code>, and <code>OPTIONS</code> requests) and 7 (for <code>GET, HEAD, OPTIONS, PUT, PATCH, POST</code>, and <code>DELETE</code> requests).</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -366,34 +379,53 @@ impl BooleanSerializer {
 }
 
 /// <p>A complex type that describes how CloudFront processes requests.</p> <p>You must create at least as many cache behaviors (including the default cache behavior) as you have origins if you want CloudFront to distribute objects from all of the origins. Each cache behavior specifies the one origin from which you want CloudFront to get objects. If you have two origins and only the default cache behavior, the default cache behavior will cause CloudFront to get objects from one of the origins, but the other origin is never used.</p> <p>For the current limit on the number of cache behaviors that you can add to a distribution, see <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html#limits_cloudfront">Amazon CloudFront Limits</a> in the <i>AWS General Reference</i>.</p> <p>If you don't want to specify any cache behaviors, include only an empty <code>CacheBehaviors</code> element. Don't include an empty <code>CacheBehavior</code> element, or CloudFront returns a <code>MalformedXML</code> error.</p> <p>To delete all cache behaviors in an existing distribution, update the distribution configuration and include only an empty <code>CacheBehaviors</code> element.</p> <p>To add, change, or remove one or more cache behaviors, update the distribution configuration and specify all of the cache behaviors that you want to include in the updated distribution.</p> <p>For more information about cache behaviors, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesCacheBehavior">Cache Behaviors</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CacheBehavior {
+    #[serde(rename = "AllowedMethods")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub allowed_methods: Option<AllowedMethods>,
     /// <p>Whether you want CloudFront to automatically compress certain files for this cache behavior. If so, specify true; if not, specify false. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/ServingCompressedFiles.html">Serving Compressed Files</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "Compress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub compress: Option<bool>,
     /// <p>The default amount of time that you want objects to stay in CloudFront caches before CloudFront forwards another request to your origin to determine whether the object has been updated. The value that you specify applies only when your origin does not add HTTP headers such as <code>Cache-Control max-age</code>, <code>Cache-Control s-maxage</code>, and <code>Expires</code> to objects. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html">Managing How Long Content Stays in an Edge Cache (Expiration)</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "DefaultTTL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_ttl: Option<i64>,
     /// <p>The value of <code>ID</code> for the field-level encryption configuration that you want CloudFront to use for encrypting specific fields of data for a cache behavior or for the default cache behavior in your distribution.</p>
+    #[serde(rename = "FieldLevelEncryptionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_level_encryption_id: Option<String>,
     /// <p>A complex type that specifies how CloudFront handles query strings, cookies, and HTTP headers.</p>
+    #[serde(rename = "ForwardedValues")]
     pub forwarded_values: ForwardedValues,
     /// <p>A complex type that contains zero or more Lambda function associations for a cache behavior.</p>
+    #[serde(rename = "LambdaFunctionAssociations")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lambda_function_associations: Option<LambdaFunctionAssociations>,
     /// <p>The maximum amount of time that you want objects to stay in CloudFront caches before CloudFront forwards another request to your origin to determine whether the object has been updated. The value that you specify applies only when your origin adds HTTP headers such as <code>Cache-Control max-age</code>, <code>Cache-Control s-maxage</code>, and <code>Expires</code> to objects. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html">Managing How Long Content Stays in an Edge Cache (Expiration)</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "MaxTTL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_ttl: Option<i64>,
     /// <p>The minimum amount of time that you want objects to stay in CloudFront caches before CloudFront forwards another request to your origin to determine whether the object has been updated. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html"> Managing How Long Content Stays in an Edge Cache (Expiration)</a> in the <i> Amazon CloudFront Developer Guide</i>.</p> <p>You must specify <code>0</code> for <code>MinTTL</code> if you configure CloudFront to forward all headers to your origin (under <code>Headers</code>, if you specify <code>1</code> for <code>Quantity</code> and <code>*</code> for <code>Name</code>).</p>
+    #[serde(rename = "MinTTL")]
     pub min_ttl: i64,
     /// <p>The pattern (for example, <code>images/*.jpg</code>) that specifies which requests to apply the behavior to. When CloudFront receives a viewer request, the requested path is compared with path patterns in the order in which cache behaviors are listed in the distribution.</p> <note> <p>You can optionally include a slash (<code>/</code>) at the beginning of the path pattern. For example, <code>/images/*.jpg</code>. CloudFront behavior is the same with or without the leading <code>/</code>.</p> </note> <p>The path pattern for the default cache behavior is <code>*</code> and cannot be changed. If the request for an object does not match the path pattern for any cache behaviors, CloudFront applies the behavior in the default cache behavior.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesPathPattern">Path Pattern</a> in the <i> Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "PathPattern")]
     pub path_pattern: String,
     /// <p>Indicates whether you want to distribute media files in the Microsoft Smooth Streaming format using the origin that is associated with this cache behavior. If so, specify <code>true</code>; if not, specify <code>false</code>. If you specify <code>true</code> for <code>SmoothStreaming</code>, you can still distribute other content using this cache behavior if the content matches the value of <code>PathPattern</code>. </p>
+    #[serde(rename = "SmoothStreaming")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub smooth_streaming: Option<bool>,
     /// <p>The value of <code>ID</code> for the origin that you want CloudFront to route requests to when a request matches the path pattern either for a cache behavior or for the default cache behavior in your distribution.</p>
+    #[serde(rename = "TargetOriginId")]
     pub target_origin_id: String,
     /// <p>A complex type that specifies the AWS accounts, if any, that you want to allow to create signed URLs for private content.</p> <p>If you want to require signed URLs in requests for objects in the target origin that match the <code>PathPattern</code> for this cache behavior, specify <code>true</code> for <code>Enabled</code>, and specify the applicable values for <code>Quantity</code> and <code>Items</code>. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html">Serving Private Content through CloudFront</a> in the <i>Amazon CloudFront Developer Guide</i>. </p> <p>If you don't want to require signed URLs in requests for objects that match <code>PathPattern</code>, specify <code>false</code> for <code>Enabled</code> and <code>0</code> for <code>Quantity</code>. Omit <code>Items</code>.</p> <p>To add, change, or remove one or more trusted signers, change <code>Enabled</code> to <code>true</code> (if it's currently <code>false</code>), change <code>Quantity</code> as applicable, and specify all of the trusted signers that you want to include in the updated distribution.</p>
+    #[serde(rename = "TrustedSigners")]
     pub trusted_signers: TrustedSigners,
     /// <p><p>The protocol that viewers can use to access the files in the origin specified by <code>TargetOriginId</code> when a request matches the path pattern in <code>PathPattern</code>. You can specify the following options:</p> <ul> <li> <p> <code>allow-all</code>: Viewers can use HTTP or HTTPS.</p> </li> <li> <p> <code>redirect-to-https</code>: If a viewer submits an HTTP request, CloudFront returns an HTTP status code of 301 (Moved Permanently) to the viewer along with the HTTPS URL. The viewer then resubmits the request using the new URL. </p> </li> <li> <p> <code>https-only</code>: If a viewer sends an HTTP request, CloudFront returns an HTTP status code of 403 (Forbidden). </p> </li> </ul> <p>For more information about requiring the HTTPS protocol, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/SecureConnections.html">Using an HTTPS Connection to Access Your Objects</a> in the <i>Amazon CloudFront Developer Guide</i>.</p> <note> <p>The only way to guarantee that viewers retrieve an object that was fetched from the origin using HTTPS is never to use any other protocol to fetch the object. If you have recently changed from HTTP to HTTPS, we recommend that you clear your objects&#39; cache because cached objects are protocol agnostic. That means that an edge location will return an object from the cache regardless of whether the current request protocol matches the protocol used previously. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html">Managing How Long Content Stays in an Edge Cache (Expiration)</a> in the <i>Amazon CloudFront Developer Guide</i>.</p> </note></p>
+    #[serde(rename = "ViewerProtocolPolicy")]
     pub viewer_protocol_policy: String,
 }
 
@@ -609,13 +641,15 @@ impl CacheBehaviorListSerializer {
 }
 
 /// <p>A complex type that contains zero or more <code>CacheBehavior</code> elements. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CacheBehaviors {
     /// <p>Optional: A complex type that contains cache behaviors for this distribution. If <code>Quantity</code> is <code>0</code>, you can omit <code>Items</code>.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<CacheBehavior>>,
     /// <p>The number of cache behaviors for this distribution. </p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -669,13 +703,14 @@ impl CacheBehaviorsSerializer {
 }
 
 /// <p>A complex type that controls whether CloudFront caches the response to requests using the specified HTTP methods. There are two choices:</p> <ul> <li> <p>CloudFront caches responses to <code>GET</code> and <code>HEAD</code> requests.</p> </li> <li> <p>CloudFront caches responses to <code>GET</code>, <code>HEAD</code>, and <code>OPTIONS</code> requests.</p> </li> </ul> <p>If you pick the second choice for your Amazon S3 Origin, you may need to forward Access-Control-Request-Method, Access-Control-Request-Headers, and Origin headers for the responses to be cached correctly. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CachedMethods {
     /// <p>A complex type that contains the HTTP methods that you want CloudFront to cache responses to.</p>
+    #[serde(rename = "Items")]
     pub items: Vec<String>,
     /// <p>The number of HTTP methods for which you want CloudFront to cache responses. Valid values are <code>2</code> (for caching responses to <code>GET</code> and <code>HEAD</code> requests) and <code>3</code> (for caching responses to <code>GET</code>, <code>HEAD</code>, and <code>OPTIONS</code> requests).</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -726,14 +761,18 @@ impl CachedMethodsSerializer {
 }
 
 /// <p>CloudFront origin access identity.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CloudFrontOriginAccessIdentity {
     /// <p>The current configuration information for the identity. </p>
+    #[serde(rename = "CloudFrontOriginAccessIdentityConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cloud_front_origin_access_identity_config: Option<CloudFrontOriginAccessIdentityConfig>,
     /// <p>The ID for the origin access identity, for example, <code>E74FTE3AJFJ256A</code>. </p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The Amazon S3 canonical user ID for the origin access identity, used when giving the origin access identity read permission to an object in Amazon S3. </p>
+    #[serde(rename = "S3CanonicalUserId")]
     pub s3_canonical_user_id: String,
 }
 
@@ -772,13 +811,14 @@ impl CloudFrontOriginAccessIdentityDeserializer {
     }
 }
 /// <p>Origin access identity configuration. Send a <code>GET</code> request to the <code>/<i>CloudFront API version</i>/CloudFront/identity ID/config</code> resource. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CloudFrontOriginAccessIdentityConfig {
     /// <p>A unique value (for example, a date-time stamp) that ensures that the request can't be replayed.</p> <p>If the value of <code>CallerReference</code> is new (regardless of the content of the <code>CloudFrontOriginAccessIdentityConfig</code> object), a new origin access identity is created.</p> <p>If the <code>CallerReference</code> is a value already sent in a previous identity request, and the content of the <code>CloudFrontOriginAccessIdentityConfig</code> is identical to the original request (ignoring white space), the response includes the same information returned to the original request. </p> <p>If the <code>CallerReference</code> is a value you already sent in a previous request to create an identity, but the content of the <code>CloudFrontOriginAccessIdentityConfig</code> is different from the original request, CloudFront returns a <code>CloudFrontOriginAccessIdentityAlreadyExists</code> error. </p>
+    #[serde(rename = "CallerReference")]
     pub caller_reference: String,
     /// <p>Any comments you want to include about the origin access identity. </p>
+    #[serde(rename = "Comment")]
     pub comment: String,
 }
 
@@ -838,20 +878,28 @@ impl CloudFrontOriginAccessIdentityConfigSerializer {
 }
 
 /// <p>Lists the origin access identities for CloudFront.Send a <code>GET</code> request to the <code>/<i>CloudFront API version</i>/origin-access-identity/cloudfront</code> resource. The response includes a <code>CloudFrontOriginAccessIdentityList</code> element with zero or more <code>CloudFrontOriginAccessIdentitySummary</code> child elements. By default, your entire list of origin access identities is returned in one single page. If the list is long, you can paginate it using the <code>MaxItems</code> and <code>Marker</code> parameters.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CloudFrontOriginAccessIdentityList {
     /// <p>A flag that indicates whether more origin access identities remain to be listed. If your results were truncated, you can make a follow-up pagination request using the <code>Marker</code> request parameter to retrieve more items in the list.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>A complex type that contains one <code>CloudFrontOriginAccessIdentitySummary</code> element for each origin access identity that was created by the current AWS account.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<CloudFrontOriginAccessIdentitySummary>>,
     /// <p>Use this when paginating results to indicate where to begin in your list of origin access identities. The results include identities in the list that occur after the marker. To get the next page of results, set the <code>Marker</code> to the value of the <code>NextMarker</code> from the current page's response (which is also the ID of the last identity on that page). </p>
+    #[serde(rename = "Marker")]
     pub marker: String,
     /// <p>The maximum number of origin access identities you want in the response body. </p>
+    #[serde(rename = "MaxItems")]
     pub max_items: i64,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value you can use for the <code>Marker</code> request parameter to continue listing your origin access identities where they left off. </p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
     /// <p>The number of CloudFront origin access identities that were created by the current AWS account. </p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -898,14 +946,17 @@ impl CloudFrontOriginAccessIdentityListDeserializer {
     }
 }
 /// <p>Summary of the information about a CloudFront origin access identity.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CloudFrontOriginAccessIdentitySummary {
     /// <p>The comment for this origin access identity, as originally specified when created.</p>
+    #[serde(rename = "Comment")]
     pub comment: String,
     /// <p>The ID for the origin access identity. For example: <code>E74FTE3AJFJ256A</code>.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The Amazon S3 canonical user ID for the origin access identity, which you use when giving the origin access identity read permission to an object in Amazon S3.</p>
+    #[serde(rename = "S3CanonicalUserId")]
     pub s3_canonical_user_id: String,
 }
 
@@ -993,15 +1044,18 @@ impl CommentTypeSerializer {
 }
 
 /// <p>A field-level encryption content type profile. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ContentTypeProfile {
     /// <p>The content type for a field-level encryption content type-profile mapping. </p>
+    #[serde(rename = "ContentType")]
     pub content_type: String,
     /// <p>The format for a field-level encryption content type-profile mapping. </p>
+    #[serde(rename = "Format")]
     pub format: String,
     /// <p>The profile ID for a field-level encryption content type-profile mapping. </p>
+    #[serde(rename = "ProfileId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub profile_id: Option<String>,
 }
 
@@ -1067,13 +1121,15 @@ impl ContentTypeProfileSerializer {
 }
 
 /// <p>The configuration for a field-level encryption content type-profile mapping. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ContentTypeProfileConfig {
     /// <p>The configuration for a field-level encryption content type-profile. </p>
+    #[serde(rename = "ContentTypeProfiles")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub content_type_profiles: Option<ContentTypeProfiles>,
     /// <p>The setting in a field-level encryption content type-profile mapping that specifies what to do when an unknown content type is provided for the profile. If true, content is forwarded without being encrypted when the content type is unknown. If false (the default), an error is returned when the content type is unknown. </p>
+    #[serde(rename = "ForwardWhenContentTypeIsUnknown")]
     pub forward_when_content_type_is_unknown: bool,
 }
 
@@ -1180,13 +1236,15 @@ impl ContentTypeProfileListSerializer {
 }
 
 /// <p>Field-level encryption content type-profile. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ContentTypeProfiles {
     /// <p>Items in a field-level encryption content type-profile mapping. </p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<ContentTypeProfile>>,
     /// <p>The number of field-level encryption content type-profile mappings. </p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -1278,13 +1336,15 @@ impl CookieNameListSerializer {
 }
 
 /// <p>A complex type that specifies whether you want CloudFront to forward cookies to the origin and, if so, which ones. For more information about forwarding cookies to the origin, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/header-caching.html"> Caching Content Based on Request Headers</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CookieNames {
     /// <p>A complex type that contains one <code>Name</code> element for each cookie that you want CloudFront to forward to the origin for this cache behavior.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<String>>,
     /// <p>The number of different cookies that you want CloudFront to forward to the origin for this cache behavior.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -1338,13 +1398,15 @@ impl CookieNamesSerializer {
 }
 
 /// <p>A complex type that specifies whether you want CloudFront to forward cookies to the origin and, if so, which ones. For more information about forwarding cookies to the origin, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Cookies.html">Caching Content Based on Cookies</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CookiePreference {
     /// <p>Specifies which cookies to forward to the origin for this cache behavior: all, none, or the list of cookies specified in the <code>WhitelistedNames</code> complex type.</p> <p>Amazon S3 doesn't process cookies. When the cache behavior is forwarding requests to an Amazon S3 origin, specify none for the <code>Forward</code> element. </p>
+    #[serde(rename = "Forward")]
     pub forward: String,
     /// <p>Required if you specify <code>whitelist</code> for the value of <code>Forward:</code>. A complex type that specifies how many different cookies you want CloudFront to forward to the origin for this cache behavior and, if you want to forward selected cookies, the names of those cookies.</p> <p>If you specify <code>all</code> or none for the value of <code>Forward</code>, omit <code>WhitelistedNames</code>. If you change the value of <code>Forward</code> from <code>whitelist</code> to all or none and you don't delete the <code>WhitelistedNames</code> element and its child elements, CloudFront deletes them automatically.</p> <p>For the current limit on the number of cookie names that you can whitelist for each cache behavior, see <a href="https://docs.aws.amazon.com/general/latest/gr/xrefaws_service_limits.html#limits_cloudfront"> CloudFront Limits</a> in the <i>AWS General Reference</i>.</p>
+    #[serde(rename = "WhitelistedNames")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub whitelisted_names: Option<CookieNames>,
 }
 
@@ -1407,14 +1469,20 @@ pub struct CreateCloudFrontOriginAccessIdentityRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateCloudFrontOriginAccessIdentityResult {
     /// <p>The origin access identity's information.</p>
+    #[serde(rename = "CloudFrontOriginAccessIdentity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cloud_front_origin_access_identity: Option<CloudFrontOriginAccessIdentity>,
     /// <p>The current version of the origin access identity created.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>The fully qualified URI of the new origin access identity just created. For example: <code>https://cloudfront.amazonaws.com/2010-11-01/origin-access-identity/cloudfront/E74FTE3AJFJ256A</code>.</p>
+    #[serde(rename = "Location")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
 }
 
@@ -1445,14 +1513,20 @@ pub struct CreateDistributionRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateDistributionResult {
     /// <p>The distribution's information.</p>
+    #[serde(rename = "Distribution")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub distribution: Option<Distribution>,
     /// <p>The current version of the distribution created.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>The fully qualified URI of the new distribution resource just created. For example: <code>https://cloudfront.amazonaws.com/2010-11-01/distribution/EDFDVBD632BHDS5</code>.</p>
+    #[serde(rename = "Location")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
 }
 
@@ -1481,14 +1555,20 @@ pub struct CreateDistributionWithTagsRequest {
 }
 
 /// <p>The returned result of the corresponding request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateDistributionWithTagsResult {
     /// <p>The distribution's information. </p>
+    #[serde(rename = "Distribution")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub distribution: Option<Distribution>,
     /// <p>The current version of the distribution created.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>The fully qualified URI of the new distribution resource just created. For example: <code>https://cloudfront.amazonaws.com/2010-11-01/distribution/EDFDVBD632BHDS5</code>. </p>
+    #[serde(rename = "Location")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
 }
 
@@ -1515,14 +1595,20 @@ pub struct CreateFieldLevelEncryptionConfigRequest {
     pub field_level_encryption_config: FieldLevelEncryptionConfig,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateFieldLevelEncryptionConfigResult {
     /// <p>The current version of the field level encryption configuration. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Returned when you create a new field-level encryption configuration.</p>
+    #[serde(rename = "FieldLevelEncryption")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_level_encryption: Option<FieldLevelEncryption>,
     /// <p>The fully qualified URI of the new configuration resource just created. For example: <code>https://cloudfront.amazonaws.com/2010-11-01/field-level-encryption-config/EDFDVBD632BHDS5</code>.</p>
+    #[serde(rename = "Location")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
 }
 
@@ -1549,14 +1635,20 @@ pub struct CreateFieldLevelEncryptionProfileRequest {
     pub field_level_encryption_profile_config: FieldLevelEncryptionProfileConfig,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateFieldLevelEncryptionProfileResult {
     /// <p>The current version of the field level encryption profile. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Returned when you create a new field-level encryption profile.</p>
+    #[serde(rename = "FieldLevelEncryptionProfile")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_level_encryption_profile: Option<FieldLevelEncryptionProfile>,
     /// <p>The fully qualified URI of the new profile resource just created. For example: <code>https://cloudfront.amazonaws.com/2010-11-01/field-level-encryption-profile/EDFDVBD632BHDS5</code>.</p>
+    #[serde(rename = "Location")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
 }
 
@@ -1589,12 +1681,16 @@ pub struct CreateInvalidationRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateInvalidationResult {
     /// <p>The invalidation's information.</p>
+    #[serde(rename = "Invalidation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub invalidation: Option<Invalidation>,
     /// <p>The fully qualified URI of the distribution and invalidation batch request, including the <code>Invalidation ID</code>.</p>
+    #[serde(rename = "Location")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
 }
 
@@ -1621,14 +1717,20 @@ pub struct CreatePublicKeyRequest {
     pub public_key_config: PublicKeyConfig,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreatePublicKeyResult {
     /// <p>The current version of the public key. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>The fully qualified URI of the new public key resource just created. For example: <code>https://cloudfront.amazonaws.com/2010-11-01/cloudfront-public-key/EDFDVBD632BHDS5</code>.</p>
+    #[serde(rename = "Location")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
     /// <p>Returned when you add a public key.</p>
+    #[serde(rename = "PublicKey")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub public_key: Option<PublicKey>,
 }
 
@@ -1654,14 +1756,20 @@ pub struct CreateStreamingDistributionRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateStreamingDistributionResult {
     /// <p>The current version of the streaming distribution created.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>The fully qualified URI of the new streaming distribution resource just created. For example: <code>https://cloudfront.amazonaws.com/2010-11-01/streaming-distribution/EGTXBD79H29TRA8</code>.</p>
+    #[serde(rename = "Location")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
     /// <p>The streaming distribution's information.</p>
+    #[serde(rename = "StreamingDistribution")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub streaming_distribution: Option<StreamingDistribution>,
 }
 
@@ -1690,14 +1798,20 @@ pub struct CreateStreamingDistributionWithTagsRequest {
 }
 
 /// <p>The returned result of the corresponding request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateStreamingDistributionWithTagsResult {
     /// <p>The current version of the distribution created.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>The fully qualified URI of the new streaming distribution resource just created. For example:<code> https://cloudfront.amazonaws.com/2010-11-01/streaming-distribution/EGTXBD79H29TRA8</code>.</p>
+    #[serde(rename = "Location")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
     /// <p>The streaming distribution's information. </p>
+    #[serde(rename = "StreamingDistribution")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub streaming_distribution: Option<StreamingDistribution>,
 }
 
@@ -1718,17 +1832,23 @@ impl CreateStreamingDistributionWithTagsResultDeserializer {
     }
 }
 /// <p>A complex type that controls:</p> <ul> <li> <p>Whether CloudFront replaces HTTP status codes in the 4xx and 5xx range with custom error messages before returning the response to the viewer. </p> </li> <li> <p>How long CloudFront caches HTTP status codes in the 4xx and 5xx range.</p> </li> </ul> <p>For more information about custom error pages, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/custom-error-pages.html">Customizing Error Responses</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CustomErrorResponse {
     /// <p>The minimum amount of time, in seconds, that you want CloudFront to cache the HTTP status code specified in <code>ErrorCode</code>. When this time period has elapsed, CloudFront queries your origin to see whether the problem that caused the error has been resolved and the requested object is now available.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/custom-error-pages.html">Customizing Error Responses</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "ErrorCachingMinTTL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub error_caching_min_ttl: Option<i64>,
     /// <p>The HTTP status code for which you want to specify a custom error page and/or a caching duration.</p>
+    #[serde(rename = "ErrorCode")]
     pub error_code: i64,
     /// <p>The HTTP status code that you want CloudFront to return to the viewer along with the custom error page. There are a variety of reasons that you might want CloudFront to return a status code different from the status code that your origin returned to CloudFront, for example:</p> <ul> <li> <p>Some Internet devices (some firewalls and corporate proxies, for example) intercept HTTP 4xx and 5xx and prevent the response from being returned to the viewer. If you substitute <code>200</code>, the response typically won't be intercepted.</p> </li> <li> <p>If you don't care about distinguishing among different client errors or server errors, you can specify <code>400</code> or <code>500</code> as the <code>ResponseCode</code> for all 4xx or 5xx errors.</p> </li> <li> <p>You might want to return a <code>200</code> status code (OK) and static website so your customers don't know that your website is down.</p> </li> </ul> <p>If you specify a value for <code>ResponseCode</code>, you must also specify a value for <code>ResponsePagePath</code>.</p>
+    #[serde(rename = "ResponseCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub response_code: Option<String>,
     /// <p>The path to the custom error page that you want CloudFront to return to a viewer when your origin returns the HTTP status code specified by <code>ErrorCode</code>, for example, <code>/4xx-errors/403-forbidden.html</code>. If you want to store your objects and your custom error pages in different locations, your distribution must include a cache behavior for which the following is true:</p> <ul> <li> <p>The value of <code>PathPattern</code> matches the path to your custom error messages. For example, suppose you saved custom error pages for 4xx errors in an Amazon S3 bucket in a directory named <code>/4xx-errors</code>. Your distribution must include a cache behavior for which the path pattern routes requests for your custom error pages to that location, for example, <code>/4xx-errors/*</code>. </p> </li> <li> <p>The value of <code>TargetOriginId</code> specifies the value of the <code>ID</code> element for the origin that contains your custom error pages.</p> </li> </ul> <p>If you specify a value for <code>ResponsePagePath</code>, you must also specify a value for <code>ResponseCode</code>.</p> <p>We recommend that you store custom error pages in an Amazon S3 bucket. If you store custom error pages on an HTTP server and the server starts to return 5xx errors, CloudFront can't get the files that you want to return to viewers because the origin server is unavailable.</p>
+    #[serde(rename = "ResponsePagePath")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub response_page_path: Option<String>,
 }
 
@@ -1851,13 +1971,15 @@ impl CustomErrorResponseListSerializer {
 }
 
 /// <p>A complex type that controls:</p> <ul> <li> <p>Whether CloudFront replaces HTTP status codes in the 4xx and 5xx range with custom error messages before returning the response to the viewer.</p> </li> <li> <p>How long CloudFront caches HTTP status codes in the 4xx and 5xx range.</p> </li> </ul> <p>For more information about custom error pages, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/custom-error-pages.html">Customizing Error Responses</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CustomErrorResponses {
     /// <p>A complex type that contains a <code>CustomErrorResponse</code> element for each HTTP status code for which you want to specify a custom error page and/or a caching duration. </p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<CustomErrorResponse>>,
     /// <p>The number of HTTP status codes for which you want to specify a custom error page and/or a caching duration. If <code>Quantity</code> is <code>0</code>, you can omit <code>Items</code>.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -1911,13 +2033,15 @@ impl CustomErrorResponsesSerializer {
 }
 
 /// <p>A complex type that contains the list of Custom Headers for each origin. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CustomHeaders {
     /// <p> <b>Optional</b>: A list that contains one <code>OriginCustomHeader</code> element for each custom header that you want CloudFront to forward to the origin. If Quantity is <code>0</code>, omit <code>Items</code>.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<OriginCustomHeader>>,
     /// <p>The number of custom headers, if any, for this distribution.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -1971,21 +2095,29 @@ impl CustomHeadersSerializer {
 }
 
 /// <p>A custom origin or an Amazon S3 bucket configured as a website endpoint.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CustomOriginConfig {
     /// <p>The HTTP port the custom origin listens on.</p>
+    #[serde(rename = "HTTPPort")]
     pub http_port: i64,
     /// <p>The HTTPS port the custom origin listens on.</p>
+    #[serde(rename = "HTTPSPort")]
     pub https_port: i64,
     /// <p>You can create a custom keep-alive timeout. All timeout units are in seconds. The default keep-alive timeout is 5 seconds, but you can configure custom timeout lengths using the CloudFront API. The minimum timeout length is 1 second; the maximum is 60 seconds.</p> <p>If you need to increase the maximum time limit, contact the <a href="https://console.aws.amazon.com/support/home#/">AWS Support Center</a>.</p>
+    #[serde(rename = "OriginKeepaliveTimeout")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub origin_keepalive_timeout: Option<i64>,
     /// <p>The origin protocol policy to apply to your origin.</p>
+    #[serde(rename = "OriginProtocolPolicy")]
     pub origin_protocol_policy: String,
     /// <p>You can create a custom origin read timeout. All timeout units are in seconds. The default origin read timeout is 30 seconds, but you can configure custom timeout lengths using the CloudFront API. The minimum timeout length is 4 seconds; the maximum is 60 seconds.</p> <p>If you need to increase the maximum time limit, contact the <a href="https://console.aws.amazon.com/support/home#/">AWS Support Center</a>.</p>
+    #[serde(rename = "OriginReadTimeout")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub origin_read_timeout: Option<i64>,
     /// <p>The SSL/TLS protocols that you want CloudFront to use when communicating with your origin over HTTPS.</p>
+    #[serde(rename = "OriginSslProtocols")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub origin_ssl_protocols: Option<OriginSslProtocols>,
 }
 
@@ -2091,32 +2223,50 @@ impl CustomOriginConfigSerializer {
 }
 
 /// <p>A complex type that describes the default cache behavior if you don't specify a <code>CacheBehavior</code> element or if files don't match any of the values of <code>PathPattern</code> in <code>CacheBehavior</code> elements. You must create exactly one default cache behavior.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DefaultCacheBehavior {
+    #[serde(rename = "AllowedMethods")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub allowed_methods: Option<AllowedMethods>,
     /// <p>Whether you want CloudFront to automatically compress certain files for this cache behavior. If so, specify <code>true</code>; if not, specify <code>false</code>. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/ServingCompressedFiles.html">Serving Compressed Files</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "Compress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub compress: Option<bool>,
     /// <p>The default amount of time that you want objects to stay in CloudFront caches before CloudFront forwards another request to your origin to determine whether the object has been updated. The value that you specify applies only when your origin does not add HTTP headers such as <code>Cache-Control max-age</code>, <code>Cache-Control s-maxage</code>, and <code>Expires</code> to objects. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html">Managing How Long Content Stays in an Edge Cache (Expiration)</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "DefaultTTL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_ttl: Option<i64>,
     /// <p>The value of <code>ID</code> for the field-level encryption configuration that you want CloudFront to use for encrypting specific fields of data for a cache behavior or for the default cache behavior in your distribution.</p>
+    #[serde(rename = "FieldLevelEncryptionId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_level_encryption_id: Option<String>,
     /// <p>A complex type that specifies how CloudFront handles query strings, cookies, and HTTP headers.</p>
+    #[serde(rename = "ForwardedValues")]
     pub forwarded_values: ForwardedValues,
     /// <p>A complex type that contains zero or more Lambda function associations for a cache behavior.</p>
+    #[serde(rename = "LambdaFunctionAssociations")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lambda_function_associations: Option<LambdaFunctionAssociations>,
     /// <p>The maximum amount of time that you want objects to stay in CloudFront caches before CloudFront forwards another request to your origin to determine whether the object has been updated. The value that you specify applies only when your origin adds HTTP headers such as <code>Cache-Control max-age</code>, <code>Cache-Control s-maxage</code>, and <code>Expires</code> to objects. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html">Managing How Long Content Stays in an Edge Cache (Expiration)</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "MaxTTL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_ttl: Option<i64>,
     /// <p>The minimum amount of time that you want objects to stay in CloudFront caches before CloudFront forwards another request to your origin to determine whether the object has been updated. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html">Managing How Long Content Stays in an Edge Cache (Expiration)</a> in the <i>Amazon CloudFront Developer Guide</i>.</p> <p>You must specify <code>0</code> for <code>MinTTL</code> if you configure CloudFront to forward all headers to your origin (under <code>Headers</code>, if you specify <code>1</code> for <code>Quantity</code> and <code>*</code> for <code>Name</code>).</p>
+    #[serde(rename = "MinTTL")]
     pub min_ttl: i64,
     /// <p>Indicates whether you want to distribute media files in the Microsoft Smooth Streaming format using the origin that is associated with this cache behavior. If so, specify <code>true</code>; if not, specify <code>false</code>. If you specify <code>true</code> for <code>SmoothStreaming</code>, you can still distribute other content using this cache behavior if the content matches the value of <code>PathPattern</code>. </p>
+    #[serde(rename = "SmoothStreaming")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub smooth_streaming: Option<bool>,
     /// <p>The value of <code>ID</code> for the origin that you want CloudFront to route requests to when a request matches the path pattern either for a cache behavior or for the default cache behavior in your distribution.</p>
+    #[serde(rename = "TargetOriginId")]
     pub target_origin_id: String,
     /// <p>A complex type that specifies the AWS accounts, if any, that you want to allow to create signed URLs for private content.</p> <p>If you want to require signed URLs in requests for objects in the target origin that match the <code>PathPattern</code> for this cache behavior, specify <code>true</code> for <code>Enabled</code>, and specify the applicable values for <code>Quantity</code> and <code>Items</code>. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html">Serving Private Content through CloudFront</a> in the <i> Amazon CloudFront Developer Guide</i>.</p> <p>If you don't want to require signed URLs in requests for objects that match <code>PathPattern</code>, specify <code>false</code> for <code>Enabled</code> and <code>0</code> for <code>Quantity</code>. Omit <code>Items</code>.</p> <p>To add, change, or remove one or more trusted signers, change <code>Enabled</code> to <code>true</code> (if it's currently <code>false</code>), change <code>Quantity</code> as applicable, and specify all of the trusted signers that you want to include in the updated distribution.</p>
+    #[serde(rename = "TrustedSigners")]
     pub trusted_signers: TrustedSigners,
     /// <p><p>The protocol that viewers can use to access the files in the origin specified by <code>TargetOriginId</code> when a request matches the path pattern in <code>PathPattern</code>. You can specify the following options:</p> <ul> <li> <p> <code>allow-all</code>: Viewers can use HTTP or HTTPS.</p> </li> <li> <p> <code>redirect-to-https</code>: If a viewer submits an HTTP request, CloudFront returns an HTTP status code of 301 (Moved Permanently) to the viewer along with the HTTPS URL. The viewer then resubmits the request using the new URL.</p> </li> <li> <p> <code>https-only</code>: If a viewer sends an HTTP request, CloudFront returns an HTTP status code of 403 (Forbidden).</p> </li> </ul> <p>For more information about requiring the HTTPS protocol, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/SecureConnections.html">Using an HTTPS Connection to Access Your Objects</a> in the <i>Amazon CloudFront Developer Guide</i>.</p> <note> <p>The only way to guarantee that viewers retrieve an object that was fetched from the origin using HTTPS is never to use any other protocol to fetch the object. If you have recently changed from HTTP to HTTPS, we recommend that you clear your objects&#39; cache because cached objects are protocol agnostic. That means that an edge location will return an object from the cache regardless of whether the current request protocol matches the protocol used previously. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html">Managing How Long Content Stays in an Edge Cache (Expiration)</a> in the <i>Amazon CloudFront Developer Guide</i>.</p> </note></p>
+    #[serde(rename = "ViewerProtocolPolicy")]
     pub viewer_protocol_policy: String,
 }
 
@@ -2339,26 +2489,36 @@ pub struct DeleteStreamingDistributionRequest {
 }
 
 /// <p>A distribution tells CloudFront where you want content to be delivered from, and the details about how to track and manage content delivery.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Distribution {
     /// <p>The ARN (Amazon Resource Name) for the distribution. For example: <code>arn:aws:cloudfront::123456789012:distribution/EDFDVBD632BHDS5</code>, where <code>123456789012</code> is your AWS account ID.</p>
+    #[serde(rename = "ARN")]
     pub arn: String,
     /// <p>CloudFront automatically adds this element to the response only if you've set up the distribution to serve private content with signed URLs. The element lists the key pair IDs that CloudFront is aware of for each trusted signer. The <code>Signer</code> child element lists the AWS account number of the trusted signer (or an empty <code>Self</code> element if the signer is you). The <code>Signer</code> element also includes the IDs of any active key pairs associated with the trusted signer's AWS account. If no <code>KeyPairId</code> element appears for a <code>Signer</code>, that signer can't create working signed URLs.</p>
+    #[serde(rename = "ActiveTrustedSigners")]
     pub active_trusted_signers: ActiveTrustedSigners,
     /// <p>AWS services in China customers must file for an Internet Content Provider (ICP) recordal if they want to serve content publicly on an alternate domain name, also known as a CNAME, that they've added to CloudFront. AliasICPRecordal provides the ICP recordal status for CNAMEs associated with distributions.</p> <p>For more information about ICP recordals, see <a href="https://docs.amazonaws.cn/en_us/aws/latest/userguide/accounts-and-credentials.html"> Signup, Accounts, and Credentials</a> in <i>Getting Started with AWS services in China</i>.</p>
+    #[serde(rename = "AliasICPRecordals")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alias_icp_recordals: Option<Vec<AliasICPRecordal>>,
     /// <p>The current configuration information for the distribution. Send a <code>GET</code> request to the <code>/<i>CloudFront API version</i>/distribution ID/config</code> resource.</p>
+    #[serde(rename = "DistributionConfig")]
     pub distribution_config: DistributionConfig,
     /// <p>The domain name corresponding to the distribution, for example, <code>d111111abcdef8.cloudfront.net</code>. </p>
+    #[serde(rename = "DomainName")]
     pub domain_name: String,
     /// <p>The identifier for the distribution. For example: <code>EDFDVBD632BHDS5</code>. </p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The number of invalidation batches currently in progress. </p>
+    #[serde(rename = "InProgressInvalidationBatches")]
     pub in_progress_invalidation_batches: i64,
     /// <p>The date and time the distribution was last modified. </p>
+    #[serde(rename = "LastModifiedTime")]
     pub last_modified_time: String,
     /// <p>This response element indicates the current status of the distribution. When the status is <code>Deployed</code>, the distribution's information is fully propagated to all CloudFront edge locations. </p>
+    #[serde(rename = "Status")]
     pub status: String,
 }
 
@@ -2413,43 +2573,71 @@ impl DistributionDeserializer {
     }
 }
 /// <p>A distribution configuration.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DistributionConfig {
     /// <p>A complex type that contains information about CNAMEs (alternate domain names), if any, for this distribution.</p>
+    #[serde(rename = "Aliases")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub aliases: Option<Aliases>,
     /// <p>A complex type that contains zero or more <code>CacheBehavior</code> elements. </p>
+    #[serde(rename = "CacheBehaviors")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cache_behaviors: Option<CacheBehaviors>,
     /// <p>A unique value (for example, a date-time stamp) that ensures that the request can't be replayed.</p> <p>If the value of <code>CallerReference</code> is new (regardless of the content of the <code>DistributionConfig</code> object), CloudFront creates a new distribution.</p> <p>If <code>CallerReference</code> is a value that you already sent in a previous request to create a distribution, CloudFront returns a <code>DistributionAlreadyExists</code> error.</p>
+    #[serde(rename = "CallerReference")]
     pub caller_reference: String,
     /// <p>Any comments you want to include about the distribution.</p> <p>If you don't want to specify a comment, include an empty <code>Comment</code> element.</p> <p>To delete an existing comment, update the distribution configuration and include an empty <code>Comment</code> element.</p> <p>To add or change a comment, update the distribution configuration and specify the new comment.</p>
+    #[serde(rename = "Comment")]
     pub comment: String,
     /// <p>A complex type that controls the following:</p> <ul> <li> <p>Whether CloudFront replaces HTTP status codes in the 4xx and 5xx range with custom error messages before returning the response to the viewer.</p> </li> <li> <p>How long CloudFront caches HTTP status codes in the 4xx and 5xx range.</p> </li> </ul> <p>For more information about custom error pages, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/custom-error-pages.html">Customizing Error Responses</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "CustomErrorResponses")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub custom_error_responses: Option<CustomErrorResponses>,
     /// <p>A complex type that describes the default cache behavior if you don't specify a <code>CacheBehavior</code> element or if files don't match any of the values of <code>PathPattern</code> in <code>CacheBehavior</code> elements. You must create exactly one default cache behavior.</p>
+    #[serde(rename = "DefaultCacheBehavior")]
     pub default_cache_behavior: DefaultCacheBehavior,
     /// <p>The object that you want CloudFront to request from your origin (for example, <code>index.html</code>) when a viewer requests the root URL for your distribution (<code>http://www.example.com</code>) instead of an object in your distribution (<code>http://www.example.com/product-description.html</code>). Specifying a default root object avoids exposing the contents of your distribution.</p> <p>Specify only the object name, for example, <code>index.html</code>. Don't add a <code>/</code> before the object name.</p> <p>If you don't want to specify a default root object when you create a distribution, include an empty <code>DefaultRootObject</code> element.</p> <p>To delete the default root object from an existing distribution, update the distribution configuration and include an empty <code>DefaultRootObject</code> element.</p> <p>To replace the default root object, update the distribution configuration and specify the new object.</p> <p>For more information about the default root object, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DefaultRootObject.html">Creating a Default Root Object</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "DefaultRootObject")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_root_object: Option<String>,
     /// <p>From this field, you can enable or disable the selected distribution.</p>
+    #[serde(rename = "Enabled")]
     pub enabled: bool,
     /// <p>(Optional) Specify the maximum HTTP version that you want viewers to use to communicate with CloudFront. The default value for new web distributions is http2. Viewers that don't support HTTP/2 automatically use an earlier HTTP version.</p> <p>For viewers and CloudFront to use HTTP/2, viewers must support TLS 1.2 or later, and must support Server Name Identification (SNI).</p> <p>In general, configuring CloudFront to communicate with viewers using HTTP/2 reduces latency. You can improve performance by optimizing for HTTP/2. For more information, do an Internet search for "http/2 optimization." </p>
+    #[serde(rename = "HttpVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub http_version: Option<String>,
     /// <p>If you want CloudFront to respond to IPv6 DNS requests with an IPv6 address for your distribution, specify <code>true</code>. If you specify <code>false</code>, CloudFront responds to IPv6 DNS requests with the DNS response code <code>NOERROR</code> and with no IP addresses. This allows viewers to submit a second request, for an IPv4 address for your distribution. </p> <p>In general, you should enable IPv6 if you have users on IPv6 networks who want to access your content. However, if you're using signed URLs or signed cookies to restrict access to your content, and if you're using a custom policy that includes the <code>IpAddress</code> parameter to restrict the IP addresses that can access your content, don't enable IPv6. If you want to restrict access to some content by IP address and not restrict access to other content (or restrict access but not by IP address), you can create two distributions. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-creating-signed-url-custom-policy.html">Creating a Signed URL Using a Custom Policy</a> in the <i>Amazon CloudFront Developer Guide</i>.</p> <p>If you're using an Amazon Route 53 alias resource record set to route traffic to your CloudFront distribution, you need to create a second alias resource record set when both of the following are true:</p> <ul> <li> <p>You enable IPv6 for the distribution</p> </li> <li> <p>You're using alternate domain names in the URLs for your objects</p> </li> </ul> <p>For more information, see <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-cloudfront-distribution.html">Routing Traffic to an Amazon CloudFront Web Distribution by Using Your Domain Name</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> <p>If you created a CNAME resource record set, either with Amazon Route 53 or with another DNS service, you don't need to make any changes. A CNAME record will route traffic to your distribution regardless of the IP address format of the viewer request.</p>
+    #[serde(rename = "IsIPV6Enabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_ipv6_enabled: Option<bool>,
     /// <p>A complex type that controls whether access logs are written for the distribution.</p> <p>For more information about logging, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html">Access Logs</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "Logging")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub logging: Option<LoggingConfig>,
     /// <p> A complex type that contains information about origin groups for this distribution.</p>
+    #[serde(rename = "OriginGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub origin_groups: Option<OriginGroups>,
     /// <p>A complex type that contains information about origins for this distribution. </p>
+    #[serde(rename = "Origins")]
     pub origins: Origins,
     /// <p>The price class that corresponds with the maximum price that you want to pay for CloudFront service. If you specify <code>PriceClass_All</code>, CloudFront responds to requests for your objects from all CloudFront edge locations.</p> <p>If you specify a price class other than <code>PriceClass_All</code>, CloudFront serves your objects from the CloudFront edge location that has the lowest latency among the edge locations in your price class. Viewers who are in or near regions that are excluded from your specified price class may encounter slower performance.</p> <p>For more information about price classes, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PriceClass.html">Choosing the Price Class for a CloudFront Distribution</a> in the <i>Amazon CloudFront Developer Guide</i>. For information about CloudFront pricing, including how price classes (such as Price Class 100) map to CloudFront regions, see <a href="http://aws.amazon.com/cloudfront/pricing/">Amazon CloudFront Pricing</a>. For price class information, scroll down to see the table at the bottom of the page.</p>
+    #[serde(rename = "PriceClass")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub price_class: Option<String>,
     /// <p>A complex type that identifies ways in which you want to restrict distribution of your content.</p>
+    #[serde(rename = "Restrictions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub restrictions: Option<Restrictions>,
     /// <p>A complex type that specifies whether you want viewers to use HTTP or HTTPS to request your objects, whether you're using an alternate domain name with HTTPS, and if so, if you're using AWS Certificate Manager (ACM) or a third-party certificate authority.</p>
+    #[serde(rename = "ViewerCertificate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub viewer_certificate: Option<ViewerCertificate>,
     /// <p>A unique identifier that specifies the AWS WAF web ACL, if any, to associate with this distribution. To specify a web ACL created using the latest version of AWS WAF, use the ACL ARN, for example <code>arn:aws:wafv2:us-east-1:123456789012:global/webacl/ExampleWebACL/473e64fd-f30b-4765-81a0-62ad96dd167a</code>. To specify a web ACL created using AWS WAF Classic, use the ACL ID, for example <code>473e64fd-f30b-4765-81a0-62ad96dd167a</code>.</p> <p>AWS WAF is a web application firewall that lets you monitor the HTTP and HTTPS requests that are forwarded to CloudFront, and lets you control access to your content. Based on conditions that you specify, such as the IP addresses that requests originate from or the values of query strings, CloudFront responds to requests either with the requested content or with an HTTP 403 status code (Forbidden). You can also configure CloudFront to return a custom error page when a request is blocked. For more information about AWS WAF, see the <a href="https://docs.aws.amazon.com/waf/latest/developerguide/what-is-aws-waf.html">AWS WAF Developer Guide</a>. </p>
+    #[serde(rename = "WebACLId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub web_acl_id: Option<String>,
 }
 
@@ -2678,20 +2866,28 @@ impl DistributionConfigWithTagsSerializer {
 }
 
 /// <p>A distribution list.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DistributionList {
     /// <p>A flag that indicates whether more distributions remain to be listed. If your results were truncated, you can make a follow-up pagination request using the <code>Marker</code> request parameter to retrieve more distributions in the list.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>A complex type that contains one <code>DistributionSummary</code> element for each distribution that was created by the current AWS account.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<DistributionSummary>>,
     /// <p>The value you provided for the <code>Marker</code> request parameter.</p>
+    #[serde(rename = "Marker")]
     pub marker: String,
     /// <p>The value you provided for the <code>MaxItems</code> request parameter.</p>
+    #[serde(rename = "MaxItems")]
     pub max_items: i64,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value you can use for the <code>Marker</code> request parameter to continue listing your distributions where they left off. </p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
     /// <p>The number of distributions that were created by the current AWS account. </p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -2731,48 +2927,70 @@ impl DistributionListDeserializer {
     }
 }
 /// <p>A summary of the information about a CloudFront distribution.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DistributionSummary {
     /// <p>The ARN (Amazon Resource Name) for the distribution. For example: <code>arn:aws:cloudfront::123456789012:distribution/EDFDVBD632BHDS5</code>, where <code>123456789012</code> is your AWS account ID.</p>
+    #[serde(rename = "ARN")]
     pub arn: String,
     /// <p>AWS services in China customers must file for an Internet Content Provider (ICP) recordal if they want to serve content publicly on an alternate domain name, also known as a CNAME, that they've added to CloudFront. AliasICPRecordal provides the ICP recordal status for CNAMEs associated with distributions.</p> <p>For more information about ICP recordals, see <a href="https://docs.amazonaws.cn/en_us/aws/latest/userguide/accounts-and-credentials.html"> Signup, Accounts, and Credentials</a> in <i>Getting Started with AWS services in China</i>.</p>
+    #[serde(rename = "AliasICPRecordals")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alias_icp_recordals: Option<Vec<AliasICPRecordal>>,
     /// <p>A complex type that contains information about CNAMEs (alternate domain names), if any, for this distribution.</p>
+    #[serde(rename = "Aliases")]
     pub aliases: Aliases,
     /// <p>A complex type that contains zero or more <code>CacheBehavior</code> elements.</p>
+    #[serde(rename = "CacheBehaviors")]
     pub cache_behaviors: CacheBehaviors,
     /// <p>The comment originally specified when this distribution was created.</p>
+    #[serde(rename = "Comment")]
     pub comment: String,
     /// <p>A complex type that contains zero or more <code>CustomErrorResponses</code> elements.</p>
+    #[serde(rename = "CustomErrorResponses")]
     pub custom_error_responses: CustomErrorResponses,
     /// <p>A complex type that describes the default cache behavior if you don't specify a <code>CacheBehavior</code> element or if files don't match any of the values of <code>PathPattern</code> in <code>CacheBehavior</code> elements. You must create exactly one default cache behavior.</p>
+    #[serde(rename = "DefaultCacheBehavior")]
     pub default_cache_behavior: DefaultCacheBehavior,
     /// <p>The domain name that corresponds to the distribution, for example, <code>d111111abcdef8.cloudfront.net</code>.</p>
+    #[serde(rename = "DomainName")]
     pub domain_name: String,
     /// <p>Whether the distribution is enabled to accept user requests for content.</p>
+    #[serde(rename = "Enabled")]
     pub enabled: bool,
     /// <p> Specify the maximum HTTP version that you want viewers to use to communicate with CloudFront. The default value for new web distributions is <code>http2</code>. Viewers that don't support <code>HTTP/2</code> will automatically use an earlier version.</p>
+    #[serde(rename = "HttpVersion")]
     pub http_version: String,
     /// <p>The identifier for the distribution. For example: <code>EDFDVBD632BHDS5</code>.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>Whether CloudFront responds to IPv6 DNS requests with an IPv6 address for your distribution.</p>
+    #[serde(rename = "IsIPV6Enabled")]
     pub is_ipv6_enabled: bool,
     /// <p>The date and time the distribution was last modified.</p>
+    #[serde(rename = "LastModifiedTime")]
     pub last_modified_time: String,
     /// <p> A complex type that contains information about origin groups for this distribution.</p>
+    #[serde(rename = "OriginGroups")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub origin_groups: Option<OriginGroups>,
     /// <p>A complex type that contains information about origins for this distribution.</p>
+    #[serde(rename = "Origins")]
     pub origins: Origins,
     /// <p>A complex type that contains information about price class for this streaming distribution. </p>
+    #[serde(rename = "PriceClass")]
     pub price_class: String,
     /// <p>A complex type that identifies ways in which you want to restrict distribution of your content.</p>
+    #[serde(rename = "Restrictions")]
     pub restrictions: Restrictions,
     /// <p>The current status of the distribution. When the status is <code>Deployed</code>, the distribution's information is propagated to all CloudFront edge locations.</p>
+    #[serde(rename = "Status")]
     pub status: String,
     /// <p>A complex type that specifies whether you want viewers to use HTTP or HTTPS to request your objects, whether you're using an alternate domain name with HTTPS, and if so, if you're using AWS Certificate Manager (ACM) or a third-party certificate authority.</p>
+    #[serde(rename = "ViewerCertificate")]
     pub viewer_certificate: ViewerCertificate,
     /// <p>The Web ACL Id (if any) associated with the distribution.</p>
+    #[serde(rename = "WebACLId")]
     pub web_acl_id: String,
 }
 
@@ -2887,13 +3105,15 @@ impl DistributionSummaryListDeserializer {
     }
 }
 /// <p>Complex data type for field-level encryption profiles that includes all of the encryption entities. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EncryptionEntities {
     /// <p>An array of field patterns in a field-level encryption content type-profile mapping. </p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<EncryptionEntity>>,
     /// <p>Number of field pattern items in a field-level encryption content type-profile mapping. </p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -2947,15 +3167,17 @@ impl EncryptionEntitiesSerializer {
 }
 
 /// <p>Complex data type for field-level encryption profiles that includes the encryption key and field pattern specifications. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct EncryptionEntity {
     /// <p>Field patterns in a field-level encryption content type profile specify the fields that you want to be encrypted. You can provide the full field name, or any beginning characters followed by a wildcard (*). You can't overlap field patterns. For example, you can't have both ABC* and AB*. Note that field patterns are case-sensitive. </p>
+    #[serde(rename = "FieldPatterns")]
     pub field_patterns: FieldPatterns,
     /// <p>The provider associated with the public key being used for encryption. This value must also be provided with the private key for applications to be able to decrypt data.</p>
+    #[serde(rename = "ProviderId")]
     pub provider_id: String,
     /// <p>The public key associated with a set of field-level encryption patterns, to be used when encrypting the fields that match the patterns. </p>
+    #[serde(rename = "PublicKeyId")]
     pub public_key_id: String,
 }
 
@@ -3088,14 +3310,17 @@ impl EventTypeSerializer {
 }
 
 /// <p>A complex data type that includes the profile configurations and other options specified for field-level encryption. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FieldLevelEncryption {
     /// <p>A complex data type that includes the profile configurations specified for field-level encryption. </p>
+    #[serde(rename = "FieldLevelEncryptionConfig")]
     pub field_level_encryption_config: FieldLevelEncryptionConfig,
     /// <p>The configuration ID for a field-level encryption configuration which includes a set of profiles that specify certain selected data fields to be encrypted by specific public keys.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The last time the field-level encryption configuration was changed. </p>
+    #[serde(rename = "LastModifiedTime")]
     pub last_modified_time: String,
 }
 
@@ -3129,17 +3354,23 @@ impl FieldLevelEncryptionDeserializer {
     }
 }
 /// <p>A complex data type that includes the profile configurations specified for field-level encryption. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FieldLevelEncryptionConfig {
     /// <p>A unique number that ensures the request can't be replayed.</p>
+    #[serde(rename = "CallerReference")]
     pub caller_reference: String,
     /// <p>An optional comment about the configuration.</p>
+    #[serde(rename = "Comment")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub comment: Option<String>,
     /// <p>A complex data type that specifies when to forward content if a content type isn't recognized and profiles to use as by default in a request if a query argument doesn't specify a profile to use.</p>
+    #[serde(rename = "ContentTypeProfileConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub content_type_profile_config: Option<ContentTypeProfileConfig>,
     /// <p>A complex data type that specifies when to forward content if a profile isn't found and the profile that can be provided as a query argument in a request.</p>
+    #[serde(rename = "QueryArgProfileConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub query_arg_profile_config: Option<QueryArgProfileConfig>,
 }
 
@@ -3229,16 +3460,22 @@ impl FieldLevelEncryptionConfigSerializer {
 }
 
 /// <p>List of field-level encrpytion configurations.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FieldLevelEncryptionList {
     /// <p>An array of field-level encryption items.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<FieldLevelEncryptionSummary>>,
     /// <p>The maximum number of elements you want in the response body. </p>
+    #[serde(rename = "MaxItems")]
     pub max_items: i64,
     /// <p>If there are more elements to be listed, this element is present and contains the value that you can use for the <code>Marker</code> request parameter to continue listing your configurations where you left off.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
     /// <p>The number of field-level encryption items.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -3279,14 +3516,17 @@ impl FieldLevelEncryptionListDeserializer {
     }
 }
 /// <p>A complex data type for field-level encryption profiles.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FieldLevelEncryptionProfile {
     /// <p>A complex data type that includes the profile name and the encryption entities for the field-level encryption profile.</p>
+    #[serde(rename = "FieldLevelEncryptionProfileConfig")]
     pub field_level_encryption_profile_config: FieldLevelEncryptionProfileConfig,
     /// <p>The ID for a field-level encryption profile configuration which includes a set of profiles that specify certain selected data fields to be encrypted by specific public keys.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The last time the field-level encryption profile was updated.</p>
+    #[serde(rename = "LastModifiedTime")]
     pub last_modified_time: String,
 }
 
@@ -3324,17 +3564,21 @@ impl FieldLevelEncryptionProfileDeserializer {
     }
 }
 /// <p>A complex data type of profiles for the field-level encryption.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FieldLevelEncryptionProfileConfig {
     /// <p>A unique number that ensures that the request can't be replayed.</p>
+    #[serde(rename = "CallerReference")]
     pub caller_reference: String,
     /// <p>An optional comment for the field-level encryption profile.</p>
+    #[serde(rename = "Comment")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub comment: Option<String>,
     /// <p>A complex data type of encryption entities for the field-level encryption profile that include the public key ID, provider, and field patterns for specifying which fields to encrypt with this key.</p>
+    #[serde(rename = "EncryptionEntities")]
     pub encryption_entities: EncryptionEntities,
     /// <p>Profile name for the field-level encryption profile.</p>
+    #[serde(rename = "Name")]
     pub name: String,
 }
 
@@ -3416,16 +3660,22 @@ impl FieldLevelEncryptionProfileConfigSerializer {
 }
 
 /// <p>List of field-level encryption profiles.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FieldLevelEncryptionProfileList {
     /// <p>The field-level encryption profile items.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<FieldLevelEncryptionProfileSummary>>,
     /// <p>The maximum number of field-level encryption profiles you want in the response body. </p>
+    #[serde(rename = "MaxItems")]
     pub max_items: i64,
     /// <p>If there are more elements to be listed, this element is present and contains the value that you can use for the <code>Marker</code> request parameter to continue listing your profiles where you left off.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
     /// <p>The number of field-level encryption profiles.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -3466,18 +3716,24 @@ impl FieldLevelEncryptionProfileListDeserializer {
     }
 }
 /// <p>The field-level encryption profile summary.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FieldLevelEncryptionProfileSummary {
     /// <p>An optional comment for the field-level encryption profile summary.</p>
+    #[serde(rename = "Comment")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub comment: Option<String>,
     /// <p>A complex data type of encryption entities for the field-level encryption profile that include the public key ID, provider, and field patterns for specifying which fields to encrypt with this key.</p>
+    #[serde(rename = "EncryptionEntities")]
     pub encryption_entities: EncryptionEntities,
     /// <p>ID for the field-level encryption profile summary.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The time when the the field-level encryption profile summary was last updated.</p>
+    #[serde(rename = "LastModifiedTime")]
     pub last_modified_time: String,
     /// <p>Name for the field-level encryption profile summary.</p>
+    #[serde(rename = "Name")]
     pub name: String,
 }
 
@@ -3540,18 +3796,26 @@ impl FieldLevelEncryptionProfileSummaryListDeserializer {
     }
 }
 /// <p>A summary of a field-level encryption item.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FieldLevelEncryptionSummary {
     /// <p>An optional comment about the field-level encryption item.</p>
+    #[serde(rename = "Comment")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub comment: Option<String>,
     /// <p> A summary of a content type-profile mapping. </p>
+    #[serde(rename = "ContentTypeProfileConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub content_type_profile_config: Option<ContentTypeProfileConfig>,
     /// <p>The unique ID of a field-level encryption item.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The last time that the summary of field-level encryption items was modified.</p>
+    #[serde(rename = "LastModifiedTime")]
     pub last_modified_time: String,
     /// <p> A summary of a query argument-profile mapping. </p>
+    #[serde(rename = "QueryArgProfileConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub query_arg_profile_config: Option<QueryArgProfileConfig>,
 }
 
@@ -3657,13 +3921,15 @@ impl FieldPatternListSerializer {
 }
 
 /// <p>A complex data type that includes the field patterns to match for field-level encryption.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct FieldPatterns {
     /// <p>An array of the field-level encryption field patterns.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<String>>,
     /// <p>The number of field-level encryption field patterns.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -3749,17 +4015,22 @@ impl FormatSerializer {
 }
 
 /// <p>A complex type that specifies how CloudFront handles query strings, cookies, and HTTP headers.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ForwardedValues {
     /// <p>A complex type that specifies whether you want CloudFront to forward cookies to the origin and, if so, which ones. For more information about forwarding cookies to the origin, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Cookies.html">How CloudFront Forwards, Caches, and Logs Cookies</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "Cookies")]
     pub cookies: CookiePreference,
     /// <p>A complex type that specifies the <code>Headers</code>, if any, that you want CloudFront to forward to the origin for this cache behavior (whitelisted headers). For the headers that you specify, CloudFront also caches separate versions of a specified object that is based on the header values in viewer requests.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/header-caching.html"> Caching Content Based on Request Headers</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "Headers")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub headers: Option<Headers>,
     /// <p>Indicates whether you want CloudFront to forward query strings to the origin that is associated with this cache behavior and cache based on the query string parameters. CloudFront behavior depends on the value of <code>QueryString</code> and on the values that you specify for <code>QueryStringCacheKeys</code>, if any:</p> <p>If you specify true for <code>QueryString</code> and you don't specify any values for <code>QueryStringCacheKeys</code>, CloudFront forwards all query string parameters to the origin and caches based on all query string parameters. Depending on how many query string parameters and values you have, this can adversely affect performance because CloudFront must forward more requests to the origin.</p> <p>If you specify true for <code>QueryString</code> and you specify one or more values for <code>QueryStringCacheKeys</code>, CloudFront forwards all query string parameters to the origin, but it only caches based on the query string parameters that you specify.</p> <p>If you specify false for <code>QueryString</code>, CloudFront doesn't forward any query string parameters to the origin, and doesn't cache based on query string parameters.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/QueryStringParameters.html">Configuring CloudFront to Cache Based on Query String Parameters</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "QueryString")]
     pub query_string: bool,
     /// <p>A complex type that contains information about the query string parameters that you want CloudFront to use for caching for this cache behavior.</p>
+    #[serde(rename = "QueryStringCacheKeys")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub query_string_cache_keys: Option<QueryStringCacheKeys>,
 }
 
@@ -3825,15 +4096,18 @@ impl ForwardedValuesSerializer {
 }
 
 /// <p>A complex type that controls the countries in which your content is distributed. CloudFront determines the location of your users using <code>MaxMind</code> GeoIP databases. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GeoRestriction {
     /// <p> A complex type that contains a <code>Location</code> element for each country in which you want CloudFront either to distribute your content (<code>whitelist</code>) or not distribute your content (<code>blacklist</code>).</p> <p>The <code>Location</code> element is a two-letter, uppercase country code for a country that you want to include in your <code>blacklist</code> or <code>whitelist</code>. Include one <code>Location</code> element for each country.</p> <p>CloudFront and <code>MaxMind</code> both use <code>ISO 3166</code> country codes. For the current list of countries and the corresponding codes, see <code>ISO 3166-1-alpha-2</code> code on the <i>International Organization for Standardization</i> website. You can also refer to the country list on the CloudFront console, which includes both country names and codes.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<String>>,
     /// <p>When geo restriction is <code>enabled</code>, this is the number of countries in your <code>whitelist</code> or <code>blacklist</code>. Otherwise, when it is not enabled, <code>Quantity</code> is <code>0</code>, and you can omit <code>Items</code>.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
     /// <p><p>The method that you want to use to restrict distribution of your content by country:</p> <ul> <li> <p> <code>none</code>: No geo restriction is enabled, meaning access to content is not restricted by client geo location.</p> </li> <li> <p> <code>blacklist</code>: The <code>Location</code> elements specify the countries in which you don&#39;t want CloudFront to distribute your content.</p> </li> <li> <p> <code>whitelist</code>: The <code>Location</code> elements specify the countries in which you want CloudFront to distribute your content.</p> </li> </ul></p>
+    #[serde(rename = "RestrictionType")]
     pub restriction_type: String,
 }
 
@@ -3937,12 +4211,16 @@ pub struct GetCloudFrontOriginAccessIdentityConfigRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetCloudFrontOriginAccessIdentityConfigResult {
     /// <p>The origin access identity's configuration information. </p>
+    #[serde(rename = "CloudFrontOriginAccessIdentityConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cloud_front_origin_access_identity_config: Option<CloudFrontOriginAccessIdentityConfig>,
     /// <p>The current version of the configuration. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
 }
 
@@ -3973,12 +4251,16 @@ pub struct GetCloudFrontOriginAccessIdentityRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetCloudFrontOriginAccessIdentityResult {
     /// <p>The origin access identity's information.</p>
+    #[serde(rename = "CloudFrontOriginAccessIdentity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cloud_front_origin_access_identity: Option<CloudFrontOriginAccessIdentity>,
     /// <p>The current version of the origin access identity's information. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
 }
 
@@ -4009,12 +4291,16 @@ pub struct GetDistributionConfigRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetDistributionConfigResult {
     /// <p>The distribution's configuration information.</p>
+    #[serde(rename = "DistributionConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub distribution_config: Option<DistributionConfig>,
     /// <p>The current version of the configuration. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
 }
 
@@ -4043,12 +4329,16 @@ pub struct GetDistributionRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetDistributionResult {
     /// <p>The distribution's information.</p>
+    #[serde(rename = "Distribution")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub distribution: Option<Distribution>,
     /// <p>The current version of the distribution's information. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
 }
 
@@ -4075,12 +4365,16 @@ pub struct GetFieldLevelEncryptionConfigRequest {
     pub id: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetFieldLevelEncryptionConfigResult {
     /// <p>The current version of the field level encryption configuration. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Return the field-level encryption configuration information.</p>
+    #[serde(rename = "FieldLevelEncryptionConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_level_encryption_config: Option<FieldLevelEncryptionConfig>,
 }
 
@@ -4109,12 +4403,16 @@ pub struct GetFieldLevelEncryptionProfileConfigRequest {
     pub id: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetFieldLevelEncryptionProfileConfigResult {
     /// <p>The current version of the field-level encryption profile configuration result. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Return the field-level encryption profile configuration information.</p>
+    #[serde(rename = "FieldLevelEncryptionProfileConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_level_encryption_profile_config: Option<FieldLevelEncryptionProfileConfig>,
 }
 
@@ -4143,12 +4441,16 @@ pub struct GetFieldLevelEncryptionProfileRequest {
     pub id: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetFieldLevelEncryptionProfileResult {
     /// <p>The current version of the field level encryption profile. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Return the field-level encryption profile information.</p>
+    #[serde(rename = "FieldLevelEncryptionProfile")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_level_encryption_profile: Option<FieldLevelEncryptionProfile>,
 }
 
@@ -4177,12 +4479,16 @@ pub struct GetFieldLevelEncryptionRequest {
     pub id: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetFieldLevelEncryptionResult {
     /// <p>The current version of the field level encryption configuration. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Return the field-level encryption configuration information.</p>
+    #[serde(rename = "FieldLevelEncryption")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_level_encryption: Option<FieldLevelEncryption>,
 }
 
@@ -4213,10 +4519,12 @@ pub struct GetInvalidationRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetInvalidationResult {
     /// <p>The invalidation's information. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/InvalidationDatatype.html">Invalidation Complex Type</a>. </p>
+    #[serde(rename = "Invalidation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub invalidation: Option<Invalidation>,
 }
 
@@ -4243,12 +4551,16 @@ pub struct GetPublicKeyConfigRequest {
     pub id: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetPublicKeyConfigResult {
     /// <p>The current version of the public key configuration. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Return the result for the public key configuration.</p>
+    #[serde(rename = "PublicKeyConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub public_key_config: Option<PublicKeyConfig>,
 }
 
@@ -4275,12 +4587,16 @@ pub struct GetPublicKeyRequest {
     pub id: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetPublicKeyResult {
     /// <p>The current version of the public key. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Return the public key.</p>
+    #[serde(rename = "PublicKey")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub public_key: Option<PublicKey>,
 }
 
@@ -4306,12 +4622,16 @@ pub struct GetStreamingDistributionConfigRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetStreamingDistributionConfigResult {
     /// <p>The current version of the configuration. For example: <code>E2QWRUHAPOMQZL</code>. </p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>The streaming distribution's configuration information.</p>
+    #[serde(rename = "StreamingDistributionConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub streaming_distribution_config: Option<StreamingDistributionConfig>,
 }
 
@@ -4342,12 +4662,16 @@ pub struct GetStreamingDistributionRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetStreamingDistributionResult {
     /// <p>The current version of the streaming distribution's information. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>The streaming distribution's information.</p>
+    #[serde(rename = "StreamingDistribution")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub streaming_distribution: Option<StreamingDistribution>,
 }
 
@@ -4406,13 +4730,15 @@ impl HeaderListSerializer {
 }
 
 /// <p>A complex type that specifies the request headers, if any, that you want CloudFront to base caching on for this cache behavior. </p> <p>For the headers that you specify, CloudFront caches separate versions of a specified object based on the header values in viewer requests. For example, suppose viewer requests for <code>logo.jpg</code> contain a custom <code>product</code> header that has a value of either <code>acme</code> or <code>apex</code>, and you configure CloudFront to cache your content based on values in the <code>product</code> header. CloudFront forwards the <code>product</code> header to the origin and caches the response from the origin once for each header value. For more information about caching based on header values, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/header-caching.html">How CloudFront Forwards and Caches Headers</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Headers {
     /// <p>A list that contains one <code>Name</code> element for each header that you want CloudFront to use for caching in this cache behavior. If <code>Quantity</code> is <code>0</code>, omit <code>Items</code>.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<String>>,
     /// <p><p>The number of different headers that you want CloudFront to base caching on for this cache behavior. You can configure each cache behavior in a web distribution to do one of the following:</p> <ul> <li> <p> <b>Forward all headers to your origin</b>: Specify <code>1</code> for <code>Quantity</code> and <code>*</code> for <code>Name</code>.</p> <important> <p>CloudFront doesn&#39;t cache the objects that are associated with this cache behavior. Instead, CloudFront sends every request to the origin. </p> </important> </li> <li> <p> <b>Forward a whitelist of headers you specify</b>: Specify the number of headers that you want CloudFront to base caching on. Then specify the header names in <code>Name</code> elements. CloudFront caches your objects based on the values in the specified headers.</p> </li> <li> <p> <b>Forward only the default headers</b>: Specify <code>0</code> for <code>Quantity</code> and omit <code>Items</code>. In this configuration, CloudFront doesn&#39;t cache based on the values in the request headers.</p> </li> </ul> <p>Regardless of which option you choose, CloudFront forwards headers to your origin based on whether the origin is an S3 bucket or a custom origin. See the following documentation:</p> <ul> <li> <p> <b>S3 bucket</b>: See <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/RequestAndResponseBehaviorS3Origin.html#request-s3-removed-headers">HTTP Request Headers That CloudFront Removes or Updates</a> </p> </li> <li> <p> <b>Custom origin</b>: See <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/RequestAndResponseBehaviorCustomOrigin.html#request-custom-headers-behavior">HTTP Request Headers and CloudFront Behavior</a> </p> </li> </ul></p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -4541,16 +4867,20 @@ impl IntegerSerializer {
 }
 
 /// <p>An invalidation. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Invalidation {
     /// <p>The date and time the invalidation request was first made. </p>
+    #[serde(rename = "CreateTime")]
     pub create_time: String,
     /// <p>The identifier for the invalidation request. For example: <code>IDFDVBD632BHDS5</code>.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The current invalidation information for the batch request. </p>
+    #[serde(rename = "InvalidationBatch")]
     pub invalidation_batch: InvalidationBatch,
     /// <p>The status of the invalidation request. When the invalidation batch is finished, the status is <code>Completed</code>.</p>
+    #[serde(rename = "Status")]
     pub status: String,
 }
 
@@ -4583,13 +4913,14 @@ impl InvalidationDeserializer {
     }
 }
 /// <p>An invalidation batch.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InvalidationBatch {
     /// <p>A value that you specify to uniquely identify an invalidation request. CloudFront uses the value to prevent you from accidentally resubmitting an identical request. Whenever you create a new invalidation request, you must specify a new value for <code>CallerReference</code> and change other values in the request as applicable. One way to ensure that the value of <code>CallerReference</code> is unique is to use a <code>timestamp</code>, for example, <code>20120301090000</code>.</p> <p>If you make a second invalidation request with the same value for <code>CallerReference</code>, and if the rest of the request is the same, CloudFront doesn't create a new invalidation request. Instead, CloudFront returns information about the invalidation request that you previously created with the same <code>CallerReference</code>.</p> <p>If <code>CallerReference</code> is a value you already sent in a previous invalidation batch request but the content of any <code>Path</code> is different from the original request, CloudFront returns an <code>InvalidationBatchAlreadyExists</code> error.</p>
+    #[serde(rename = "CallerReference")]
     pub caller_reference: String,
     /// <p>A complex type that contains information about the objects that you want to invalidate. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html#invalidation-specifying-objects">Specifying the Objects to Invalidate</a> in the <i>Amazon CloudFront Developer Guide</i>. </p>
+    #[serde(rename = "Paths")]
     pub paths: Paths,
 }
 
@@ -4640,20 +4971,28 @@ impl InvalidationBatchSerializer {
 }
 
 /// <p>The <code>InvalidationList</code> complex type describes the list of invalidation objects. For more information about invalidation, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html">Invalidating Objects (Web Distributions Only)</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InvalidationList {
     /// <p>A flag that indicates whether more invalidation batch requests remain to be listed. If your results were truncated, you can make a follow-up pagination request using the <code>Marker</code> request parameter to retrieve more invalidation batches in the list.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>A complex type that contains one <code>InvalidationSummary</code> element for each invalidation batch created by the current AWS account.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<InvalidationSummary>>,
     /// <p>The value that you provided for the <code>Marker</code> request parameter.</p>
+    #[serde(rename = "Marker")]
     pub marker: String,
     /// <p>The value that you provided for the <code>MaxItems</code> request parameter.</p>
+    #[serde(rename = "MaxItems")]
     pub max_items: i64,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value that you can use for the <code>Marker</code> request parameter to continue listing your invalidation batches where they left off.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
     /// <p>The number of invalidation batches that were created by the current AWS account. </p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -4693,14 +5032,17 @@ impl InvalidationListDeserializer {
     }
 }
 /// <p>A summary of an invalidation request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct InvalidationSummary {
     /// <p>The time that an invalidation request was created.</p>
+    #[serde(rename = "CreateTime")]
     pub create_time: String,
     /// <p>The unique ID for an invalidation request.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The status of an invalidation request.</p>
+    #[serde(rename = "Status")]
     pub status: String,
 }
 
@@ -4798,12 +5140,15 @@ impl KeyPairIdListDeserializer {
     }
 }
 /// <p>A complex type that lists the active CloudFront key pairs, if any, that are associated with <code>AwsAccountNumber</code>. </p> <p>For more information, see <a href="https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ActiveTrustedSigners.html">ActiveTrustedSigners</a>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct KeyPairIds {
     /// <p>A complex type that lists the active CloudFront key pairs, if any, that are associated with <code>AwsAccountNumber</code>.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ActiveTrustedSigners.html">ActiveTrustedSigners</a>.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<String>>,
     /// <p>The number of active CloudFront key pairs for <code>AwsAccountNumber</code>.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ActiveTrustedSigners.html">ActiveTrustedSigners</a>.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -4863,15 +5208,18 @@ impl LambdaFunctionARNSerializer {
 }
 
 /// <p>A complex type that contains a Lambda function association.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LambdaFunctionAssociation {
     /// <p><p>Specifies the event type that triggers a Lambda function invocation. You can specify the following values:</p> <ul> <li> <p> <code>viewer-request</code>: The function executes when CloudFront receives a request from a viewer and before it checks to see whether the requested object is in the edge cache. </p> </li> <li> <p> <code>origin-request</code>: The function executes only when CloudFront forwards a request to your origin. When the requested object is in the edge cache, the function doesn&#39;t execute.</p> </li> <li> <p> <code>origin-response</code>: The function executes after CloudFront receives a response from the origin and before it caches the object in the response. When the requested object is in the edge cache, the function doesn&#39;t execute.</p> </li> <li> <p> <code>viewer-response</code>: The function executes before CloudFront returns the requested object to the viewer. The function executes regardless of whether the object was already in the edge cache.</p> <p>If the origin returns an HTTP status code other than HTTP 200 (OK), the function doesn&#39;t execute.</p> </li> </ul></p>
+    #[serde(rename = "EventType")]
     pub event_type: String,
     /// <p>A flag that allows a Lambda function to have read access to the body content. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-include-body-access.html">Accessing the Request Body by Choosing the Include Body Option</a> in the Amazon CloudFront Developer Guide.</p>
+    #[serde(rename = "IncludeBody")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub include_body: Option<bool>,
     /// <p>The ARN of the Lambda function. You must specify the ARN of a function version; you can't specify a Lambda alias or $LATEST.</p>
+    #[serde(rename = "LambdaFunctionARN")]
     pub lambda_function_arn: String,
 }
 
@@ -4988,13 +5336,15 @@ impl LambdaFunctionAssociationListSerializer {
 }
 
 /// <p>A complex type that specifies a list of Lambda functions associations for a cache behavior.</p> <p>If you want to invoke one or more Lambda functions triggered by requests that match the <code>PathPattern</code> of the cache behavior, specify the applicable values for <code>Quantity</code> and <code>Items</code>. Note that there can be up to 4 <code>LambdaFunctionAssociation</code> items in this list (one for each possible value of <code>EventType</code>) and each <code>EventType</code> can be associated with the Lambda function only once.</p> <p>If you don't want to invoke any Lambda functions for the requests that match <code>PathPattern</code>, specify <code>0</code> for <code>Quantity</code> and omit <code>Items</code>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LambdaFunctionAssociations {
     /// <p> <b>Optional</b>: A complex type that contains <code>LambdaFunctionAssociation</code> items for this cache behavior. If <code>Quantity</code> is <code>0</code>, you can omit <code>Items</code>.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<LambdaFunctionAssociation>>,
     /// <p>The number of Lambda function associations for this cache behavior.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -5062,10 +5412,12 @@ pub struct ListCloudFrontOriginAccessIdentitiesRequest {
 }
 
 /// <p>The returned result of the corresponding request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListCloudFrontOriginAccessIdentitiesResult {
     /// <p>The <code>CloudFrontOriginAccessIdentityList</code> type. </p>
+    #[serde(rename = "CloudFrontOriginAccessIdentityList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cloud_front_origin_access_identity_list: Option<CloudFrontOriginAccessIdentityList>,
 }
 
@@ -5100,10 +5452,12 @@ pub struct ListDistributionsByWebACLIdRequest {
 }
 
 /// <p>The response to a request to list the distributions that are associated with a specified AWS WAF web ACL. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListDistributionsByWebACLIdResult {
     /// <p>The <code>DistributionList</code> type. </p>
+    #[serde(rename = "DistributionList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub distribution_list: Option<DistributionList>,
 }
 
@@ -5134,10 +5488,12 @@ pub struct ListDistributionsRequest {
 }
 
 /// <p>The returned result of the corresponding request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListDistributionsResult {
     /// <p>The <code>DistributionList</code> type. </p>
+    #[serde(rename = "DistributionList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub distribution_list: Option<DistributionList>,
 }
 
@@ -5166,10 +5522,12 @@ pub struct ListFieldLevelEncryptionConfigsRequest {
     pub max_items: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListFieldLevelEncryptionConfigsResult {
     /// <p>Returns a list of all field-level encryption configurations that have been created in CloudFront for this account.</p>
+    #[serde(rename = "FieldLevelEncryptionList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_level_encryption_list: Option<FieldLevelEncryptionList>,
 }
 
@@ -5198,10 +5556,12 @@ pub struct ListFieldLevelEncryptionProfilesRequest {
     pub max_items: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListFieldLevelEncryptionProfilesResult {
     /// <p>Returns a list of the field-level encryption profiles that have been created in CloudFront for this account.</p>
+    #[serde(rename = "FieldLevelEncryptionProfileList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_level_encryption_profile_list: Option<FieldLevelEncryptionProfileList>,
 }
 
@@ -5236,10 +5596,12 @@ pub struct ListInvalidationsRequest {
 }
 
 /// <p>The returned result of the corresponding request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListInvalidationsResult {
     /// <p>Information about invalidation batches. </p>
+    #[serde(rename = "InvalidationList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub invalidation_list: Option<InvalidationList>,
 }
 
@@ -5268,10 +5630,12 @@ pub struct ListPublicKeysRequest {
     pub max_items: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListPublicKeysResult {
     /// <p>Returns a list of all public keys that have been added to CloudFront for this account.</p>
+    #[serde(rename = "PublicKeyList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub public_key_list: Option<PublicKeyList>,
 }
 
@@ -5302,10 +5666,12 @@ pub struct ListStreamingDistributionsRequest {
 }
 
 /// <p>The returned result of the corresponding request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListStreamingDistributionsResult {
     /// <p>The <code>StreamingDistributionList</code> type. </p>
+    #[serde(rename = "StreamingDistributionList")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub streaming_distribution_list: Option<StreamingDistributionList>,
 }
 
@@ -5334,10 +5700,11 @@ pub struct ListTagsForResourceRequest {
 }
 
 /// <p> The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTagsForResourceResult {
     /// <p> A complex type that contains zero or more <code>Tag</code> elements.</p>
+    #[serde(rename = "Tags")]
     pub tags: Tags,
 }
 
@@ -5393,17 +5760,20 @@ impl LocationListSerializer {
 }
 
 /// <p>A complex type that controls whether access logs are written for the distribution.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LoggingConfig {
     /// <p>The Amazon S3 bucket to store the access logs in, for example, <code>myawslogbucket.s3.amazonaws.com</code>.</p>
+    #[serde(rename = "Bucket")]
     pub bucket: String,
     /// <p>Specifies whether you want CloudFront to save access logs to an Amazon S3 bucket. If you don't want to enable logging when you create a distribution or if you want to disable logging for an existing distribution, specify <code>false</code> for <code>Enabled</code>, and specify empty <code>Bucket</code> and <code>Prefix</code> elements. If you specify <code>false</code> for <code>Enabled</code> but you specify values for <code>Bucket</code>, <code>prefix</code>, and <code>IncludeCookies</code>, the values are automatically deleted.</p>
+    #[serde(rename = "Enabled")]
     pub enabled: bool,
     /// <p>Specifies whether you want CloudFront to include cookies in access logs, specify <code>true</code> for <code>IncludeCookies</code>. If you choose to include cookies in logs, CloudFront logs all cookies regardless of how you configure the cache behaviors for this distribution. If you don't want to include cookies when you create a distribution or if you want to disable include cookies for an existing distribution, specify <code>false</code> for <code>IncludeCookies</code>.</p>
+    #[serde(rename = "IncludeCookies")]
     pub include_cookies: bool,
     /// <p>An optional string that you want CloudFront to prefix to the access log <code>filenames</code> for this distribution, for example, <code>myprefix/</code>. If you want to enable logging, but you don't want to specify a prefix, you still must include an empty <code>Prefix</code> element in the <code>Logging</code> element.</p>
+    #[serde(rename = "Prefix")]
     pub prefix: String,
 }
 
@@ -5611,21 +5981,30 @@ impl MinimumProtocolVersionSerializer {
 }
 
 /// <p>A complex type that describes the Amazon S3 bucket, HTTP server (for example, a web server), Amazon MediaStore, or other server from which CloudFront gets your files. This can also be an origin group, if you've created an origin group. You must specify at least one origin or origin group.</p> <p>For the current limit on the number of origins or origin groups that you can specify for a distribution, see <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html#limits_cloudfront">Amazon CloudFront Limits</a> in the <i>AWS General Reference</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Origin {
     /// <p>A complex type that contains names and values for the custom headers that you want.</p>
+    #[serde(rename = "CustomHeaders")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub custom_headers: Option<CustomHeaders>,
     /// <p>A complex type that contains information about a custom origin. If the origin is an Amazon S3 bucket, use the <code>S3OriginConfig</code> element instead.</p>
+    #[serde(rename = "CustomOriginConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub custom_origin_config: Option<CustomOriginConfig>,
     /// <p><p> <b>Amazon S3 origins</b>: The DNS name of the Amazon S3 bucket from which you want CloudFront to get objects for this origin, for example, <code>myawsbucket.s3.amazonaws.com</code>. If you set up your bucket to be configured as a website endpoint, enter the Amazon S3 static website hosting endpoint for the bucket.</p> <p>For more information about specifying this value for different types of origins, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesDomainName">Origin Domain Name</a> in the <i>Amazon CloudFront Developer Guide</i>.</p> <p>Constraints for Amazon S3 origins: </p> <ul> <li> <p>If you configured Amazon S3 Transfer Acceleration for your bucket, don&#39;t specify the <code>s3-accelerate</code> endpoint for <code>DomainName</code>.</p> </li> <li> <p>The bucket name must be between 3 and 63 characters long (inclusive).</p> </li> <li> <p>The bucket name must contain only lowercase characters, numbers, periods, underscores, and dashes.</p> </li> <li> <p>The bucket name must not contain adjacent periods.</p> </li> </ul> <p> <b>Custom Origins</b>: The DNS domain name for the HTTP server from which you want CloudFront to get objects for this origin, for example, <code>www.example.com</code>. </p> <p>Constraints for custom origins:</p> <ul> <li> <p> <code>DomainName</code> must be a valid DNS name that contains only a-z, A-Z, 0-9, dot (.), hyphen (-), or underscore (_) characters.</p> </li> <li> <p>The name cannot exceed 128 characters.</p> </li> </ul></p>
+    #[serde(rename = "DomainName")]
     pub domain_name: String,
     /// <p>A unique identifier for the origin or origin group. The value of <code>Id</code> must be unique within the distribution.</p> <p>When you specify the value of <code>TargetOriginId</code> for the default cache behavior or for another cache behavior, you indicate the origin to which you want the cache behavior to route requests by specifying the value of the <code>Id</code> element for that origin. When a request matches the path pattern for that cache behavior, CloudFront routes the request to the specified origin. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesCacheBehavior">Cache Behavior Settings</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>An optional element that causes CloudFront to request your content from a directory in your Amazon S3 bucket or your custom origin. When you include the <code>OriginPath</code> element, specify the directory name, beginning with a <code>/</code>. CloudFront appends the directory name to the value of <code>DomainName</code>, for example, <code>example.com/production</code>. Do not include a <code>/</code> at the end of the directory name.</p> <p>For example, suppose you've specified the following values for your distribution:</p> <ul> <li> <p> <code>DomainName</code>: An Amazon S3 bucket named <code>myawsbucket</code>.</p> </li> <li> <p> <code>OriginPath</code>: <code>/production</code> </p> </li> <li> <p> <code>CNAME</code>: <code>example.com</code> </p> </li> </ul> <p>When a user enters <code>example.com/index.html</code> in a browser, CloudFront sends a request to Amazon S3 for <code>myawsbucket/production/index.html</code>.</p> <p>When a user enters <code>example.com/acme/index.html</code> in a browser, CloudFront sends a request to Amazon S3 for <code>myawsbucket/production/acme/index.html</code>.</p>
+    #[serde(rename = "OriginPath")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub origin_path: Option<String>,
     /// <p>A complex type that contains information about the Amazon S3 origin. If the origin is a custom origin, use the <code>CustomOriginConfig</code> element instead.</p>
+    #[serde(rename = "S3OriginConfig")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub s3_origin_config: Option<S3OriginConfig>,
 }
 
@@ -5715,13 +6094,14 @@ impl OriginSerializer {
 }
 
 /// <p>A complex type that contains <code>HeaderName</code> and <code>HeaderValue</code> elements, if any, for this distribution. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OriginCustomHeader {
     /// <p>The name of a header that you want CloudFront to forward to your origin. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/forward-custom-headers.html">Forwarding Custom Headers to Your Origin (Web Distributions Only)</a> in the <i> Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "HeaderName")]
     pub header_name: String,
     /// <p>The value for the header that you specified in the <code>HeaderName</code> field.</p>
+    #[serde(rename = "HeaderValue")]
     pub header_value: String,
 }
 
@@ -5817,15 +6197,17 @@ impl OriginCustomHeadersListSerializer {
 }
 
 /// <p>An origin group includes two origins (a primary origin and a second origin to failover to) and a failover criteria that you specify. You create an origin group to support origin failover in CloudFront. When you create or update a distribution, you can specifiy the origin group instead of a single origin, and CloudFront will failover from the primary origin to the second origin under the failover conditions that you've chosen.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OriginGroup {
     /// <p>A complex type that contains information about the failover criteria for an origin group.</p>
+    #[serde(rename = "FailoverCriteria")]
     pub failover_criteria: OriginGroupFailoverCriteria,
     /// <p>The origin group's ID.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>A complex type that contains information about the origins in an origin group.</p>
+    #[serde(rename = "Members")]
     pub members: OriginGroupMembers,
 }
 
@@ -5886,11 +6268,11 @@ impl OriginGroupSerializer {
 }
 
 /// <p>A complex data type that includes information about the failover criteria for an origin group, including the status codes for which CloudFront will failover from the primary origin to the second origin.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OriginGroupFailoverCriteria {
     /// <p>The status codes that, when returned from the primary origin, will trigger CloudFront to failover to the second origin.</p>
+    #[serde(rename = "StatusCodes")]
     pub status_codes: StatusCodes,
 }
 
@@ -5974,11 +6356,11 @@ impl OriginGroupListSerializer {
 }
 
 /// <p>An origin in an origin group.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OriginGroupMember {
     /// <p>The ID for an origin in an origin group.</p>
+    #[serde(rename = "OriginId")]
     pub origin_id: String,
 }
 
@@ -6065,13 +6447,14 @@ impl OriginGroupMemberListSerializer {
 }
 
 /// <p>A complex data type for the origins included in an origin group.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OriginGroupMembers {
     /// <p>Items (origins) in an origin group.</p>
+    #[serde(rename = "Items")]
     pub items: Vec<OriginGroupMember>,
     /// <p>The number of origins in an origin group.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -6124,13 +6507,15 @@ impl OriginGroupMembersSerializer {
 }
 
 /// <p>A complex data type for the origin groups specified for a distribution.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OriginGroups {
     /// <p>The items (origin groups) in a distribution.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<OriginGroup>>,
     /// <p>The number of origin groups.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -6254,13 +6639,14 @@ impl OriginProtocolPolicySerializer {
 }
 
 /// <p>A complex type that contains information about the SSL/TLS protocols that CloudFront can use when establishing an HTTPS connection with your origin. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct OriginSslProtocols {
     /// <p>A list that contains allowed SSL/TLS protocols for this distribution.</p>
+    #[serde(rename = "Items")]
     pub items: Vec<String>,
     /// <p>The number of SSL/TLS protocols that you want to allow CloudFront to use when establishing an HTTPS connection with this origin. </p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -6311,13 +6697,14 @@ impl OriginSslProtocolsSerializer {
 }
 
 /// <p>A complex type that contains information about origins and origin groups for this distribution. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Origins {
     /// <p>A complex type that contains origins or origin groups for this distribution.</p>
+    #[serde(rename = "Items")]
     pub items: Vec<Origin>,
     /// <p>The number of origins or origin groups for this distribution.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -6406,13 +6793,15 @@ impl PathListSerializer {
 }
 
 /// <p>A complex type that contains information about the objects that you want to invalidate. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html#invalidation-specifying-objects">Specifying the Objects to Invalidate</a> in the <i>Amazon CloudFront Developer Guide</i>. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Paths {
     /// <p>A complex type that contains a list of the paths that you want to invalidate.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<String>>,
     /// <p>The number of invalidation paths specified for the objects that you want to invalidate.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -6495,14 +6884,17 @@ impl PriceClassSerializer {
 }
 
 /// <p>A complex data type of public keys you add to CloudFront to use with features like field-level encryption.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PublicKey {
     /// <p>A time you added a public key to CloudFront.</p>
+    #[serde(rename = "CreatedTime")]
     pub created_time: String,
     /// <p>A unique ID assigned to a public key you've added to CloudFront.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>A complex data type for a public key you add to CloudFront to use with features like field-level encryption.</p>
+    #[serde(rename = "PublicKeyConfig")]
     pub public_key_config: PublicKeyConfig,
 }
 
@@ -6532,17 +6924,21 @@ impl PublicKeyDeserializer {
     }
 }
 /// <p>Information about a public key you add to CloudFront to use with features like field-level encryption.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PublicKeyConfig {
     /// <p>A unique number that ensures that the request can't be replayed.</p>
+    #[serde(rename = "CallerReference")]
     pub caller_reference: String,
     /// <p>An optional comment about a public key.</p>
+    #[serde(rename = "Comment")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub comment: Option<String>,
     /// <p>The encoded public key that you want to add to CloudFront to use with features like field-level encryption.</p>
+    #[serde(rename = "EncodedKey")]
     pub encoded_key: String,
     /// <p>The name for a public key you add to CloudFront to use with features like field-level encryption.</p>
+    #[serde(rename = "Name")]
     pub name: String,
 }
 
@@ -6618,16 +7014,22 @@ impl PublicKeyConfigSerializer {
 }
 
 /// <p>A list of public keys you've added to CloudFront to use with features like field-level encryption.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PublicKeyList {
     /// <p>An array of information about a public key you add to CloudFront to use with features like field-level encryption.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<PublicKeySummary>>,
     /// <p>The maximum number of public keys you want in the response body. </p>
+    #[serde(rename = "MaxItems")]
     pub max_items: i64,
     /// <p>If there are more elements to be listed, this element is present and contains the value that you can use for the <code>Marker</code> request parameter to continue listing your public keys where you left off.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
     /// <p>The number of public keys you added to CloudFront to use with features like field-level encryption.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -6661,18 +7063,24 @@ impl PublicKeyListDeserializer {
     }
 }
 /// <p>A complex data type for public key information. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct PublicKeySummary {
     /// <p> Comment for public key information summary. </p>
+    #[serde(rename = "Comment")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub comment: Option<String>,
     /// <p> Creation time for public key information summary. </p>
+    #[serde(rename = "CreatedTime")]
     pub created_time: String,
     /// <p> Encoded key for public key information summary. </p>
+    #[serde(rename = "EncodedKey")]
     pub encoded_key: String,
     /// <p> ID for public key information summary. </p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p> Name for public key information summary. </p>
+    #[serde(rename = "Name")]
     pub name: String,
 }
 
@@ -6727,13 +7135,14 @@ impl PublicKeySummaryListDeserializer {
     }
 }
 /// <p>Query argument-profile mapping for field-level encryption.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct QueryArgProfile {
     /// <p>ID of profile to use for field-level encryption query argument-profile mapping</p>
+    #[serde(rename = "ProfileId")]
     pub profile_id: String,
     /// <p>Query argument for field-level encryption query argument-profile mapping.</p>
+    #[serde(rename = "QueryArg")]
     pub query_arg: String,
 }
 
@@ -6788,13 +7197,15 @@ impl QueryArgProfileSerializer {
 }
 
 /// <p>Configuration for query argument-profile mapping for field-level encryption.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct QueryArgProfileConfig {
     /// <p>Flag to set if you want a request to be forwarded to the origin even if the profile specified by the field-level encryption query argument, fle-profile, is unknown.</p>
+    #[serde(rename = "ForwardWhenQueryArgProfileIsUnknown")]
     pub forward_when_query_arg_profile_is_unknown: bool,
     /// <p>Profiles specified for query argument-profile mapping for field-level encryption.</p>
+    #[serde(rename = "QueryArgProfiles")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub query_arg_profiles: Option<QueryArgProfiles>,
 }
 
@@ -6896,13 +7307,15 @@ impl QueryArgProfileListSerializer {
 }
 
 /// <p>Query argument-profile mapping for field-level encryption.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct QueryArgProfiles {
     /// <p>Number of items for query argument-profile mapping for field-level encryption.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<QueryArgProfile>>,
     /// <p>Number of profiles for query argument-profile mapping for field-level encryption.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -6956,13 +7369,15 @@ impl QueryArgProfilesSerializer {
 }
 
 /// <p>A complex type that contains information about the query string parameters that you want CloudFront to use for caching for a cache behavior. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct QueryStringCacheKeys {
     /// <p>A list that contains the query string parameters that you want CloudFront to use as a basis for caching for a cache behavior. If <code>Quantity</code> is 0, you can omit <code>Items</code>. </p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<String>>,
     /// <p>The number of <code>whitelisted</code> query string parameters for a cache behavior.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -7074,11 +7489,11 @@ impl ResourceARNSerializer {
 }
 
 /// <p>A complex type that identifies ways in which you want to restrict distribution of your content.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Restrictions {
     /// <p>A complex type that controls the countries in which your content is distributed. CloudFront determines the location of your users using <code>MaxMind</code> GeoIP databases.</p>
+    #[serde(rename = "GeoRestriction")]
     pub geo_restriction: GeoRestriction,
 }
 
@@ -7120,13 +7535,14 @@ impl RestrictionsSerializer {
 }
 
 /// <p>A complex type that contains information about the Amazon S3 bucket from which you want CloudFront to get your media files for distribution.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct S3Origin {
     /// <p>The DNS name of the Amazon S3 origin. </p>
+    #[serde(rename = "DomainName")]
     pub domain_name: String,
     /// <p>The CloudFront origin access identity to associate with the distribution. Use an origin access identity to configure the distribution so that end users can only access objects in an Amazon S3 bucket through CloudFront.</p> <p>If you want end users to be able to access objects using either the CloudFront URL or the Amazon S3 URL, specify an empty <code>OriginAccessIdentity</code> element.</p> <p>To delete the origin access identity from an existing distribution, update the distribution configuration and include an empty <code>OriginAccessIdentity</code> element.</p> <p>To replace the origin access identity, update the distribution configuration and specify the new origin access identity.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html">Using an Origin Access Identity to Restrict Access to Your Amazon S3 Content</a> in the <i> Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "OriginAccessIdentity")]
     pub origin_access_identity: String,
 }
 
@@ -7182,11 +7598,11 @@ impl S3OriginSerializer {
 }
 
 /// <p>A complex type that contains information about the Amazon S3 origin. If the origin is a custom origin, use the <code>CustomOriginConfig</code> element instead.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct S3OriginConfig {
     /// <p>The CloudFront origin access identity to associate with the origin. Use an origin access identity to configure the origin so that viewers can <i>only</i> access objects in an Amazon S3 bucket through CloudFront. The format of the value is:</p> <p>origin-access-identity/cloudfront/<i>ID-of-origin-access-identity</i> </p> <p>where <code> <i>ID-of-origin-access-identity</i> </code> is the value that CloudFront returned in the <code>ID</code> element when you created the origin access identity.</p> <p>If you want viewers to be able to access objects using either the CloudFront URL or the Amazon S3 URL, specify an empty <code>OriginAccessIdentity</code> element.</p> <p>To delete the origin access identity from an existing distribution, update the distribution configuration and include an empty <code>OriginAccessIdentity</code> element.</p> <p>To replace the origin access identity, update the distribution configuration and specify the new origin access identity.</p> <p>For more information about the origin access identity, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html">Serving Private Content through CloudFront</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "OriginAccessIdentity")]
     pub origin_access_identity: String,
 }
 
@@ -7265,12 +7681,16 @@ impl SSLSupportMethodSerializer {
 }
 
 /// <p>A complex type that lists the AWS accounts that were included in the <code>TrustedSigners</code> complex type, as well as their active CloudFront key pair IDs, if any. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Signer {
     /// <p><p>An AWS account that is included in the <code>TrustedSigners</code> complex type for this distribution. Valid values include:</p> <ul> <li> <p> <code>self</code>, which is the AWS account used to create the distribution.</p> </li> <li> <p>An AWS account number.</p> </li> </ul></p>
+    #[serde(rename = "AwsAccountNumber")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub aws_account_number: Option<String>,
     /// <p>A complex type that lists the active CloudFront key pairs, if any, that are associated with <code>AwsAccountNumber</code>.</p>
+    #[serde(rename = "KeyPairIds")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key_pair_ids: Option<KeyPairIds>,
 }
 
@@ -7420,13 +7840,14 @@ impl StatusCodeListSerializer {
 }
 
 /// <p>A complex data type for the status codes that you specify that, when returned by a primary origin, trigger CloudFront to failover to a second origin.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StatusCodes {
     /// <p>The items (status codes) for an origin group.</p>
+    #[serde(rename = "Items")]
     pub items: Vec<i64>,
     /// <p>The number of status codes.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -7477,22 +7898,30 @@ impl StatusCodesSerializer {
 }
 
 /// <p>A streaming distribution tells CloudFront where you want RTMP content to be delivered from, and the details about how to track and manage content delivery.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StreamingDistribution {
     /// <p>The ARN (Amazon Resource Name) for the distribution. For example: <code>arn:aws:cloudfront::123456789012:distribution/EDFDVBD632BHDS5</code>, where <code>123456789012</code> is your AWS account ID.</p>
+    #[serde(rename = "ARN")]
     pub arn: String,
     /// <p>A complex type that lists the AWS accounts, if any, that you included in the <code>TrustedSigners</code> complex type for this distribution. These are the accounts that you want to allow to create signed URLs for private content.</p> <p>The <code>Signer</code> complex type lists the AWS account number of the trusted signer or <code>self</code> if the signer is the AWS account that created the distribution. The <code>Signer</code> element also includes the IDs of any active CloudFront key pairs that are associated with the trusted signer's AWS account. If no <code>KeyPairId</code> element appears for a <code>Signer</code>, that signer can't create signed URLs.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html">Serving Private Content through CloudFront</a> in the <i>Amazon CloudFront Developer Guide</i>. </p>
+    #[serde(rename = "ActiveTrustedSigners")]
     pub active_trusted_signers: ActiveTrustedSigners,
     /// <p>The domain name that corresponds to the streaming distribution, for example, <code>s5c39gqb8ow64r.cloudfront.net</code>. </p>
+    #[serde(rename = "DomainName")]
     pub domain_name: String,
     /// <p>The identifier for the RTMP distribution. For example: <code>EGTXBD79EXAMPLE</code>.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The date and time that the distribution was last modified. </p>
+    #[serde(rename = "LastModifiedTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_modified_time: Option<String>,
     /// <p>The current status of the RTMP distribution. When the status is <code>Deployed</code>, the distribution's information is propagated to all CloudFront edge locations.</p>
+    #[serde(rename = "Status")]
     pub status: String,
     /// <p>The current configuration information for the RTMP distribution.</p>
+    #[serde(rename = "StreamingDistributionConfig")]
     pub streaming_distribution_config: StreamingDistributionConfig,
 }
 
@@ -7543,25 +7972,35 @@ impl StreamingDistributionDeserializer {
     }
 }
 /// <p>The RTMP distribution's configuration information.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StreamingDistributionConfig {
     /// <p>A complex type that contains information about CNAMEs (alternate domain names), if any, for this streaming distribution. </p>
+    #[serde(rename = "Aliases")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub aliases: Option<Aliases>,
     /// <p>A unique value (for example, a date-time stamp) that ensures that the request can't be replayed.</p> <p>If the value of <code>CallerReference</code> is new (regardless of the content of the <code>StreamingDistributionConfig</code> object), CloudFront creates a new distribution.</p> <p>If <code>CallerReference</code> is a value that you already sent in a previous request to create a distribution, CloudFront returns a <code>DistributionAlreadyExists</code> error.</p>
+    #[serde(rename = "CallerReference")]
     pub caller_reference: String,
     /// <p>Any comments you want to include about the streaming distribution. </p>
+    #[serde(rename = "Comment")]
     pub comment: String,
     /// <p>Whether the streaming distribution is enabled to accept user requests for content.</p>
+    #[serde(rename = "Enabled")]
     pub enabled: bool,
     /// <p>A complex type that controls whether access logs are written for the streaming distribution. </p>
+    #[serde(rename = "Logging")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub logging: Option<StreamingLoggingConfig>,
     /// <p>A complex type that contains information about price class for this streaming distribution. </p>
+    #[serde(rename = "PriceClass")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub price_class: Option<String>,
     /// <p>A complex type that contains information about the Amazon S3 bucket from which you want CloudFront to get your media files for distribution. </p>
+    #[serde(rename = "S3Origin")]
     pub s3_origin: S3Origin,
     /// <p>A complex type that specifies any AWS accounts that you want to permit to create signed URLs for private content. If you want the distribution to use signed URLs, include this element; if you want the distribution to use public URLs, remove this element. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html">Serving Private Content through CloudFront</a> in the <i>Amazon CloudFront Developer Guide</i>. </p>
+    #[serde(rename = "TrustedSigners")]
     pub trusted_signers: TrustedSigners,
 }
 
@@ -7697,20 +8136,28 @@ impl StreamingDistributionConfigWithTagsSerializer {
 }
 
 /// <p>A streaming distribution list. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StreamingDistributionList {
     /// <p>A flag that indicates whether more streaming distributions remain to be listed. If your results were truncated, you can make a follow-up pagination request using the <code>Marker</code> request parameter to retrieve more distributions in the list. </p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>A complex type that contains one <code>StreamingDistributionSummary</code> element for each distribution that was created by the current AWS account.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<StreamingDistributionSummary>>,
     /// <p>The value you provided for the <code>Marker</code> request parameter. </p>
+    #[serde(rename = "Marker")]
     pub marker: String,
     /// <p>The value you provided for the <code>MaxItems</code> request parameter. </p>
+    #[serde(rename = "MaxItems")]
     pub max_items: i64,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, this element is present and contains the value you can use for the <code>Marker</code> request parameter to continue listing your RTMP distributions where they left off. </p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
     /// <p>The number of streaming distributions that were created by the current AWS account. </p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -7757,30 +8204,41 @@ impl StreamingDistributionListDeserializer {
     }
 }
 /// <p> A summary of the information for a CloudFront streaming distribution.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StreamingDistributionSummary {
     /// <p> The ARN (Amazon Resource Name) for the streaming distribution. For example: <code>arn:aws:cloudfront::123456789012:streaming-distribution/EDFDVBD632BHDS5</code>, where <code>123456789012</code> is your AWS account ID.</p>
+    #[serde(rename = "ARN")]
     pub arn: String,
     /// <p>A complex type that contains information about CNAMEs (alternate domain names), if any, for this streaming distribution.</p>
+    #[serde(rename = "Aliases")]
     pub aliases: Aliases,
     /// <p>The comment originally specified when this distribution was created.</p>
+    #[serde(rename = "Comment")]
     pub comment: String,
     /// <p>The domain name corresponding to the distribution, for example, <code>d111111abcdef8.cloudfront.net</code>.</p>
+    #[serde(rename = "DomainName")]
     pub domain_name: String,
     /// <p>Whether the distribution is enabled to accept end user requests for content.</p>
+    #[serde(rename = "Enabled")]
     pub enabled: bool,
     /// <p>The identifier for the distribution, for example, <code>EDFDVBD632BHDS5</code>.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The date and time the distribution was last modified.</p>
+    #[serde(rename = "LastModifiedTime")]
     pub last_modified_time: String,
     /// <p>A complex type that contains information about price class for this streaming distribution. </p>
+    #[serde(rename = "PriceClass")]
     pub price_class: String,
     /// <p>A complex type that contains information about the Amazon S3 bucket from which you want CloudFront to get your media files for distribution.</p>
+    #[serde(rename = "S3Origin")]
     pub s3_origin: S3Origin,
     /// <p> Indicates the current status of the distribution. When the status is <code>Deployed</code>, the distribution's information is fully propagated throughout the Amazon CloudFront system.</p>
+    #[serde(rename = "Status")]
     pub status: String,
     /// <p>A complex type that specifies the AWS accounts, if any, that you want to allow to create signed URLs for private content. If you want to require signed URLs in requests for objects in the target origin that match the <code>PathPattern</code> for this cache behavior, specify <code>true</code> for <code>Enabled</code>, and specify the applicable values for <code>Quantity</code> and <code>Items</code>.If you don't want to require signed URLs in requests for objects that match <code>PathPattern</code>, specify <code>false</code> for <code>Enabled</code> and <code>0</code> for <code>Quantity</code>. Omit <code>Items</code>. To add, change, or remove one or more trusted signers, change <code>Enabled</code> to <code>true</code> (if it's currently <code>false</code>), change <code>Quantity</code> as applicable, and specify all of the trusted signers that you want to include in the updated distribution.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html">Serving Private Content through CloudFront</a> in the <i>Amazon CloudFront Developer Guide</i>. </p>
+    #[serde(rename = "TrustedSigners")]
     pub trusted_signers: TrustedSigners,
 }
 
@@ -7859,15 +8317,17 @@ impl StreamingDistributionSummaryListDeserializer {
     }
 }
 /// <p>A complex type that controls whether access logs are written for this streaming distribution.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StreamingLoggingConfig {
     /// <p>The Amazon S3 bucket to store the access logs in, for example, <code>myawslogbucket.s3.amazonaws.com</code>.</p>
+    #[serde(rename = "Bucket")]
     pub bucket: String,
     /// <p>Specifies whether you want CloudFront to save access logs to an Amazon S3 bucket. If you don't want to enable logging when you create a streaming distribution or if you want to disable logging for an existing streaming distribution, specify <code>false</code> for <code>Enabled</code>, and specify <code>empty Bucket</code> and <code>Prefix</code> elements. If you specify <code>false</code> for <code>Enabled</code> but you specify values for <code>Bucket</code> and <code>Prefix</code>, the values are automatically deleted. </p>
+    #[serde(rename = "Enabled")]
     pub enabled: bool,
     /// <p>An optional string that you want CloudFront to prefix to the access log filenames for this streaming distribution, for example, <code>myprefix/</code>. If you want to enable logging, but you don't want to specify a prefix, you still must include an empty <code>Prefix</code> element in the <code>Logging</code> element.</p>
+    #[serde(rename = "Prefix")]
     pub prefix: String,
 }
 
@@ -7963,13 +8423,15 @@ impl StringSerializer {
 }
 
 /// <p> A complex type that contains <code>Tag</code> key and <code>Tag</code> value.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Tag {
     /// <p> A string that contains <code>Tag</code> key.</p> <p>The string length should be between 1 and 128 characters. Valid characters include <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, space, and the special characters <code>_ - . : / = + @</code>.</p>
+    #[serde(rename = "Key")]
     pub key: String,
     /// <p> A string that contains an optional <code>Tag</code> value.</p> <p>The string length should be between 0 and 256 characters. Valid characters include <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, space, and the special characters <code>_ - . : / = + @</code>.</p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -8182,11 +8644,12 @@ impl TagValueSerializer {
 }
 
 /// <p> A complex type that contains zero or more <code>Tag</code> elements.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Tags {
     /// <p> A complex type that contains <code>Tag</code> elements.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<Tag>>,
 }
 
@@ -8239,15 +8702,18 @@ impl TimestampDeserializer {
     }
 }
 /// <p>A complex type that specifies the AWS accounts, if any, that you want to allow to create signed URLs for private content.</p> <p>If you want to require signed URLs in requests for objects in the target origin that match the <code>PathPattern</code> for this cache behavior, specify <code>true</code> for <code>Enabled</code>, and specify the applicable values for <code>Quantity</code> and <code>Items</code>. For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html">Serving Private Content through CloudFront</a> in the <i> Amazon CloudFront Developer Guide</i>.</p> <p>If you don't want to require signed URLs in requests for objects that match <code>PathPattern</code>, specify <code>false</code> for <code>Enabled</code> and <code>0</code> for <code>Quantity</code>. Omit <code>Items</code>.</p> <p>To add, change, or remove one or more trusted signers, change <code>Enabled</code> to <code>true</code> (if it's currently <code>false</code>), change <code>Quantity</code> as applicable, and specify all of the trusted signers that you want to include in the updated distribution.</p> <p>For more information about updating the distribution configuration, see <a href="https://docs.aws.amazon.com/cloudfront/latest/APIReference/DistributionConfig.html">DistributionConfig</a> in the <i>Amazon CloudFront API Reference</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TrustedSigners {
     /// <p>Specifies whether you want to require viewers to use signed URLs to access the files specified by <code>PathPattern</code> and <code>TargetOriginId</code>.</p>
+    #[serde(rename = "Enabled")]
     pub enabled: bool,
     /// <p> <b>Optional</b>: A complex type that contains trusted signers for this cache behavior. If <code>Quantity</code> is <code>0</code>, you can omit <code>Items</code>.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<String>>,
     /// <p>The number of trusted signers for this cache behavior.</p>
+    #[serde(rename = "Quantity")]
     pub quantity: i64,
 }
 
@@ -8332,12 +8798,16 @@ pub struct UpdateCloudFrontOriginAccessIdentityRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateCloudFrontOriginAccessIdentityResult {
     /// <p>The origin access identity's information.</p>
+    #[serde(rename = "CloudFrontOriginAccessIdentity")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cloud_front_origin_access_identity: Option<CloudFrontOriginAccessIdentity>,
     /// <p>The current version of the configuration. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
 }
 
@@ -8372,12 +8842,16 @@ pub struct UpdateDistributionRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateDistributionResult {
     /// <p>The distribution's information.</p>
+    #[serde(rename = "Distribution")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub distribution: Option<Distribution>,
     /// <p>The current version of the configuration. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
 }
 
@@ -8408,12 +8882,16 @@ pub struct UpdateFieldLevelEncryptionConfigRequest {
     pub if_match: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateFieldLevelEncryptionConfigResult {
     /// <p>The value of the <code>ETag</code> header that you received when updating the configuration. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Return the results of updating the configuration.</p>
+    #[serde(rename = "FieldLevelEncryption")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_level_encryption: Option<FieldLevelEncryption>,
 }
 
@@ -8444,12 +8922,16 @@ pub struct UpdateFieldLevelEncryptionProfileRequest {
     pub if_match: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateFieldLevelEncryptionProfileResult {
     /// <p>The result of the field-level encryption profile request. </p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Return the results of updating the profile.</p>
+    #[serde(rename = "FieldLevelEncryptionProfile")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub field_level_encryption_profile: Option<FieldLevelEncryptionProfile>,
 }
 
@@ -8482,12 +8964,16 @@ pub struct UpdatePublicKeyRequest {
     pub public_key_config: PublicKeyConfig,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdatePublicKeyResult {
     /// <p>The current version of the update public key result. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>Return the results of updating the public key.</p>
+    #[serde(rename = "PublicKey")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub public_key: Option<PublicKey>,
 }
 
@@ -8517,12 +9003,16 @@ pub struct UpdateStreamingDistributionRequest {
 }
 
 /// <p>The returned result of the corresponding request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateStreamingDistributionResult {
     /// <p>The current version of the configuration. For example: <code>E2QWRUHAPOMQZL</code>.</p>
+    #[serde(rename = "ETag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
     /// <p>The streaming distribution's information.</p>
+    #[serde(rename = "StreamingDistribution")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub streaming_distribution: Option<StreamingDistribution>,
 }
 
@@ -8543,19 +9033,28 @@ impl UpdateStreamingDistributionResultDeserializer {
     }
 }
 /// <p>A complex type that specifies the following:</p> <ul> <li> <p>Whether you want viewers to use HTTP or HTTPS to request your objects.</p> </li> <li> <p>If you want viewers to use HTTPS, whether you're using an alternate domain name, such as <code>example.com</code>, or the CloudFront domain name for your distribution, such as <code>d111111abcdef8.cloudfront.net</code>.</p> </li> <li> <p>If you're using an alternate domain name, whether AWS Certificate Manager (ACM) provided the certificate, or you purchased a certificate from a third-party certificate authority and imported it into ACM or uploaded it to the IAM certificate store.</p> </li> </ul> <p>Specify only one of the following values: </p> <ul> <li> <p> <a href="https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ViewerCertificate.html#cloudfront-Type-ViewerCertificate-ACMCertificateArn">ACMCertificateArn</a> </p> </li> <li> <p> <a href="https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ViewerCertificate.html#cloudfront-Type-ViewerCertificate-IAMCertificateId">IAMCertificateId</a> </p> </li> <li> <p> <a href="https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ViewerCertificate.html#cloudfront-Type-ViewerCertificate-CloudFrontDefaultCertificate">CloudFrontDefaultCertificate</a> </p> </li> </ul> <p>For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/SecureConnections.html#CNAMEsAndHTTPS"> Using Alternate Domain Names and HTTPS</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ViewerCertificate {
     /// <p>If you want viewers to use HTTPS to request your objects and you're using an alternate domain name, you must choose the type of certificate that you want to use. If ACM provided your certificate, specify the Amazon Resource Name (ARN) for the ACM certificate that you want to use for this distribution. CloudFront only supports ACM certificates in the US East (N. Virginia) Region (us-east-1).</p> <p>If you specify an ACM certificate ARN, you must also specify an SSL support method (<code>sni-only</code> or <code>vip</code>).</p>
+    #[serde(rename = "ACMCertificateArn")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub acm_certificate_arn: Option<String>,
     /// <p>If you're using the CloudFront domain name for your distribution, such as <code>d111111abcdef8.cloudfront.net</code>, specify this value as <code>true</code>.</p>
+    #[serde(rename = "CloudFrontDefaultCertificate")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cloud_front_default_certificate: Option<bool>,
     /// <p>If you want viewers to use HTTPS to request your objects and you're using an alternate domain name, you must choose the type of certificate that you want to use. If you purchased your certificate from a third-party certificate authority and uploaded it to the IAM certificate store, specify the certificate ID that you want to use for this distribution.</p> <p>If you specify a certificate ID, you must also specify an SSL support method (<code>sni-only</code> or <code>vip</code>).</p>
+    #[serde(rename = "IAMCertificateId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub iam_certificate_id: Option<String>,
     /// <p>Specify the security policy that you want CloudFront to use for HTTPS connections. A security policy determines two settings:</p> <ul> <li> <p>The minimum SSL/TLS protocol that CloudFront uses to communicate with viewers.</p> </li> <li> <p>The cipher that CloudFront uses to encrypt the content that it returns to viewers.</p> </li> </ul> <note> <p>On the CloudFront console, this setting is called <b>Security Policy</b>.</p> </note> <p>We recommend that you specify <code>TLSv1.1_2016</code> unless your viewers are using browsers or devices that do not support TLSv1.1 or later.</p> <p>When both of the following are true, you must specify <code>TLSv1</code> or later for the security policy: </p> <ul> <li> <p>You're using a custom certificate; that is, you specified a value for <code>ACMCertificateArn</code> or for <code>IAMCertificateId</code>.</p> </li> <li> <p>You're using SNI; that is, you specified <code>sni-only</code> for <code>SSLSupportMethod</code>.</p> </li> </ul> <p>If you specify <code>true</code> for <code>CloudFrontDefaultCertificate</code>, CloudFront automatically sets the security policy to <code>TLSv1</code> regardless of the value that you specify here.</p> <p>For information about the relationship between the security policy that you choose and the protocols and ciphers that CloudFront uses to communicate with viewers, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html#secure-connections-supported-ciphers"> Supported SSL/TLS Protocols and Ciphers for Communication Between Viewers and CloudFront</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "MinimumProtocolVersion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub minimum_protocol_version: Option<String>,
     /// <p>If you specify a value for <a href="https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ViewerCertificate.html#cloudfront-Type-ViewerCertificate-ACMCertificateArn">ACMCertificateArn</a> or for <a href="https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ViewerCertificate.html#cloudfront-Type-ViewerCertificate-IAMCertificateId">IAMCertificateId</a>, you must also specify how you want CloudFront to serve HTTPS requests: using a method that works for browsers and clients released after 2010, or one that works for all clients.</p> <ul> <li> <p> <code>sni-only</code>: CloudFront can respond to HTTPS requests from viewers that support Server Name Indication (SNI). All modern browsers support SNI, but there are a few that don't. For a current list of the browsers that support SNI, see the <a href="http://en.wikipedia.org/wiki/Server_Name_Indication">Wikipedia entry Server Name Indication</a>. To learn about options to explore if you have viewers with browsers that don't include SNI support, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-https-dedicated-ip-or-sni.html">Choosing How CloudFront Serves HTTPS Requests</a> in the <i>Amazon CloudFront Developer Guide</i>.</p> </li> <li> <p> <code>vip</code>: CloudFront uses dedicated IP addresses for your content and can respond to HTTPS requests from any viewer. However, there are additional monthly charges. For details, including specific pricing information, see <a href="http://aws.amazon.com/cloudfront/custom-ssl-domains/">Custom SSL options for Amazon CloudFront</a> on the AWS marketing site.</p> </li> </ul> <p>Don't specify a value here if you specified <code>CloudFrontDefaultCertificate</code> as <code>true</code>.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-https-dedicated-ip-or-sni.html">Choosing How CloudFront Serves HTTPS Requests</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>
+    #[serde(rename = "SSLSupportMethod")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssl_support_method: Option<String>,
 }
 

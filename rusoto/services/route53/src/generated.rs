@@ -39,12 +39,14 @@ use xml::EventReader;
 use xml::EventWriter;
 
 /// <p>A complex type that contains the type of limit that you specified in the request and the current value for that limit.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AccountLimit {
     /// <p><p>The limit that you requested. Valid values include the following:</p> <ul> <li> <p> <b>MAX<em>HEALTH</em>CHECKS<em>BY</em>OWNER</b>: The maximum number of health checks that you can create using the current account.</p> </li> <li> <p> <b>MAX<em>HOSTED</em>ZONES<em>BY</em>OWNER</b>: The maximum number of hosted zones that you can create using the current account.</p> </li> <li> <p> <b>MAX<em>REUSABLE</em>DELEGATION<em>SETS</em>BY<em>OWNER</b>: The maximum number of reusable delegation sets that you can create using the current account.</p> </li> <li> <p> <b>MAX</em>TRAFFIC<em>POLICIES</em>BY<em>OWNER</b>: The maximum number of traffic policies that you can create using the current account.</p> </li> <li> <p> <b>MAX</em>TRAFFIC<em>POLICY</em>INSTANCES<em>BY</em>OWNER</b>: The maximum number of traffic policy instances that you can create using the current account. (Traffic policy instances are referred to as traffic flow policy records in the Amazon Route 53 console.)</p> </li> </ul></p>
+    #[serde(rename = "Type")]
     pub type_: String,
     /// <p>The current value for the limit that is specified by <a href="https://docs.aws.amazon.com/Route53/latest/APIReference/API_AccountLimit.html#Route53-Type-AccountLimit-Type">Type</a>.</p>
+    #[serde(rename = "Value")]
     pub value: i64,
 }
 
@@ -102,13 +104,14 @@ impl AccountLimitTypeSerializer {
 }
 
 /// <p>A complex type that identifies the CloudWatch alarm that you want Amazon Route 53 health checkers to use to determine whether the specified health check is healthy.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AlarmIdentifier {
     /// <p><p>The name of the CloudWatch alarm that you want Amazon Route 53 health checkers to use to determine whether this health check is healthy.</p> <note> <p>Route 53 supports CloudWatch alarms with the following features:</p> <ul> <li> <p>Standard-resolution metrics. High-resolution metrics aren&#39;t supported. For more information, see <a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/publishingMetrics.html#high-resolution-metrics">High-Resolution Metrics</a> in the <i>Amazon CloudWatch User Guide</i>.</p> </li> <li> <p>Statistics: Average, Minimum, Maximum, Sum, and SampleCount. Extended statistics aren&#39;t supported.</p> </li> </ul> </note></p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p>For the CloudWatch alarm that you want Route 53 health checkers to use to determine whether this health check is healthy, the region that the alarm was created in.</p> <p>For the current list of CloudWatch regions, see <a href="http://docs.aws.amazon.com/general/latest/gr/rande.html#cw_region">Amazon CloudWatch</a> in the <i>AWS Regions and Endpoints</i> chapter of the <i>Amazon Web Services General Reference</i>.</p>
+    #[serde(rename = "Region")]
     pub region: String,
 }
 
@@ -227,15 +230,17 @@ impl AliasHealthEnabledSerializer {
 }
 
 /// <p><p> <i>Alias resource record sets only:</i> Information about the AWS resource, such as a CloudFront distribution or an Amazon S3 bucket, that you want to route traffic to.</p> <p>When creating resource record sets for a private hosted zone, note the following:</p> <ul> <li> <p>Creating geolocation alias resource record sets or latency alias resource record sets in a private hosted zone is unsupported.</p> </li> <li> <p>For information about creating failover resource record sets in a private hosted zone, see <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-private-hosted-zones.html">Configuring Failover in a Private Hosted Zone</a>.</p> </li> </ul></p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AliasTarget {
     /// <p><p> <i>Alias resource record sets only:</i> The value that you specify depends on where you want to route queries:</p> <dl> <dt>Amazon API Gateway custom regional APIs and edge-optimized APIs</dt> <dd> <p>Specify the applicable domain name for your API. You can get the applicable value using the AWS CLI command <a href="https://docs.aws.amazon.com/cli/latest/reference/apigateway/get-domain-names.html">get-domain-names</a>:</p> <ul> <li> <p>For regional APIs, specify the value of <code>regionalDomainName</code>.</p> </li> <li> <p>For edge-optimized APIs, specify the value of <code>distributionDomainName</code>. This is the name of the associated CloudFront distribution, such as <code>da1b2c3d4e5.cloudfront.net</code>.</p> </li> </ul> <note> <p>The name of the record that you&#39;re creating must match a custom domain name for your API, such as <code>api.example.com</code>.</p> </note> </dd> <dt>Amazon Virtual Private Cloud interface VPC endpoint</dt> <dd> <p>Enter the API endpoint for the interface endpoint, such as <code>vpce-123456789abcdef01-example-us-east-1a.elasticloadbalancing.us-east-1.vpce.amazonaws.com</code>. For edge-optimized APIs, this is the domain name for the corresponding CloudFront distribution. You can get the value of <code>DnsName</code> using the AWS CLI command <a href="https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-vpc-endpoints.html">describe-vpc-endpoints</a>.</p> </dd> <dt>CloudFront distribution</dt> <dd> <p>Specify the domain name that CloudFront assigned when you created your distribution.</p> <p>Your CloudFront distribution must include an alternate domain name that matches the name of the resource record set. For example, if the name of the resource record set is <i>acme.example.com</i>, your CloudFront distribution must include <i>acme.example.com</i> as one of the alternate domain names. For more information, see <a href="http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html">Using Alternate Domain Names (CNAMEs)</a> in the <i>Amazon CloudFront Developer Guide</i>.</p> <p>You can&#39;t create a resource record set in a private hosted zone to route traffic to a CloudFront distribution.</p> <note> <p>For failover alias records, you can&#39;t specify a CloudFront distribution for both the primary and secondary records. A distribution must include an alternate domain name that matches the name of the record. However, the primary and secondary records have the same name, and you can&#39;t include the same alternate domain name in more than one distribution. </p> </note> </dd> <dt>Elastic Beanstalk environment</dt> <dd> <p>If the domain name for your Elastic Beanstalk environment includes the region that you deployed the environment in, you can create an alias record that routes traffic to the environment. For example, the domain name <code>my-environment.<i>us-west-2</i>.elasticbeanstalk.com</code> is a regionalized domain name. </p> <important> <p>For environments that were created before early 2016, the domain name doesn&#39;t include the region. To route traffic to these environments, you must create a CNAME record instead of an alias record. Note that you can&#39;t create a CNAME record for the root domain name. For example, if your domain name is example.com, you can create a record that routes traffic for acme.example.com to your Elastic Beanstalk environment, but you can&#39;t create a record that routes traffic for example.com to your Elastic Beanstalk environment.</p> </important> <p>For Elastic Beanstalk environments that have regionalized subdomains, specify the <code>CNAME</code> attribute for the environment. You can use the following methods to get the value of the CNAME attribute:</p> <ul> <li> <p> <i>AWS Management Console</i>: For information about how to get the value by using the console, see <a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/customdomains.html">Using Custom Domains with AWS Elastic Beanstalk</a> in the <i>AWS Elastic Beanstalk Developer Guide</i>.</p> </li> <li> <p> <i>Elastic Beanstalk API</i>: Use the <code>DescribeEnvironments</code> action to get the value of the <code>CNAME</code> attribute. For more information, see <a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironments.html">DescribeEnvironments</a> in the <i>AWS Elastic Beanstalk API Reference</i>.</p> </li> <li> <p> <i>AWS CLI</i>: Use the <code>describe-environments</code> command to get the value of the <code>CNAME</code> attribute. For more information, see <a href="http://docs.aws.amazon.com/cli/latest/reference/elasticbeanstalk/describe-environments.html">describe-environments</a> in the <i>AWS Command Line Interface Reference</i>.</p> </li> </ul> </dd> <dt>ELB load balancer</dt> <dd> <p>Specify the DNS name that is associated with the load balancer. Get the DNS name by using the AWS Management Console, the ELB API, or the AWS CLI. </p> <ul> <li> <p> <b>AWS Management Console</b>: Go to the EC2 page, choose <b>Load Balancers</b> in the navigation pane, choose the load balancer, choose the <b>Description</b> tab, and get the value of the <b>DNS name</b> field. </p> <p>If you&#39;re routing traffic to a Classic Load Balancer, get the value that begins with <b>dualstack</b>. If you&#39;re routing traffic to another type of load balancer, get the value that applies to the record type, A or AAAA.</p> </li> <li> <p> <b>Elastic Load Balancing API</b>: Use <code>DescribeLoadBalancers</code> to get the value of <code>DNSName</code>. For more information, see the applicable guide:</p> <ul> <li> <p>Classic Load Balancers: <a href="http://docs.aws.amazon.com/elasticloadbalancing/2012-06-01/APIReference/API_DescribeLoadBalancers.html">DescribeLoadBalancers</a> </p> </li> <li> <p>Application and Network Load Balancers: <a href="http://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_DescribeLoadBalancers.html">DescribeLoadBalancers</a> </p> </li> </ul> </li> <li> <p> <b>AWS CLI</b>: Use <code>describe-load-balancers</code> to get the value of <code>DNSName</code>. For more information, see the applicable guide:</p> <ul> <li> <p>Classic Load Balancers: <a href="http://docs.aws.amazon.com/cli/latest/reference/elb/describe-load-balancers.html">describe-load-balancers</a> </p> </li> <li> <p>Application and Network Load Balancers: <a href="http://docs.aws.amazon.com/cli/latest/reference/elbv2/describe-load-balancers.html">describe-load-balancers</a> </p> </li> </ul> </li> </ul> </dd> <dt>Amazon S3 bucket that is configured as a static website</dt> <dd> <p>Specify the domain name of the Amazon S3 website endpoint that you created the bucket in, for example, <code>s3-website.us-east-2.amazonaws.com</code>. For more information about valid values, see the table <a href="http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region">Amazon Simple Storage Service (S3) Website Endpoints</a> in the <i>Amazon Web Services General Reference</i>. For more information about using S3 buckets for websites, see <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/getting-started.html">Getting Started with Amazon Route 53</a> in the <i>Amazon Route 53 Developer Guide.</i> </p> </dd> <dt>Another Route 53 resource record set</dt> <dd> <p>Specify the value of the <code>Name</code> element for a resource record set in the current hosted zone.</p> <note> <p>If you&#39;re creating an alias record that has the same name as the hosted zone (known as the zone apex), you can&#39;t specify the domain name for a record for which the value of <code>Type</code> is <code>CNAME</code>. This is because the alias record must have the same type as the record that you&#39;re routing traffic to, and creating a CNAME record for the zone apex isn&#39;t supported even for an alias record.</p> </note> </dd> </dl></p>
+    #[serde(rename = "DNSName")]
     pub dns_name: String,
     /// <p> <i>Applies only to alias, failover alias, geolocation alias, latency alias, and weighted alias resource record sets:</i> When <code>EvaluateTargetHealth</code> is <code>true</code>, an alias resource record set inherits the health of the referenced AWS resource, such as an ELB load balancer or another resource record set in the hosted zone.</p> <p>Note the following:</p> <dl> <dt>CloudFront distributions</dt> <dd> <p>You can't set <code>EvaluateTargetHealth</code> to <code>true</code> when the alias target is a CloudFront distribution.</p> </dd> <dt>Elastic Beanstalk environments that have regionalized subdomains</dt> <dd> <p>If you specify an Elastic Beanstalk environment in <code>DNSName</code> and the environment contains an ELB load balancer, Elastic Load Balancing routes queries only to the healthy Amazon EC2 instances that are registered with the load balancer. (An environment automatically contains an ELB load balancer if it includes more than one Amazon EC2 instance.) If you set <code>EvaluateTargetHealth</code> to <code>true</code> and either no Amazon EC2 instances are healthy or the load balancer itself is unhealthy, Route 53 routes queries to other available resources that are healthy, if any. </p> <p>If the environment contains a single Amazon EC2 instance, there are no special requirements.</p> </dd> <dt>ELB load balancers</dt> <dd> <p>Health checking behavior depends on the type of load balancer:</p> <ul> <li> <p> <b>Classic Load Balancers</b>: If you specify an ELB Classic Load Balancer in <code>DNSName</code>, Elastic Load Balancing routes queries only to the healthy Amazon EC2 instances that are registered with the load balancer. If you set <code>EvaluateTargetHealth</code> to <code>true</code> and either no EC2 instances are healthy or the load balancer itself is unhealthy, Route 53 routes queries to other resources.</p> </li> <li> <p> <b>Application and Network Load Balancers</b>: If you specify an ELB Application or Network Load Balancer and you set <code>EvaluateTargetHealth</code> to <code>true</code>, Route 53 routes queries to the load balancer based on the health of the target groups that are associated with the load balancer:</p> <ul> <li> <p>For an Application or Network Load Balancer to be considered healthy, every target group that contains targets must contain at least one healthy target. If any target group contains only unhealthy targets, the load balancer is considered unhealthy, and Route 53 routes queries to other resources.</p> </li> <li> <p>A target group that has no registered targets is considered unhealthy.</p> </li> </ul> </li> </ul> <note> <p>When you create a load balancer, you configure settings for Elastic Load Balancing health checks; they're not Route 53 health checks, but they perform a similar function. Do not create Route 53 health checks for the EC2 instances that you register with an ELB load balancer. </p> </note> </dd> <dt>S3 buckets</dt> <dd> <p>There are no special requirements for setting <code>EvaluateTargetHealth</code> to <code>true</code> when the alias target is an S3 bucket.</p> </dd> <dt>Other records in the same hosted zone</dt> <dd> <p>If the AWS resource that you specify in <code>DNSName</code> is a record or a group of records (for example, a group of weighted records) but is not another alias record, we recommend that you associate a health check with all of the records in the alias target. For more information, see <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-complex-configs.html#dns-failover-complex-configs-hc-omitting">What Happens When You Omit Health Checks?</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> </dd> </dl> <p>For more information and examples, see <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html">Amazon Route 53 Health Checks and DNS Failover</a> in the <i>Amazon Route 53 Developer Guide</i>.</p>
+    #[serde(rename = "EvaluateTargetHealth")]
     pub evaluate_target_health: bool,
     /// <p><p> <i>Alias resource records sets only</i>: The value used depends on where you want to route traffic:</p> <dl> <dt>Amazon API Gateway custom regional APIs and edge-optimized APIs</dt> <dd> <p>Specify the hosted zone ID for your API. You can get the applicable value using the AWS CLI command <a href="https://docs.aws.amazon.com/cli/latest/reference/apigateway/get-domain-names.html">get-domain-names</a>:</p> <ul> <li> <p>For regional APIs, specify the value of <code>regionalHostedZoneId</code>.</p> </li> <li> <p>For edge-optimized APIs, specify the value of <code>distributionHostedZoneId</code>.</p> </li> </ul> </dd> <dt>Amazon Virtual Private Cloud interface VPC endpoint</dt> <dd> <p>Specify the hosted zone ID for your interface endpoint. You can get the value of <code>HostedZoneId</code> using the AWS CLI command <a href="https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-vpc-endpoints.html">describe-vpc-endpoints</a>.</p> </dd> <dt>CloudFront distribution</dt> <dd> <p>Specify <code>Z2FDTNDATAQYW2</code>.</p> <note> <p>Alias resource record sets for CloudFront can&#39;t be created in a private zone.</p> </note> </dd> <dt>Elastic Beanstalk environment</dt> <dd> <p>Specify the hosted zone ID for the region that you created the environment in. The environment must have a regionalized subdomain. For a list of regions and the corresponding hosted zone IDs, see <a href="http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region">AWS Elastic Beanstalk</a> in the &quot;AWS Regions and Endpoints&quot; chapter of the <i>Amazon Web Services General Reference</i>.</p> </dd> <dt>ELB load balancer</dt> <dd> <p>Specify the value of the hosted zone ID for the load balancer. Use the following methods to get the hosted zone ID:</p> <ul> <li> <p> <a href="https://docs.aws.amazon.com/general/latest/gr/rande.html#elb_region">Elastic Load Balancing</a> table in the &quot;AWS Regions and Endpoints&quot; chapter of the <i>Amazon Web Services General Reference</i>: Use the value that corresponds with the region that you created your load balancer in. Note that there are separate columns for Application and Classic Load Balancers and for Network Load Balancers.</p> </li> <li> <p> <b>AWS Management Console</b>: Go to the Amazon EC2 page, choose <b>Load Balancers</b> in the navigation pane, select the load balancer, and get the value of the <b>Hosted zone</b> field on the <b>Description</b> tab.</p> </li> <li> <p> <b>Elastic Load Balancing API</b>: Use <code>DescribeLoadBalancers</code> to get the applicable value. For more information, see the applicable guide:</p> <ul> <li> <p>Classic Load Balancers: Use <a href="http://docs.aws.amazon.com/elasticloadbalancing/2012-06-01/APIReference/API_DescribeLoadBalancers.html">DescribeLoadBalancers</a> to get the value of <code>CanonicalHostedZoneNameId</code>.</p> </li> <li> <p>Application and Network Load Balancers: Use <a href="http://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_DescribeLoadBalancers.html">DescribeLoadBalancers</a> to get the value of <code>CanonicalHostedZoneId</code>.</p> </li> </ul> </li> <li> <p> <b>AWS CLI</b>: Use <code>describe-load-balancers</code> to get the applicable value. For more information, see the applicable guide:</p> <ul> <li> <p>Classic Load Balancers: Use <a href="http://docs.aws.amazon.com/cli/latest/reference/elb/describe-load-balancers.html">describe-load-balancers</a> to get the value of <code>CanonicalHostedZoneNameId</code>.</p> </li> <li> <p>Application and Network Load Balancers: Use <a href="http://docs.aws.amazon.com/cli/latest/reference/elbv2/describe-load-balancers.html">describe-load-balancers</a> to get the value of <code>CanonicalHostedZoneId</code>.</p> </li> </ul> </li> </ul> </dd> <dt>An Amazon S3 bucket configured as a static website</dt> <dd> <p>Specify the hosted zone ID for the region that you created the bucket in. For more information about valid values, see the <a href="http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region">Amazon Simple Storage Service Website Endpoints</a> table in the &quot;AWS Regions and Endpoints&quot; chapter of the <i>Amazon Web Services General Reference</i>.</p> </dd> <dt>Another Route 53 resource record set in your hosted zone</dt> <dd> <p>Specify the hosted zone ID of your hosted zone. (An alias resource record set can&#39;t reference a resource record set in a different hosted zone.)</p> </dd> </dl></p>
+    #[serde(rename = "HostedZoneId")]
     pub hosted_zone_id: String,
 }
 
@@ -353,10 +358,11 @@ impl AssociateVPCWithHostedZoneRequestSerializer {
     }
 }
 /// <p>A complex type that contains the response information for the <code>AssociateVPCWithHostedZone</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct AssociateVPCWithHostedZoneResponse {
     /// <p>A complex type that describes the changes made to your hosted zone.</p>
+    #[serde(rename = "ChangeInfo")]
     pub change_info: ChangeInfo,
 }
 
@@ -475,16 +481,21 @@ impl ChangeBatchSerializer {
 }
 
 /// <p>A complex type that describes change information about changes made to your hosted zone.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ChangeInfo {
     /// <p>A complex type that describes change information about changes made to your hosted zone.</p> <p>This element contains an ID that you use when performing a <a href="https://docs.aws.amazon.com/Route53/latest/APIReference/API_GetChange.html">GetChange</a> action to get detailed information about the change.</p>
+    #[serde(rename = "Comment")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub comment: Option<String>,
     /// <p>The ID of the request.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The current state of the request. <code>PENDING</code> indicates that this request has not yet been applied to all Amazon Route 53 DNS servers.</p>
+    #[serde(rename = "Status")]
     pub status: String,
     /// <p>The date and time that the change request was submitted in <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601 format</a> and Coordinated Universal Time (UTC). For example, the value <code>2017-03-27T17:48:16.751Z</code> represents March 27, 2017 at 17:48:16.751 UTC.</p>
+    #[serde(rename = "SubmittedAt")]
     pub submitted_at: String,
 }
 
@@ -545,10 +556,11 @@ impl ChangeResourceRecordSetsRequestSerializer {
     }
 }
 /// <p>A complex type containing the response for the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ChangeResourceRecordSetsResponse {
     /// <p>A complex type that contains information about changes made to your hosted zone.</p> <p>This element contains an ID that you use when performing a <a href="https://docs.aws.amazon.com/Route53/latest/APIReference/API_GetChange.html">GetChange</a> action to get detailed information about the change.</p>
+    #[serde(rename = "ChangeInfo")]
     pub change_info: ChangeInfo,
 }
 
@@ -622,8 +634,8 @@ impl ChangeTagsForResourceRequestSerializer {
     }
 }
 /// <p>Empty response for the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ChangeTagsForResourceResponse {}
 
 struct ChangeTagsForResourceResponseDeserializer;
@@ -722,24 +734,33 @@ impl ChildHealthCheckListSerializer {
 }
 
 /// <p>A complex type that contains information about the CloudWatch alarm that Amazon Route 53 is monitoring for this health check.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CloudWatchAlarmConfiguration {
     /// <p>For the metric that the CloudWatch alarm is associated with, the arithmetic operation that is used for the comparison.</p>
+    #[serde(rename = "ComparisonOperator")]
     pub comparison_operator: String,
     /// <p>For the metric that the CloudWatch alarm is associated with, a complex type that contains information about the dimensions for the metric. For information, see <a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/CW_Support_For_AWS.html">Amazon CloudWatch Namespaces, Dimensions, and Metrics Reference</a> in the <i>Amazon CloudWatch User Guide</i>.</p>
+    #[serde(rename = "Dimensions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dimensions: Option<Vec<Dimension>>,
     /// <p>For the metric that the CloudWatch alarm is associated with, the number of periods that the metric is compared to the threshold.</p>
+    #[serde(rename = "EvaluationPeriods")]
     pub evaluation_periods: i64,
     /// <p>The name of the CloudWatch metric that the alarm is associated with.</p>
+    #[serde(rename = "MetricName")]
     pub metric_name: String,
     /// <p>The namespace of the metric that the alarm is associated with. For more information, see <a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/CW_Support_For_AWS.html">Amazon CloudWatch Namespaces, Dimensions, and Metrics Reference</a> in the <i>Amazon CloudWatch User Guide</i>.</p>
+    #[serde(rename = "Namespace")]
     pub namespace: String,
     /// <p>For the metric that the CloudWatch alarm is associated with, the duration of one evaluation period in seconds.</p>
+    #[serde(rename = "Period")]
     pub period: i64,
     /// <p>For the metric that the CloudWatch alarm is associated with, the statistic that is applied to the metric.</p>
+    #[serde(rename = "Statistic")]
     pub statistic: String,
     /// <p>For the metric that the CloudWatch alarm is associated with, the value the metric is compared with.</p>
+    #[serde(rename = "Threshold")]
     pub threshold: f64,
 }
 
@@ -904,12 +925,14 @@ impl CreateHealthCheckRequestSerializer {
     }
 }
 /// <p>A complex type containing the response information for the new health check.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateHealthCheckResponse {
     /// <p>A complex type that contains identifying information about the health check.</p>
+    #[serde(rename = "HealthCheck")]
     pub health_check: HealthCheck,
     /// <p>The unique URL representing the new health check.</p>
+    #[serde(rename = "Location")]
     pub location: String,
 }
 
@@ -980,18 +1003,24 @@ impl CreateHostedZoneRequestSerializer {
     }
 }
 /// <p>A complex type containing the response information for the hosted zone.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateHostedZoneResponse {
     /// <p>A complex type that contains information about the <code>CreateHostedZone</code> request.</p>
+    #[serde(rename = "ChangeInfo")]
     pub change_info: ChangeInfo,
     /// <p>A complex type that describes the name servers for this hosted zone.</p>
+    #[serde(rename = "DelegationSet")]
     pub delegation_set: DelegationSet,
     /// <p>A complex type that contains general information about the hosted zone.</p>
+    #[serde(rename = "HostedZone")]
     pub hosted_zone: HostedZone,
     /// <p>The unique URL representing the new hosted zone.</p>
+    #[serde(rename = "Location")]
     pub location: String,
     /// <p>A complex type that contains information about an Amazon VPC that you associated with this hosted zone.</p>
+    #[serde(rename = "VPC")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vpc: Option<VPC>,
 }
 
@@ -1058,12 +1087,14 @@ impl CreateQueryLoggingConfigRequestSerializer {
         writer.write(xml::writer::XmlEvent::end_element())
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateQueryLoggingConfigResponse {
     /// <p>The unique URL representing the new query logging configuration.</p>
+    #[serde(rename = "Location")]
     pub location: String,
     /// <p>A complex type that contains the ID for a query logging configuration, the ID of the hosted zone that you want to log queries for, and the ARN for the log group that you want Amazon Route 53 to send query logs to.</p>
+    #[serde(rename = "QueryLoggingConfig")]
     pub query_logging_config: QueryLoggingConfig,
 }
 
@@ -1121,12 +1152,14 @@ impl CreateReusableDelegationSetRequestSerializer {
         writer.write(xml::writer::XmlEvent::end_element())
     }
 }
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateReusableDelegationSetResponse {
     /// <p>A complex type that contains name server information.</p>
+    #[serde(rename = "DelegationSet")]
     pub delegation_set: DelegationSet,
     /// <p>The unique URL representing the new reusable delegation set.</p>
+    #[serde(rename = "Location")]
     pub location: String,
 }
 
@@ -1199,12 +1232,14 @@ impl CreateTrafficPolicyInstanceRequestSerializer {
     }
 }
 /// <p>A complex type that contains the response information for the <code>CreateTrafficPolicyInstance</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateTrafficPolicyInstanceResponse {
     /// <p>A unique URL that represents a new traffic policy instance.</p>
+    #[serde(rename = "Location")]
     pub location: String,
     /// <p>A complex type that contains settings for the new traffic policy instance.</p>
+    #[serde(rename = "TrafficPolicyInstance")]
     pub traffic_policy_instance: TrafficPolicyInstance,
 }
 
@@ -1268,12 +1303,14 @@ impl CreateTrafficPolicyRequestSerializer {
     }
 }
 /// <p>A complex type that contains the response information for the <code>CreateTrafficPolicy</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateTrafficPolicyResponse {
     /// <p>A unique URL that represents a new traffic policy.</p>
+    #[serde(rename = "Location")]
     pub location: String,
     /// <p>A complex type that contains settings for the new traffic policy.</p>
+    #[serde(rename = "TrafficPolicy")]
     pub traffic_policy: TrafficPolicy,
 }
 
@@ -1333,12 +1370,14 @@ impl CreateTrafficPolicyVersionRequestSerializer {
     }
 }
 /// <p>A complex type that contains the response information for the <code>CreateTrafficPolicyVersion</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateTrafficPolicyVersionResponse {
     /// <p>A unique URL that represents a new traffic policy version.</p>
+    #[serde(rename = "Location")]
     pub location: String,
     /// <p>A complex type that contains settings for the new version of the traffic policy.</p>
+    #[serde(rename = "TrafficPolicy")]
     pub traffic_policy: TrafficPolicy,
 }
 
@@ -1393,12 +1432,14 @@ impl CreateVPCAssociationAuthorizationRequestSerializer {
     }
 }
 /// <p>A complex type that contains the response information from a <code>CreateVPCAssociationAuthorization</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct CreateVPCAssociationAuthorizationResponse {
     /// <p>The ID of the hosted zone that you authorized associating a VPC with.</p>
+    #[serde(rename = "HostedZoneId")]
     pub hosted_zone_id: String,
     /// <p>The VPC that you authorized associating with a hosted zone.</p>
+    #[serde(rename = "VPC")]
     pub vpc: VPC,
 }
 
@@ -1472,14 +1513,19 @@ impl DNSRCodeDeserializer {
     }
 }
 /// <p>A complex type that lists the name servers in a delegation set, as well as the <code>CallerReference</code> and the <code>ID</code> for the delegation set.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DelegationSet {
     /// <p>The value that you specified for <code>CallerReference</code> when you created the reusable delegation set.</p>
+    #[serde(rename = "CallerReference")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub caller_reference: Option<String>,
     /// <p>The ID that Amazon Route 53 assigns to a reusable delegation set.</p>
+    #[serde(rename = "Id")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// <p>A complex type that contains a list of the authoritative name servers for a hosted zone or for a reusable delegation set.</p>
+    #[serde(rename = "NameServers")]
     pub name_servers: Vec<String>,
 }
 
@@ -1558,8 +1604,8 @@ pub struct DeleteHealthCheckRequest {
 }
 
 /// <p>An empty element.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteHealthCheckResponse {}
 
 struct DeleteHealthCheckResponseDeserializer;
@@ -1587,10 +1633,11 @@ pub struct DeleteHostedZoneRequest {
 }
 
 /// <p>A complex type that contains the response to a <code>DeleteHostedZone</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteHostedZoneResponse {
     /// <p>A complex type that contains the ID, the status, and the date and time of a request to delete a hosted zone.</p>
+    #[serde(rename = "ChangeInfo")]
     pub change_info: ChangeInfo,
 }
 
@@ -1623,8 +1670,8 @@ pub struct DeleteQueryLoggingConfigRequest {
     pub id: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteQueryLoggingConfigResponse {}
 
 struct DeleteQueryLoggingConfigResponseDeserializer;
@@ -1652,8 +1699,8 @@ pub struct DeleteReusableDelegationSetRequest {
 }
 
 /// <p>An empty element.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteReusableDelegationSetResponse {}
 
 struct DeleteReusableDelegationSetResponseDeserializer;
@@ -1681,8 +1728,8 @@ pub struct DeleteTrafficPolicyInstanceRequest {
 }
 
 /// <p>An empty element.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteTrafficPolicyInstanceResponse {}
 
 struct DeleteTrafficPolicyInstanceResponseDeserializer;
@@ -1712,8 +1759,8 @@ pub struct DeleteTrafficPolicyRequest {
 }
 
 /// <p>An empty element.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteTrafficPolicyResponse {}
 
 struct DeleteTrafficPolicyResponseDeserializer;
@@ -1760,8 +1807,8 @@ impl DeleteVPCAssociationAuthorizationRequestSerializer {
     }
 }
 /// <p>Empty response for the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DeleteVPCAssociationAuthorizationResponse {}
 
 struct DeleteVPCAssociationAuthorizationResponseDeserializer;
@@ -1781,12 +1828,14 @@ impl DeleteVPCAssociationAuthorizationResponseDeserializer {
     }
 }
 /// <p>For the metric that the CloudWatch alarm is associated with, a complex type that contains information about one dimension.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Dimension {
     /// <p>For the metric that the CloudWatch alarm is associated with, the name of one dimension.</p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p>For the metric that the CloudWatch alarm is associated with, the value of one dimension.</p>
+    #[serde(rename = "Value")]
     pub value: String,
 }
 
@@ -1924,10 +1973,11 @@ impl DisassociateVPCFromHostedZoneRequestSerializer {
     }
 }
 /// <p>A complex type that contains the response information for the disassociate request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DisassociateVPCFromHostedZoneResponse {
     /// <p>A complex type that describes the changes made to the specified private hosted zone.</p>
+    #[serde(rename = "ChangeInfo")]
     pub change_info: ChangeInfo,
 }
 
@@ -2061,15 +2111,20 @@ impl FullyQualifiedDomainNameSerializer {
 }
 
 /// <p>A complex type that contains information about a geographic location.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GeoLocation {
     /// <p>The two-letter code for the continent.</p> <p>Valid values: <code>AF</code> | <code>AN</code> | <code>AS</code> | <code>EU</code> | <code>OC</code> | <code>NA</code> | <code>SA</code> </p> <p>Constraint: Specifying <code>ContinentCode</code> with either <code>CountryCode</code> or <code>SubdivisionCode</code> returns an <code>InvalidInput</code> error.</p>
+    #[serde(rename = "ContinentCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub continent_code: Option<String>,
     /// <p>The two-letter code for the country.</p>
+    #[serde(rename = "CountryCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
     /// <p>The code for the subdivision. Route 53 currently supports only states in the United States.</p>
+    #[serde(rename = "SubdivisionCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subdivision_code: Option<String>,
 }
 
@@ -2235,20 +2290,32 @@ impl GeoLocationCountryNameDeserializer {
     }
 }
 /// <p>A complex type that contains the codes and full continent, country, and subdivision names for the specified <code>geolocation</code> code.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GeoLocationDetails {
     /// <p>The two-letter code for the continent.</p>
+    #[serde(rename = "ContinentCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub continent_code: Option<String>,
     /// <p>The full name of the continent.</p>
+    #[serde(rename = "ContinentName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub continent_name: Option<String>,
     /// <p>The two-letter code for the country.</p>
+    #[serde(rename = "CountryCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
     /// <p>The name of the country.</p>
+    #[serde(rename = "CountryName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub country_name: Option<String>,
     /// <p>The code for the subdivision. Route 53 currently supports only states in the United States.</p>
+    #[serde(rename = "SubdivisionCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subdivision_code: Option<String>,
     /// <p>The full name of the subdivision. Route 53 currently supports only states in the United States.</p>
+    #[serde(rename = "SubdivisionName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subdivision_name: Option<String>,
 }
 
@@ -2377,12 +2444,14 @@ pub struct GetAccountLimitRequest {
 }
 
 /// <p>A complex type that contains the requested limit. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetAccountLimitResponse {
     /// <p>The current number of entities that you have created of the specified type. For example, if you specified <code>MAX_HEALTH_CHECKS_BY_OWNER</code> for the value of <code>Type</code> in the request, the value of <code>Count</code> is the current number of health checks that you have created using the current account.</p>
+    #[serde(rename = "Count")]
     pub count: i64,
     /// <p>The current setting for the specified limit. For example, if you specified <code>MAX_HEALTH_CHECKS_BY_OWNER</code> for the value of <code>Type</code> in the request, the value of <code>Limit</code> is the maximum number of health checks that you can create using the current account.</p>
+    #[serde(rename = "Limit")]
     pub limit: AccountLimit,
 }
 
@@ -2420,10 +2489,11 @@ pub struct GetChangeRequest {
 }
 
 /// <p>A complex type that contains the <code>ChangeInfo</code> element.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetChangeResponse {
     /// <p>A complex type that contains information about the specified change batch.</p>
+    #[serde(rename = "ChangeInfo")]
     pub change_info: ChangeInfo,
 }
 
@@ -2451,10 +2521,11 @@ impl GetChangeResponseDeserializer {
 pub struct GetCheckerIpRangesRequest {}
 
 /// <p>A complex type that contains the <code>CheckerIpRanges</code> element.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetCheckerIpRangesResponse {
     /// <p>A complex type that contains sorted list of IP ranges in CIDR format for Amazon Route 53 health checkers.</p>
+    #[serde(rename = "CheckerIpRanges")]
     pub checker_ip_ranges: Vec<String>,
 }
 
@@ -2497,10 +2568,11 @@ pub struct GetGeoLocationRequest {
 }
 
 /// <p>A complex type that contains the response information for the specified geolocation code.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetGeoLocationResponse {
     /// <p>A complex type that contains the codes and full continent, country, and subdivision names for the specified geolocation code.</p>
+    #[serde(rename = "GeoLocationDetails")]
     pub geo_location_details: GeoLocationDetails,
 }
 
@@ -2529,10 +2601,11 @@ impl GetGeoLocationResponseDeserializer {
 pub struct GetHealthCheckCountRequest {}
 
 /// <p>A complex type that contains the response to a <code>GetHealthCheckCount</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetHealthCheckCountResponse {
     /// <p>The number of health checks associated with the current AWS account.</p>
+    #[serde(rename = "HealthCheckCount")]
     pub health_check_count: i64,
 }
 
@@ -2568,10 +2641,11 @@ pub struct GetHealthCheckLastFailureReasonRequest {
 }
 
 /// <p>A complex type that contains the response to a <code>GetHealthCheckLastFailureReason</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetHealthCheckLastFailureReasonResponse {
     /// <p>A list that contains one <code>Observation</code> element for each Amazon Route 53 health checker that is reporting a last failure reason. </p>
+    #[serde(rename = "HealthCheckObservations")]
     pub health_check_observations: Vec<HealthCheckObservation>,
 }
 
@@ -2611,10 +2685,11 @@ pub struct GetHealthCheckRequest {
 }
 
 /// <p>A complex type that contains the response to a <code>GetHealthCheck</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetHealthCheckResponse {
     /// <p>A complex type that contains information about one health check that is associated with the current AWS account.</p>
+    #[serde(rename = "HealthCheck")]
     pub health_check: HealthCheck,
 }
 
@@ -2645,10 +2720,11 @@ pub struct GetHealthCheckStatusRequest {
 }
 
 /// <p>A complex type that contains the response to a <code>GetHealthCheck</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetHealthCheckStatusResponse {
     /// <p>A list that contains one <code>HealthCheckObservation</code> element for each Amazon Route 53 health checker that is reporting a status about the health check endpoint.</p>
+    #[serde(rename = "HealthCheckObservations")]
     pub health_check_observations: Vec<HealthCheckObservation>,
 }
 
@@ -2685,10 +2761,11 @@ impl GetHealthCheckStatusResponseDeserializer {
 pub struct GetHostedZoneCountRequest {}
 
 /// <p>A complex type that contains the response to a <code>GetHostedZoneCount</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetHostedZoneCountResponse {
     /// <p>The total number of public and private hosted zones that are associated with the current AWS account.</p>
+    #[serde(rename = "HostedZoneCount")]
     pub hosted_zone_count: i64,
 }
 
@@ -2726,12 +2803,14 @@ pub struct GetHostedZoneLimitRequest {
 }
 
 /// <p>A complex type that contains the requested limit. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetHostedZoneLimitResponse {
     /// <p>The current number of entities that you have created of the specified type. For example, if you specified <code>MAX_RRSETS_BY_ZONE</code> for the value of <code>Type</code> in the request, the value of <code>Count</code> is the current number of records that you have created in the specified hosted zone.</p>
+    #[serde(rename = "Count")]
     pub count: i64,
     /// <p>The current setting for the specified limit. For example, if you specified <code>MAX_RRSETS_BY_ZONE</code> for the value of <code>Type</code> in the request, the value of <code>Limit</code> is the maximum number of records that you can create in the specified hosted zone.</p>
+    #[serde(rename = "Limit")]
     pub limit: HostedZoneLimit,
 }
 
@@ -2769,14 +2848,19 @@ pub struct GetHostedZoneRequest {
 }
 
 /// <p>A complex type that contain the response to a <code>GetHostedZone</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetHostedZoneResponse {
     /// <p>A complex type that lists the Amazon Route 53 name servers for the specified hosted zone.</p>
+    #[serde(rename = "DelegationSet")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delegation_set: Option<DelegationSet>,
     /// <p>A complex type that contains general information about the specified hosted zone.</p>
+    #[serde(rename = "HostedZone")]
     pub hosted_zone: HostedZone,
     /// <p>A complex type that contains information about the VPCs that are associated with the specified hosted zone.</p>
+    #[serde(rename = "VPCs")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vp_cs: Option<Vec<VPC>>,
 }
 
@@ -2816,10 +2900,11 @@ pub struct GetQueryLoggingConfigRequest {
     pub id: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetQueryLoggingConfigResponse {
     /// <p>A complex type that contains information about the query logging configuration that you specified in a <a href="https://docs.aws.amazon.com/Route53/latest/APIReference/API_GetQueryLoggingConfig.html">GetQueryLoggingConfig</a> request.</p>
+    #[serde(rename = "QueryLoggingConfig")]
     pub query_logging_config: QueryLoggingConfig,
 }
 
@@ -2859,12 +2944,14 @@ pub struct GetReusableDelegationSetLimitRequest {
 }
 
 /// <p>A complex type that contains the requested limit. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetReusableDelegationSetLimitResponse {
     /// <p>The current number of hosted zones that you can associate with the specified reusable delegation set.</p>
+    #[serde(rename = "Count")]
     pub count: i64,
     /// <p>The current setting for the limit on hosted zones that you can associate with the specified reusable delegation set.</p>
+    #[serde(rename = "Limit")]
     pub limit: ReusableDelegationSetLimit,
 }
 
@@ -2903,10 +2990,11 @@ pub struct GetReusableDelegationSetRequest {
 }
 
 /// <p>A complex type that contains the response to the <code>GetReusableDelegationSet</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetReusableDelegationSetResponse {
     /// <p>A complex type that contains information about the reusable delegation set.</p>
+    #[serde(rename = "DelegationSet")]
     pub delegation_set: DelegationSet,
 }
 
@@ -2939,10 +3027,11 @@ impl GetReusableDelegationSetResponseDeserializer {
 pub struct GetTrafficPolicyInstanceCountRequest {}
 
 /// <p>A complex type that contains information about the resource record sets that Amazon Route 53 created based on a specified traffic policy.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetTrafficPolicyInstanceCountResponse {
     /// <p>The number of traffic policy instances that are associated with the current AWS account.</p>
+    #[serde(rename = "TrafficPolicyInstanceCount")]
     pub traffic_policy_instance_count: i64,
 }
 
@@ -2981,10 +3070,11 @@ pub struct GetTrafficPolicyInstanceRequest {
 }
 
 /// <p>A complex type that contains information about the resource record sets that Amazon Route 53 created based on a specified traffic policy.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetTrafficPolicyInstanceResponse {
     /// <p>A complex type that contains settings for the traffic policy instance.</p>
+    #[serde(rename = "TrafficPolicyInstance")]
     pub traffic_policy_instance: TrafficPolicyInstance,
 }
 
@@ -3025,10 +3115,11 @@ pub struct GetTrafficPolicyRequest {
 }
 
 /// <p>A complex type that contains the response information for the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetTrafficPolicyResponse {
     /// <p>A complex type that contains settings for the specified traffic policy.</p>
+    #[serde(rename = "TrafficPolicy")]
     pub traffic_policy: TrafficPolicy,
 }
 
@@ -3056,20 +3147,28 @@ impl GetTrafficPolicyResponseDeserializer {
     }
 }
 /// <p>A complex type that contains information about one health check that is associated with the current AWS account.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct HealthCheck {
     /// <p>A unique string that you specified when you created the health check.</p>
+    #[serde(rename = "CallerReference")]
     pub caller_reference: String,
     /// <p>A complex type that contains information about the CloudWatch alarm that Amazon Route 53 is monitoring for this health check.</p>
+    #[serde(rename = "CloudWatchAlarmConfiguration")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cloud_watch_alarm_configuration: Option<CloudWatchAlarmConfiguration>,
     /// <p>A complex type that contains detailed information about one health check.</p>
+    #[serde(rename = "HealthCheckConfig")]
     pub health_check_config: HealthCheckConfig,
     /// <p>The version of the health check. You can optionally pass this value in a call to <code>UpdateHealthCheck</code> to prevent overwriting another change to the health check.</p>
+    #[serde(rename = "HealthCheckVersion")]
     pub health_check_version: i64,
     /// <p>The identifier that Amazon Route 53assigned to the health check when you created it. When you add or update a resource record set, you use this value to specify which health check to use. The value can be up to 64 characters long. </p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>If the health check was created by another service, the service that created the health check. When a health check is created by another service, you can't edit or delete it using Amazon Route 53. </p>
+    #[serde(rename = "LinkedService")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub linked_service: Option<LinkedService>,
 }
 
@@ -3117,43 +3216,75 @@ impl HealthCheckDeserializer {
     }
 }
 /// <p>A complex type that contains information about the health check.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct HealthCheckConfig {
     /// <p>A complex type that identifies the CloudWatch alarm that you want Amazon Route 53 health checkers to use to determine whether the specified health check is healthy.</p>
+    #[serde(rename = "AlarmIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alarm_identifier: Option<AlarmIdentifier>,
     /// <p>(CALCULATED Health Checks Only) A complex type that contains one <code>ChildHealthCheck</code> element for each health check that you want to associate with a <code>CALCULATED</code> health check.</p>
+    #[serde(rename = "ChildHealthChecks")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub child_health_checks: Option<Vec<String>>,
     /// <p>Stops Route 53 from performing health checks. When you disable a health check, here's what happens:</p> <ul> <li> <p> <b>Health checks that check the health of endpoints:</b> Route 53 stops submitting requests to your application, server, or other resource.</p> </li> <li> <p> <b>Calculated health checks:</b> Route 53 stops aggregating the status of the referenced health checks.</p> </li> <li> <p> <b>Health checks that monitor CloudWatch alarms:</b> Route 53 stops monitoring the corresponding CloudWatch metrics.</p> </li> </ul> <p>After you disable a health check, Route 53 considers the status of the health check to always be healthy. If you configured DNS failover, Route 53 continues to route traffic to the corresponding resources. If you want to stop routing traffic to a resource, change the value of <a href="https://docs.aws.amazon.com/Route53/latest/APIReference/API_UpdateHealthCheck.html#Route53-UpdateHealthCheck-request-Inverted">Inverted</a>. </p> <p>Charges for a health check still apply when the health check is disabled. For more information, see <a href="http://aws.amazon.com/route53/pricing/">Amazon Route 53 Pricing</a>.</p>
+    #[serde(rename = "Disabled")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub disabled: Option<bool>,
     /// <p>Specify whether you want Amazon Route 53 to send the value of <code>FullyQualifiedDomainName</code> to the endpoint in the <code>client_hello</code> message during TLS negotiation. This allows the endpoint to respond to <code>HTTPS</code> health check requests with the applicable SSL/TLS certificate.</p> <p>Some endpoints require that <code>HTTPS</code> requests include the host name in the <code>client_hello</code> message. If you don't enable SNI, the status of the health check will be <code>SSL alert handshake_failure</code>. A health check can also have that status for other reasons. If SNI is enabled and you're still getting the error, check the SSL/TLS configuration on your endpoint and confirm that your certificate is valid.</p> <p>The SSL/TLS certificate on your endpoint includes a domain name in the <code>Common Name</code> field and possibly several more in the <code>Subject Alternative Names</code> field. One of the domain names in the certificate should match the value that you specify for <code>FullyQualifiedDomainName</code>. If the endpoint responds to the <code>client_hello</code> message with a certificate that does not include the domain name that you specified in <code>FullyQualifiedDomainName</code>, a health checker will retry the handshake. In the second attempt, the health checker will omit <code>FullyQualifiedDomainName</code> from the <code>client_hello</code> message.</p>
+    #[serde(rename = "EnableSNI")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enable_sni: Option<bool>,
     /// <p>The number of consecutive health checks that an endpoint must pass or fail for Amazon Route 53 to change the current status of the endpoint from unhealthy to healthy or vice versa. For more information, see <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html">How Amazon Route 53 Determines Whether an Endpoint Is Healthy</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> <p>If you don't specify a value for <code>FailureThreshold</code>, the default value is three health checks.</p>
+    #[serde(rename = "FailureThreshold")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failure_threshold: Option<i64>,
     /// <p>Amazon Route 53 behavior depends on whether you specify a value for <code>IPAddress</code>.</p> <p> <b>If you specify a value for</b> <code>IPAddress</code>:</p> <p>Amazon Route 53 sends health check requests to the specified IPv4 or IPv6 address and passes the value of <code>FullyQualifiedDomainName</code> in the <code>Host</code> header for all health checks except TCP health checks. This is typically the fully qualified DNS name of the endpoint on which you want Route 53 to perform health checks.</p> <p>When Route 53 checks the health of an endpoint, here is how it constructs the <code>Host</code> header:</p> <ul> <li> <p>If you specify a value of <code>80</code> for <code>Port</code> and <code>HTTP</code> or <code>HTTP_STR_MATCH</code> for <code>Type</code>, Route 53 passes the value of <code>FullyQualifiedDomainName</code> to the endpoint in the Host header. </p> </li> <li> <p>If you specify a value of <code>443</code> for <code>Port</code> and <code>HTTPS</code> or <code>HTTPS_STR_MATCH</code> for <code>Type</code>, Route 53 passes the value of <code>FullyQualifiedDomainName</code> to the endpoint in the <code>Host</code> header.</p> </li> <li> <p>If you specify another value for <code>Port</code> and any value except <code>TCP</code> for <code>Type</code>, Route 53 passes <code>FullyQualifiedDomainName:Port</code> to the endpoint in the <code>Host</code> header.</p> </li> </ul> <p>If you don't specify a value for <code>FullyQualifiedDomainName</code>, Route 53 substitutes the value of <code>IPAddress</code> in the <code>Host</code> header in each of the preceding cases.</p> <p> <b>If you don't specify a value for <code>IPAddress</code> </b>:</p> <p>Route 53 sends a DNS request to the domain that you specify for <code>FullyQualifiedDomainName</code> at the interval that you specify for <code>RequestInterval</code>. Using an IPv4 address that DNS returns, Route 53 then checks the health of the endpoint.</p> <note> <p>If you don't specify a value for <code>IPAddress</code>, Route 53 uses only IPv4 to send health checks to the endpoint. If there's no resource record set with a type of A for the name that you specify for <code>FullyQualifiedDomainName</code>, the health check fails with a "DNS resolution failed" error.</p> </note> <p>If you want to check the health of weighted, latency, or failover resource record sets and you choose to specify the endpoint only by <code>FullyQualifiedDomainName</code>, we recommend that you create a separate health check for each endpoint. For example, create a health check for each HTTP server that is serving content for www.example.com. For the value of <code>FullyQualifiedDomainName</code>, specify the domain name of the server (such as us-east-2-www.example.com), not the name of the resource record sets (www.example.com).</p> <important> <p>In this configuration, if you create a health check for which the value of <code>FullyQualifiedDomainName</code> matches the name of the resource record sets and you then associate the health check with those resource record sets, health check results will be unpredictable.</p> </important> <p>In addition, if the value that you specify for <code>Type</code> is <code>HTTP</code>, <code>HTTPS</code>, <code>HTTP_STR_MATCH</code>, or <code>HTTPS_STR_MATCH</code>, Route 53 passes the value of <code>FullyQualifiedDomainName</code> in the <code>Host</code> header, as it does when you specify a value for <code>IPAddress</code>. If the value of <code>Type</code> is <code>TCP</code>, Route 53 doesn't pass a <code>Host</code> header.</p>
+    #[serde(rename = "FullyQualifiedDomainName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub fully_qualified_domain_name: Option<String>,
     /// <p><p>The number of child health checks that are associated with a <code>CALCULATED</code> health check that Amazon Route 53 must consider healthy for the <code>CALCULATED</code> health check to be considered healthy. To specify the child health checks that you want to associate with a <code>CALCULATED</code> health check, use the <a href="https://docs.aws.amazon.com/Route53/latest/APIReference/API_UpdateHealthCheck.html#Route53-UpdateHealthCheck-request-ChildHealthChecks">ChildHealthChecks</a> element.</p> <p>Note the following:</p> <ul> <li> <p>If you specify a number greater than the number of child health checks, Route 53 always considers this health check to be unhealthy.</p> </li> <li> <p>If you specify <code>0</code>, Route 53 always considers this health check to be healthy.</p> </li> </ul></p>
+    #[serde(rename = "HealthThreshold")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health_threshold: Option<i64>,
     /// <p>The IPv4 or IPv6 IP address of the endpoint that you want Amazon Route 53 to perform health checks on. If you don't specify a value for <code>IPAddress</code>, Route 53 sends a DNS request to resolve the domain name that you specify in <code>FullyQualifiedDomainName</code> at the interval that you specify in <code>RequestInterval</code>. Using an IP address returned by DNS, Route 53 then checks the health of the endpoint.</p> <p>Use one of the following formats for the value of <code>IPAddress</code>: </p> <ul> <li> <p> <b>IPv4 address</b>: four values between 0 and 255, separated by periods (.), for example, <code>192.0.2.44</code>.</p> </li> <li> <p> <b>IPv6 address</b>: eight groups of four hexadecimal values, separated by colons (:), for example, <code>2001:0db8:85a3:0000:0000:abcd:0001:2345</code>. You can also shorten IPv6 addresses as described in RFC 5952, for example, <code>2001:db8:85a3::abcd:1:2345</code>.</p> </li> </ul> <p>If the endpoint is an EC2 instance, we recommend that you create an Elastic IP address, associate it with your EC2 instance, and specify the Elastic IP address for <code>IPAddress</code>. This ensures that the IP address of your instance will never change.</p> <p>For more information, see <a href="https://docs.aws.amazon.com/Route53/latest/APIReference/API_UpdateHealthCheck.html#Route53-UpdateHealthCheck-request-FullyQualifiedDomainName">FullyQualifiedDomainName</a>. </p> <p>Constraints: Route 53 can't check the health of endpoints for which the IP address is in local, private, non-routable, or multicast ranges. For more information about IP addresses for which you can't create health checks, see the following documents:</p> <ul> <li> <p> <a href="https://tools.ietf.org/html/rfc5735">RFC 5735, Special Use IPv4 Addresses</a> </p> </li> <li> <p> <a href="https://tools.ietf.org/html/rfc6598">RFC 6598, IANA-Reserved IPv4 Prefix for Shared Address Space</a> </p> </li> <li> <p> <a href="https://tools.ietf.org/html/rfc5156">RFC 5156, Special-Use IPv6 Addresses</a> </p> </li> </ul> <p>When the value of <code>Type</code> is <code>CALCULATED</code> or <code>CLOUDWATCH_METRIC</code>, omit <code>IPAddress</code>.</p>
+    #[serde(rename = "IPAddress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ip_address: Option<String>,
     /// <p><p>When CloudWatch has insufficient data about the metric to determine the alarm state, the status that you want Amazon Route 53 to assign to the health check:</p> <ul> <li> <p> <code>Healthy</code>: Route 53 considers the health check to be healthy.</p> </li> <li> <p> <code>Unhealthy</code>: Route 53 considers the health check to be unhealthy.</p> </li> <li> <p> <code>LastKnownStatus</code>: Route 53 uses the status of the health check from the last time that CloudWatch had sufficient data to determine the alarm state. For new health checks that have no last known status, the default status for the health check is healthy.</p> </li> </ul></p>
+    #[serde(rename = "InsufficientDataHealthStatus")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub insufficient_data_health_status: Option<String>,
     /// <p>Specify whether you want Amazon Route 53 to invert the status of a health check, for example, to consider a health check unhealthy when it otherwise would be considered healthy.</p>
+    #[serde(rename = "Inverted")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub inverted: Option<bool>,
     /// <p><p>Specify whether you want Amazon Route 53 to measure the latency between health checkers in multiple AWS regions and your endpoint, and to display CloudWatch latency graphs on the <b>Health Checks</b> page in the Route 53 console.</p> <important> <p>You can&#39;t change the value of <code>MeasureLatency</code> after you create a health check.</p> </important></p>
+    #[serde(rename = "MeasureLatency")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub measure_latency: Option<bool>,
     /// <p>The port on the endpoint on which you want Amazon Route 53 to perform health checks. Specify a value for <code>Port</code> only when you specify a value for <code>IPAddress</code>.</p>
+    #[serde(rename = "Port")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub port: Option<i64>,
     /// <p>A complex type that contains one <code>Region</code> element for each region from which you want Amazon Route 53 health checkers to check the specified endpoint.</p> <p>If you don't specify any regions, Route 53 health checkers automatically performs checks from all of the regions that are listed under <b>Valid Values</b>.</p> <p>If you update a health check to remove a region that has been performing health checks, Route 53 will briefly continue to perform checks from that region to ensure that some health checkers are always checking the endpoint (for example, if you replace three regions with four different regions). </p>
+    #[serde(rename = "Regions")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub regions: Option<Vec<String>>,
     /// <p>The number of seconds between the time that Amazon Route 53 gets a response from your endpoint and the time that it sends the next health check request. Each Route 53 health checker makes requests at this interval.</p> <important> <p>You can't change the value of <code>RequestInterval</code> after you create a health check.</p> </important> <p>If you don't specify a value for <code>RequestInterval</code>, the default value is <code>30</code> seconds.</p>
+    #[serde(rename = "RequestInterval")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub request_interval: Option<i64>,
     /// <p>The path, if any, that you want Amazon Route 53 to request when performing health checks. The path can be any value for which your endpoint will return an HTTP status code of 2xx or 3xx when the endpoint is healthy, for example, the file /docs/route53-health-check.html. You can also include query string parameters, for example, <code>/welcome.html?language=jp&amp;login=y</code>. </p>
+    #[serde(rename = "ResourcePath")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_path: Option<String>,
     /// <p>If the value of Type is <code>HTTP_STR_MATCH</code> or <code>HTTP_STR_MATCH</code>, the string that you want Amazon Route 53 to search for in the response body from the specified resource. If the string appears in the response body, Route 53 considers the resource healthy.</p> <p>Route 53 considers case when searching for <code>SearchString</code> in the response body. </p>
+    #[serde(rename = "SearchString")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub search_string: Option<String>,
     /// <p>The type of health check that you want to create, which indicates how Amazon Route 53 determines whether an endpoint is healthy.</p> <important> <p>You can't change the value of <code>Type</code> after you create a health check.</p> </important> <p>You can create the following types of health checks:</p> <ul> <li> <p> <b>HTTP</b>: Route 53 tries to establish a TCP connection. If successful, Route 53 submits an HTTP request and waits for an HTTP status code of 200 or greater and less than 400.</p> </li> <li> <p> <b>HTTPS</b>: Route 53 tries to establish a TCP connection. If successful, Route 53 submits an HTTPS request and waits for an HTTP status code of 200 or greater and less than 400.</p> <important> <p>If you specify <code>HTTPS</code> for the value of <code>Type</code>, the endpoint must support TLS v1.0 or later.</p> </important> </li> <li> <p> <b>HTTP_STR_MATCH</b>: Route 53 tries to establish a TCP connection. If successful, Route 53 submits an HTTP request and searches the first 5,120 bytes of the response body for the string that you specify in <code>SearchString</code>.</p> </li> <li> <p> <b>HTTPS_STR_MATCH</b>: Route 53 tries to establish a TCP connection. If successful, Route 53 submits an <code>HTTPS</code> request and searches the first 5,120 bytes of the response body for the string that you specify in <code>SearchString</code>.</p> </li> <li> <p> <b>TCP</b>: Route 53 tries to establish a TCP connection.</p> </li> <li> <p> <b>CLOUDWATCH_METRIC</b>: The health check is associated with a CloudWatch alarm. If the state of the alarm is <code>OK</code>, the health check is considered healthy. If the state is <code>ALARM</code>, the health check is considered unhealthy. If CloudWatch doesn't have sufficient data to determine whether the state is <code>OK</code> or <code>ALARM</code>, the health check status depends on the setting for <code>InsufficientDataHealthStatus</code>: <code>Healthy</code>, <code>Unhealthy</code>, or <code>LastKnownStatus</code>. </p> </li> <li> <p> <b>CALCULATED</b>: For health checks that monitor the status of other health checks, Route 53 adds up the number of health checks that Route 53 health checkers consider to be healthy and compares that number with the value of <code>HealthThreshold</code>. </p> </li> </ul> <p>For more information, see <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html">How Route 53 Determines Whether an Endpoint Is Healthy</a> in the <i>Amazon Route 53 Developer Guide</i>.</p>
+    #[serde(rename = "Type")]
     pub type_: String,
 }
 
@@ -3472,14 +3603,20 @@ impl HealthCheckNonceSerializer {
 }
 
 /// <p>A complex type that contains the last failure reason as reported by one Amazon Route 53 health checker.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct HealthCheckObservation {
     /// <p>The IP address of the Amazon Route 53 health checker that provided the failure reason in <code>StatusReport</code>.</p>
+    #[serde(rename = "IPAddress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ip_address: Option<String>,
     /// <p>The region of the Amazon Route 53 health checker that provided the status in <code>StatusReport</code>.</p>
+    #[serde(rename = "Region")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
     /// <p>A complex type that contains the last failure reason as reported by one Amazon Route 53 health checker and the time of the failed health check.</p>
+    #[serde(rename = "StatusReport")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status_report: Option<StatusReport>,
 }
 
@@ -3714,20 +3851,29 @@ impl HealthThresholdSerializer {
 }
 
 /// <p>A complex type that contains general information about the hosted zone.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct HostedZone {
     /// <p>The value that you specified for <code>CallerReference</code> when you created the hosted zone.</p>
+    #[serde(rename = "CallerReference")]
     pub caller_reference: String,
     /// <p>A complex type that includes the <code>Comment</code> and <code>PrivateZone</code> elements. If you omitted the <code>HostedZoneConfig</code> and <code>Comment</code> elements from the request, the <code>Config</code> and <code>Comment</code> elements don't appear in the response.</p>
+    #[serde(rename = "Config")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub config: Option<HostedZoneConfig>,
     /// <p>The ID that Amazon Route 53 assigned to the hosted zone when you created it.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>If the hosted zone was created by another service, the service that created the hosted zone. When a hosted zone is created by another service, you can't edit or delete it using Route 53. </p>
+    #[serde(rename = "LinkedService")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub linked_service: Option<LinkedService>,
     /// <p>The name of the domain. For public hosted zones, this is the name that you have registered with your DNS registrar.</p> <p>For information about how to specify characters other than <code>a-z</code>, <code>0-9</code>, and <code>-</code> (hyphen) and how to specify internationalized domain names, see <a href="https://docs.aws.amazon.com/Route53/latest/APIReference/API_CreateHostedZone.html">CreateHostedZone</a>.</p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p>The number of resource record sets in the hosted zone.</p>
+    #[serde(rename = "ResourceRecordSetCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_record_set_count: Option<i64>,
 }
 
@@ -3773,13 +3919,16 @@ impl HostedZoneDeserializer {
     }
 }
 /// <p>A complex type that contains an optional comment about your hosted zone. If you don't want to specify a comment, omit both the <code>HostedZoneConfig</code> and <code>Comment</code> elements.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct HostedZoneConfig {
     /// <p>Any comments that you want to include about the hosted zone.</p>
+    #[serde(rename = "Comment")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub comment: Option<String>,
     /// <p>A value that indicates whether this is a private hosted zone.</p>
+    #[serde(rename = "PrivateZone")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub private_zone: Option<bool>,
 }
 
@@ -3854,12 +4003,14 @@ impl HostedZoneCountDeserializer {
     }
 }
 /// <p>A complex type that contains the type of limit that you specified in the request and the current value for that limit.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct HostedZoneLimit {
     /// <p><p>The limit that you requested. Valid values include the following:</p> <ul> <li> <p> <b>MAX<em>RRSETS</em>BY<em>ZONE</b>: The maximum number of records that you can create in the specified hosted zone.</p> </li> <li> <p> <b>MAX</em>VPCS<em>ASSOCIATED</em>BY_ZONE</b>: The maximum number of Amazon VPCs that you can associate with the specified private hosted zone.</p> </li> </ul></p>
+    #[serde(rename = "Type")]
     pub type_: String,
     /// <p>The current value for the limit that is specified by <code>Type</code>.</p>
+    #[serde(rename = "Value")]
     pub value: i64,
 }
 
@@ -4095,12 +4246,16 @@ impl LimitValueDeserializer {
     }
 }
 /// <p>If a health check or hosted zone was created by another service, <code>LinkedService</code> is a complex type that describes the service that created the resource. When a resource is created by another service, you can't edit or delete it using Amazon Route 53. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct LinkedService {
     /// <p>If the health check or hosted zone was created by another service, an optional description that can be provided by the other service. When a resource is created by another service, you can't edit or delete it using Amazon Route 53. </p>
+    #[serde(rename = "Description")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// <p>If the health check or hosted zone was created by another service, the service that created the resource. When a resource is created by another service, you can't edit or delete it using Amazon Route 53. </p>
+    #[serde(rename = "ServicePrincipal")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub service_principal: Option<String>,
 }
 
@@ -4146,20 +4301,29 @@ pub struct ListGeoLocationsRequest {
 }
 
 /// <p>A complex type containing the response information for the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListGeoLocationsResponse {
     /// <p>A complex type that contains one <code>GeoLocationDetails</code> element for each location that Amazon Route 53 supports for geolocation.</p>
+    #[serde(rename = "GeoLocationDetailsList")]
     pub geo_location_details_list: Vec<GeoLocationDetails>,
     /// <p>A value that indicates whether more locations remain to be listed after the last location in this response. If so, the value of <code>IsTruncated</code> is <code>true</code>. To get more values, submit another request and include the values of <code>NextContinentCode</code>, <code>NextCountryCode</code>, and <code>NextSubdivisionCode</code> in the <code>startcontinentcode</code>, <code>startcountrycode</code>, and <code>startsubdivisioncode</code>, as applicable.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>The value that you specified for <code>MaxItems</code> in the request.</p>
+    #[serde(rename = "MaxItems")]
     pub max_items: String,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, you can make a follow-up request to display more locations. Enter the value of <code>NextContinentCode</code> in the <code>startcontinentcode</code> parameter in another <code>ListGeoLocations</code> request.</p>
+    #[serde(rename = "NextContinentCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_continent_code: Option<String>,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, you can make a follow-up request to display more locations. Enter the value of <code>NextCountryCode</code> in the <code>startcountrycode</code> parameter in another <code>ListGeoLocations</code> request.</p>
+    #[serde(rename = "NextCountryCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_country_code: Option<String>,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, you can make a follow-up request to display more locations. Enter the value of <code>NextSubdivisionCode</code> in the <code>startsubdivisioncode</code> parameter in another <code>ListGeoLocations</code> request.</p>
+    #[serde(rename = "NextSubdivisionCode")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_subdivision_code: Option<String>,
 }
 
@@ -4229,18 +4393,24 @@ pub struct ListHealthChecksRequest {
 }
 
 /// <p>A complex type that contains the response to a <code>ListHealthChecks</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListHealthChecksResponse {
     /// <p>A complex type that contains one <code>HealthCheck</code> element for each health check that is associated with the current AWS account.</p>
+    #[serde(rename = "HealthChecks")]
     pub health_checks: Vec<HealthCheck>,
     /// <p>A flag that indicates whether there are more health checks to be listed. If the response was truncated, you can get the next group of health checks by submitting another <code>ListHealthChecks</code> request and specifying the value of <code>NextMarker</code> in the <code>marker</code> parameter.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>For the second and subsequent calls to <code>ListHealthChecks</code>, <code>Marker</code> is the value that you specified for the <code>marker</code> parameter in the previous request.</p>
+    #[serde(rename = "Marker")]
     pub marker: String,
     /// <p>The value that you specified for the <code>maxitems</code> parameter in the call to <code>ListHealthChecks</code> that produced the current response.</p>
+    #[serde(rename = "MaxItems")]
     pub max_items: String,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, the value of <code>NextMarker</code> identifies the first health check that Amazon Route 53 returns if you submit another <code>ListHealthChecks</code> request and specify the value of <code>NextMarker</code> in the <code>marker</code> parameter.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
 }
 
@@ -4297,22 +4467,33 @@ pub struct ListHostedZonesByNameRequest {
 }
 
 /// <p>A complex type that contains the response information for the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListHostedZonesByNameResponse {
     /// <p>For the second and subsequent calls to <code>ListHostedZonesByName</code>, <code>DNSName</code> is the value that you specified for the <code>dnsname</code> parameter in the request that produced the current response.</p>
+    #[serde(rename = "DNSName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dns_name: Option<String>,
     /// <p>The ID that Amazon Route 53 assigned to the hosted zone when you created it.</p>
+    #[serde(rename = "HostedZoneId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub hosted_zone_id: Option<String>,
     /// <p>A complex type that contains general information about the hosted zone.</p>
+    #[serde(rename = "HostedZones")]
     pub hosted_zones: Vec<HostedZone>,
     /// <p>A flag that indicates whether there are more hosted zones to be listed. If the response was truncated, you can get the next group of <code>maxitems</code> hosted zones by calling <code>ListHostedZonesByName</code> again and specifying the values of <code>NextDNSName</code> and <code>NextHostedZoneId</code> elements in the <code>dnsname</code> and <code>hostedzoneid</code> parameters.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>The value that you specified for the <code>maxitems</code> parameter in the call to <code>ListHostedZonesByName</code> that produced the current response.</p>
+    #[serde(rename = "MaxItems")]
     pub max_items: String,
     /// <p>If <code>IsTruncated</code> is true, the value of <code>NextDNSName</code> is the name of the first hosted zone in the next group of <code>maxitems</code> hosted zones. Call <code>ListHostedZonesByName</code> again and specify the value of <code>NextDNSName</code> and <code>NextHostedZoneId</code> in the <code>dnsname</code> and <code>hostedzoneid</code> parameters, respectively.</p> <p>This element is present only if <code>IsTruncated</code> is <code>true</code>.</p>
+    #[serde(rename = "NextDNSName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_dns_name: Option<String>,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, the value of <code>NextHostedZoneId</code> identifies the first hosted zone in the next group of <code>maxitems</code> hosted zones. Call <code>ListHostedZonesByName</code> again and specify the value of <code>NextDNSName</code> and <code>NextHostedZoneId</code> in the <code>dnsname</code> and <code>hostedzoneid</code> parameters, respectively.</p> <p>This element is present only if <code>IsTruncated</code> is <code>true</code>.</p>
+    #[serde(rename = "NextHostedZoneId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_hosted_zone_id: Option<String>,
 }
 
@@ -4375,18 +4556,24 @@ pub struct ListHostedZonesRequest {
     pub max_items: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListHostedZonesResponse {
     /// <p>A complex type that contains general information about the hosted zone.</p>
+    #[serde(rename = "HostedZones")]
     pub hosted_zones: Vec<HostedZone>,
     /// <p>A flag indicating whether there are more hosted zones to be listed. If the response was truncated, you can get more hosted zones by submitting another <code>ListHostedZones</code> request and specifying the value of <code>NextMarker</code> in the <code>marker</code> parameter.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>For the second and subsequent calls to <code>ListHostedZones</code>, <code>Marker</code> is the value that you specified for the <code>marker</code> parameter in the request that produced the current response.</p>
+    #[serde(rename = "Marker")]
     pub marker: String,
     /// <p>The value that you specified for the <code>maxitems</code> parameter in the call to <code>ListHostedZones</code> that produced the current response.</p>
+    #[serde(rename = "MaxItems")]
     pub max_items: String,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, the value of <code>NextMarker</code> identifies the first hosted zone in the next group of hosted zones. Submit another <code>ListHostedZones</code> request, and specify the value of <code>NextMarker</code> from the response in the <code>marker</code> parameter.</p> <p>This element is present only if <code>IsTruncated</code> is <code>true</code>.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
 }
 
@@ -4438,12 +4625,15 @@ pub struct ListQueryLoggingConfigsRequest {
     pub next_token: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListQueryLoggingConfigsResponse {
     /// <p>If a response includes the last of the query logging configurations that are associated with the current AWS account, <code>NextToken</code> doesn't appear in the response.</p> <p>If a response doesn't include the last of the configurations, you can get more configurations by submitting another <a href="https://docs.aws.amazon.com/Route53/latest/APIReference/API_ListQueryLoggingConfigs.html">ListQueryLoggingConfigs</a> request. Get the value of <code>NextToken</code> that Amazon Route 53 returned in the previous response and include it in <code>NextToken</code> in the next request.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>An array that contains one <a href="https://docs.aws.amazon.com/Route53/latest/APIReference/API_QueryLoggingConfig.html">QueryLoggingConfig</a> element for each configuration for DNS query logging that is associated with the current AWS account.</p>
+    #[serde(rename = "QueryLoggingConfigs")]
     pub query_logging_configs: Vec<QueryLoggingConfig>,
 }
 
@@ -4497,20 +4687,29 @@ pub struct ListResourceRecordSetsRequest {
 }
 
 /// <p>A complex type that contains list information for the resource record set.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListResourceRecordSetsResponse {
     /// <p>A flag that indicates whether more resource record sets remain to be listed. If your results were truncated, you can make a follow-up pagination request by using the <code>NextRecordName</code> element.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>The maximum number of records you requested.</p>
+    #[serde(rename = "MaxItems")]
     pub max_items: String,
     /// <p> <i>Resource record sets that have a routing policy other than simple:</i> If results were truncated for a given DNS name and type, the value of <code>SetIdentifier</code> for the next resource record set that has the current DNS name and type.</p> <p>For information about routing policies, see <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html">Choosing a Routing Policy</a> in the <i>Amazon Route 53 Developer Guide</i>.</p>
+    #[serde(rename = "NextRecordIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_record_identifier: Option<String>,
     /// <p>If the results were truncated, the name of the next record in the list.</p> <p>This element is present only if <code>IsTruncated</code> is true. </p>
+    #[serde(rename = "NextRecordName")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_record_name: Option<String>,
     /// <p>If the results were truncated, the type of the next record in the list.</p> <p>This element is present only if <code>IsTruncated</code> is true. </p>
+    #[serde(rename = "NextRecordType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_record_type: Option<String>,
     /// <p>Information about multiple resource record sets.</p>
+    #[serde(rename = "ResourceRecordSets")]
     pub resource_record_sets: Vec<ResourceRecordSet>,
 }
 
@@ -4574,18 +4773,24 @@ pub struct ListReusableDelegationSetsRequest {
 }
 
 /// <p>A complex type that contains information about the reusable delegation sets that are associated with the current AWS account.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListReusableDelegationSetsResponse {
     /// <p>A complex type that contains one <code>DelegationSet</code> element for each reusable delegation set that was created by the current AWS account.</p>
+    #[serde(rename = "DelegationSets")]
     pub delegation_sets: Vec<DelegationSet>,
     /// <p>A flag that indicates whether there are more reusable delegation sets to be listed.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>For the second and subsequent calls to <code>ListReusableDelegationSets</code>, <code>Marker</code> is the value that you specified for the <code>marker</code> parameter in the request that produced the current response.</p>
+    #[serde(rename = "Marker")]
     pub marker: String,
     /// <p>The value that you specified for the <code>maxitems</code> parameter in the call to <code>ListReusableDelegationSets</code> that produced the current response.</p>
+    #[serde(rename = "MaxItems")]
     pub max_items: String,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, the value of <code>NextMarker</code> identifies the next reusable delegation set that Amazon Route 53 will return if you submit another <code>ListReusableDelegationSets</code> request and specify the value of <code>NextMarker</code> in the <code>marker</code> parameter.</p>
+    #[serde(rename = "NextMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
 }
 
@@ -4640,10 +4845,11 @@ pub struct ListTagsForResourceRequest {
 }
 
 /// <p>A complex type that contains information about the health checks or hosted zones for which you want to list tags.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTagsForResourceResponse {
     /// <p>A <code>ResourceTagSet</code> containing tags associated with the specified resource.</p>
+    #[serde(rename = "ResourceTagSet")]
     pub resource_tag_set: ResourceTagSet,
 }
 
@@ -4698,10 +4904,11 @@ impl ListTagsForResourcesRequestSerializer {
     }
 }
 /// <p>A complex type containing tags for the specified resources.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTagsForResourcesResponse {
     /// <p>A list of <code>ResourceTagSet</code>s containing tags associated with the specified resources.</p>
+    #[serde(rename = "ResourceTagSets")]
     pub resource_tag_sets: Vec<ResourceTagSet>,
 }
 
@@ -4742,16 +4949,20 @@ pub struct ListTrafficPoliciesRequest {
 }
 
 /// <p>A complex type that contains the response information for the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTrafficPoliciesResponse {
     /// <p>A flag that indicates whether there are more traffic policies to be listed. If the response was truncated, you can get the next group of traffic policies by submitting another <code>ListTrafficPolicies</code> request and specifying the value of <code>TrafficPolicyIdMarker</code> in the <code>TrafficPolicyIdMarker</code> request parameter.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>The value that you specified for the <code>MaxItems</code> parameter in the <code>ListTrafficPolicies</code> request that produced the current response.</p>
+    #[serde(rename = "MaxItems")]
     pub max_items: String,
     /// <p>If the value of <code>IsTruncated</code> is <code>true</code>, <code>TrafficPolicyIdMarker</code> is the ID of the first traffic policy in the next group of <code>MaxItems</code> traffic policies.</p>
+    #[serde(rename = "TrafficPolicyIdMarker")]
     pub traffic_policy_id_marker: String,
     /// <p>A list that contains one <code>TrafficPolicySummary</code> element for each traffic policy that was created by the current AWS account.</p>
+    #[serde(rename = "TrafficPolicySummaries")]
     pub traffic_policy_summaries: Vec<TrafficPolicySummary>,
 }
 
@@ -4810,18 +5021,25 @@ pub struct ListTrafficPolicyInstancesByHostedZoneRequest {
 }
 
 /// <p>A complex type that contains the response information for the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTrafficPolicyInstancesByHostedZoneResponse {
     /// <p>A flag that indicates whether there are more traffic policy instances to be listed. If the response was truncated, you can get the next group of traffic policy instances by submitting another <code>ListTrafficPolicyInstancesByHostedZone</code> request and specifying the values of <code>HostedZoneIdMarker</code>, <code>TrafficPolicyInstanceNameMarker</code>, and <code>TrafficPolicyInstanceTypeMarker</code> in the corresponding request parameters.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>The value that you specified for the <code>MaxItems</code> parameter in the <code>ListTrafficPolicyInstancesByHostedZone</code> request that produced the current response.</p>
+    #[serde(rename = "MaxItems")]
     pub max_items: String,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, <code>TrafficPolicyInstanceNameMarker</code> is the name of the first traffic policy instance in the next group of traffic policy instances.</p>
+    #[serde(rename = "TrafficPolicyInstanceNameMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub traffic_policy_instance_name_marker: Option<String>,
     /// <p>If <code>IsTruncated</code> is true, <code>TrafficPolicyInstanceTypeMarker</code> is the DNS type of the resource record sets that are associated with the first traffic policy instance in the next group of traffic policy instances.</p>
+    #[serde(rename = "TrafficPolicyInstanceTypeMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub traffic_policy_instance_type_marker: Option<String>,
     /// <p>A list that contains one <code>TrafficPolicyInstance</code> element for each traffic policy instance that matches the elements in the request. </p>
+    #[serde(rename = "TrafficPolicyInstances")]
     pub traffic_policy_instances: Vec<TrafficPolicyInstance>,
 }
 
@@ -4892,20 +5110,29 @@ pub struct ListTrafficPolicyInstancesByPolicyRequest {
 }
 
 /// <p>A complex type that contains the response information for the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTrafficPolicyInstancesByPolicyResponse {
     /// <p>If <code>IsTruncated</code> is <code>true</code>, <code>HostedZoneIdMarker</code> is the ID of the hosted zone of the first traffic policy instance in the next group of traffic policy instances.</p>
+    #[serde(rename = "HostedZoneIdMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub hosted_zone_id_marker: Option<String>,
     /// <p>A flag that indicates whether there are more traffic policy instances to be listed. If the response was truncated, you can get the next group of traffic policy instances by calling <code>ListTrafficPolicyInstancesByPolicy</code> again and specifying the values of the <code>HostedZoneIdMarker</code>, <code>TrafficPolicyInstanceNameMarker</code>, and <code>TrafficPolicyInstanceTypeMarker</code> elements in the corresponding request parameters.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>The value that you specified for the <code>MaxItems</code> parameter in the call to <code>ListTrafficPolicyInstancesByPolicy</code> that produced the current response.</p>
+    #[serde(rename = "MaxItems")]
     pub max_items: String,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, <code>TrafficPolicyInstanceNameMarker</code> is the name of the first traffic policy instance in the next group of <code>MaxItems</code> traffic policy instances.</p>
+    #[serde(rename = "TrafficPolicyInstanceNameMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub traffic_policy_instance_name_marker: Option<String>,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, <code>TrafficPolicyInstanceTypeMarker</code> is the DNS type of the resource record sets that are associated with the first traffic policy instance in the next group of <code>MaxItems</code> traffic policy instances.</p>
+    #[serde(rename = "TrafficPolicyInstanceTypeMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub traffic_policy_instance_type_marker: Option<String>,
     /// <p>A list that contains one <code>TrafficPolicyInstance</code> element for each traffic policy instance that matches the elements in the request.</p>
+    #[serde(rename = "TrafficPolicyInstances")]
     pub traffic_policy_instances: Vec<TrafficPolicyInstance>,
 }
 
@@ -4978,20 +5205,29 @@ pub struct ListTrafficPolicyInstancesRequest {
 }
 
 /// <p>A complex type that contains the response information for the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTrafficPolicyInstancesResponse {
     /// <p>If <code>IsTruncated</code> is <code>true</code>, <code>HostedZoneIdMarker</code> is the ID of the hosted zone of the first traffic policy instance that Route 53 will return if you submit another <code>ListTrafficPolicyInstances</code> request. </p>
+    #[serde(rename = "HostedZoneIdMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub hosted_zone_id_marker: Option<String>,
     /// <p>A flag that indicates whether there are more traffic policy instances to be listed. If the response was truncated, you can get more traffic policy instances by calling <code>ListTrafficPolicyInstances</code> again and specifying the values of the <code>HostedZoneIdMarker</code>, <code>TrafficPolicyInstanceNameMarker</code>, and <code>TrafficPolicyInstanceTypeMarker</code> in the corresponding request parameters.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>The value that you specified for the <code>MaxItems</code> parameter in the call to <code>ListTrafficPolicyInstances</code> that produced the current response.</p>
+    #[serde(rename = "MaxItems")]
     pub max_items: String,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, <code>TrafficPolicyInstanceNameMarker</code> is the name of the first traffic policy instance that Route 53 will return if you submit another <code>ListTrafficPolicyInstances</code> request. </p>
+    #[serde(rename = "TrafficPolicyInstanceNameMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub traffic_policy_instance_name_marker: Option<String>,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, <code>TrafficPolicyInstanceTypeMarker</code> is the DNS type of the resource record sets that are associated with the first traffic policy instance that Amazon Route 53 will return if you submit another <code>ListTrafficPolicyInstances</code> request. </p>
+    #[serde(rename = "TrafficPolicyInstanceTypeMarker")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub traffic_policy_instance_type_marker: Option<String>,
     /// <p>A list that contains one <code>TrafficPolicyInstance</code> element for each traffic policy instance that matches the elements in the request.</p>
+    #[serde(rename = "TrafficPolicyInstances")]
     pub traffic_policy_instances: Vec<TrafficPolicyInstance>,
 }
 
@@ -5062,16 +5298,20 @@ pub struct ListTrafficPolicyVersionsRequest {
 }
 
 /// <p>A complex type that contains the response information for the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListTrafficPolicyVersionsResponse {
     /// <p>A flag that indicates whether there are more traffic policies to be listed. If the response was truncated, you can get the next group of traffic policies by submitting another <code>ListTrafficPolicyVersions</code> request and specifying the value of <code>NextMarker</code> in the <code>marker</code> parameter.</p>
+    #[serde(rename = "IsTruncated")]
     pub is_truncated: bool,
     /// <p>The value that you specified for the <code>maxitems</code> parameter in the <code>ListTrafficPolicyVersions</code> request that produced the current response.</p>
+    #[serde(rename = "MaxItems")]
     pub max_items: String,
     /// <p>A list that contains one <code>TrafficPolicy</code> element for each traffic policy version that is associated with the specified traffic policy.</p>
+    #[serde(rename = "TrafficPolicies")]
     pub traffic_policies: Vec<TrafficPolicy>,
     /// <p>If <code>IsTruncated</code> is <code>true</code>, the value of <code>TrafficPolicyVersionMarker</code> identifies the first traffic policy that Amazon Route 53 will return if you submit another request. Call <code>ListTrafficPolicyVersions</code> again and specify the value of <code>TrafficPolicyVersionMarker</code> in the <code>TrafficPolicyVersionMarker</code> request parameter.</p> <p>This element is present only if <code>IsTruncated</code> is <code>true</code>.</p>
+    #[serde(rename = "TrafficPolicyVersionMarker")]
     pub traffic_policy_version_marker: String,
 }
 
@@ -5128,14 +5368,18 @@ pub struct ListVPCAssociationAuthorizationsRequest {
 }
 
 /// <p>A complex type that contains the response information for the request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListVPCAssociationAuthorizationsResponse {
     /// <p>The ID of the hosted zone that you can associate the listed VPCs with.</p>
+    #[serde(rename = "HostedZoneId")]
     pub hosted_zone_id: String,
     /// <p>When the response includes a <code>NextToken</code> element, there are more VPCs that can be associated with the specified hosted zone. To get the next page of VPCs, submit another <code>ListVPCAssociationAuthorizations</code> request, and include the value of the <code>NextToken</code> element from the response in the <code>nexttoken</code> request parameter.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
     /// <p>The list of VPCs that are authorized to be associated with the specified hosted zone.</p>
+    #[serde(rename = "VPCs")]
     pub vp_cs: Vec<VPC>,
 }
 
@@ -5452,14 +5696,17 @@ impl PortSerializer {
 }
 
 /// <p>A complex type that contains information about a configuration for DNS query logging.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct QueryLoggingConfig {
     /// <p>The Amazon Resource Name (ARN) of the CloudWatch Logs log group that Amazon Route 53 is publishing logs to.</p>
+    #[serde(rename = "CloudWatchLogsLogGroupArn")]
     pub cloud_watch_logs_log_group_arn: String,
     /// <p>The ID of the hosted zone that CloudWatch Logs is logging queries for. </p>
+    #[serde(rename = "HostedZoneId")]
     pub hosted_zone_id: String,
     /// <p>The ID for a configuration for DNS query logging.</p>
+    #[serde(rename = "Id")]
     pub id: String,
 }
 
@@ -5808,11 +6055,11 @@ impl ResourcePathSerializer {
 }
 
 /// <p><p>Information specific to the resource record.</p> <note> <p>If you&#39;re creating an alias resource record set, omit <code>ResourceRecord</code>.</p> </note></p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ResourceRecord {
     /// <p><p>The current or new DNS record value, not to exceed 4,000 characters. In the case of a <code>DELETE</code> action, if the current value does not match the actual value, an error is returned. For descriptions about how to format <code>Value</code> for different record types, see <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html">Supported DNS Resource Record Types</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> <p>You can specify more than one value for all record types except <code>CNAME</code> and <code>SOA</code>. </p> <note> <p>If you&#39;re creating an alias resource record set, omit <code>Value</code>.</p> </note></p>
+    #[serde(rename = "Value")]
     pub value: String,
 }
 
@@ -5858,35 +6105,58 @@ impl ResourceRecordSerializer {
 }
 
 /// <p>Information about the resource record set to create or delete.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ResourceRecordSet {
     /// <p><p> <i>Alias resource record sets only:</i> Information about the AWS resource, such as a CloudFront distribution or an Amazon S3 bucket, that you want to route traffic to. </p> <p>If you&#39;re creating resource records sets for a private hosted zone, note the following:</p> <ul> <li> <p>You can&#39;t create an alias resource record set in a private hosted zone to route traffic to a CloudFront distribution.</p> </li> <li> <p>Creating geolocation alias resource record sets or latency alias resource record sets in a private hosted zone is unsupported.</p> </li> <li> <p>For information about creating failover resource record sets in a private hosted zone, see <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-private-hosted-zones.html">Configuring Failover in a Private Hosted Zone</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> </li> </ul></p>
+    #[serde(rename = "AliasTarget")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alias_target: Option<AliasTarget>,
     /// <p><p> <i>Failover resource record sets only:</i> To configure failover, you add the <code>Failover</code> element to two resource record sets. For one resource record set, you specify <code>PRIMARY</code> as the value for <code>Failover</code>; for the other resource record set, you specify <code>SECONDARY</code>. In addition, you include the <code>HealthCheckId</code> element and specify the health check that you want Amazon Route 53 to perform for each resource record set.</p> <p>Except where noted, the following failover behaviors assume that you have included the <code>HealthCheckId</code> element in both resource record sets:</p> <ul> <li> <p>When the primary resource record set is healthy, Route 53 responds to DNS queries with the applicable value from the primary resource record set regardless of the health of the secondary resource record set.</p> </li> <li> <p>When the primary resource record set is unhealthy and the secondary resource record set is healthy, Route 53 responds to DNS queries with the applicable value from the secondary resource record set.</p> </li> <li> <p>When the secondary resource record set is unhealthy, Route 53 responds to DNS queries with the applicable value from the primary resource record set regardless of the health of the primary resource record set.</p> </li> <li> <p>If you omit the <code>HealthCheckId</code> element for the secondary resource record set, and if the primary resource record set is unhealthy, Route 53 always responds to DNS queries with the applicable value from the secondary resource record set. This is true regardless of the health of the associated endpoint.</p> </li> </ul> <p>You can&#39;t create non-failover resource record sets that have the same values for the <code>Name</code> and <code>Type</code> elements as failover resource record sets.</p> <p>For failover alias resource record sets, you must also include the <code>EvaluateTargetHealth</code> element and set the value to true.</p> <p>For more information about configuring failover for Route 53, see the following topics in the <i>Amazon Route 53 Developer Guide</i>: </p> <ul> <li> <p> <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html">Route 53 Health Checks and DNS Failover</a> </p> </li> <li> <p> <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-private-hosted-zones.html">Configuring Failover in a Private Hosted Zone</a> </p> </li> </ul></p>
+    #[serde(rename = "Failover")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub failover: Option<String>,
     /// <p> <i>Geolocation resource record sets only:</i> A complex type that lets you control how Amazon Route 53 responds to DNS queries based on the geographic origin of the query. For example, if you want all queries from Africa to be routed to a web server with an IP address of <code>192.0.2.111</code>, create a resource record set with a <code>Type</code> of <code>A</code> and a <code>ContinentCode</code> of <code>AF</code>.</p> <note> <p>Creating geolocation and geolocation alias resource record sets in private hosted zones is not supported.</p> </note> <p>If you create separate resource record sets for overlapping geographic regions (for example, one resource record set for a continent and one for a country on the same continent), priority goes to the smallest geographic region. This allows you to route most queries for a continent to one resource and to route queries for a country on that continent to a different resource.</p> <p>You can't create two geolocation resource record sets that specify the same geographic location.</p> <p>The value <code>*</code> in the <code>CountryCode</code> element matches all geographic locations that aren't specified in other geolocation resource record sets that have the same values for the <code>Name</code> and <code>Type</code> elements.</p> <important> <p>Geolocation works by mapping IP addresses to locations. However, some IP addresses aren't mapped to geographic locations, so even if you create geolocation resource record sets that cover all seven continents, Route 53 will receive some DNS queries from locations that it can't identify. We recommend that you create a resource record set for which the value of <code>CountryCode</code> is <code>*</code>, which handles both queries that come from locations for which you haven't created geolocation resource record sets and queries from IP addresses that aren't mapped to a location. If you don't create a <code>*</code> resource record set, Route 53 returns a "no answer" response for queries from those locations.</p> </important> <p>You can't create non-geolocation resource record sets that have the same values for the <code>Name</code> and <code>Type</code> elements as geolocation resource record sets.</p>
+    #[serde(rename = "GeoLocation")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub geo_location: Option<GeoLocation>,
     /// <p><p>If you want Amazon Route 53 to return this resource record set in response to a DNS query only when the status of a health check is healthy, include the <code>HealthCheckId</code> element and specify the ID of the applicable health check.</p> <p>Route 53 determines whether a resource record set is healthy based on one of the following:</p> <ul> <li> <p>By periodically sending a request to the endpoint that is specified in the health check</p> </li> <li> <p>By aggregating the status of a specified group of health checks (calculated health checks)</p> </li> <li> <p>By determining the current state of a CloudWatch alarm (CloudWatch metric health checks)</p> </li> </ul> <important> <p>Route 53 doesn&#39;t check the health of the endpoint that is specified in the resource record set, for example, the endpoint specified by the IP address in the <code>Value</code> element. When you add a <code>HealthCheckId</code> element to a resource record set, Route 53 checks the health of the endpoint that you specified in the health check. </p> </important> <p>For more information, see the following topics in the <i>Amazon Route 53 Developer Guide</i>:</p> <ul> <li> <p> <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html">How Amazon Route 53 Determines Whether an Endpoint Is Healthy</a> </p> </li> <li> <p> <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html">Route 53 Health Checks and DNS Failover</a> </p> </li> <li> <p> <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-private-hosted-zones.html">Configuring Failover in a Private Hosted Zone</a> </p> </li> </ul> <p> <b>When to Specify HealthCheckId</b> </p> <p>Specifying a value for <code>HealthCheckId</code> is useful only when Route 53 is choosing between two or more resource record sets to respond to a DNS query, and you want Route 53 to base the choice in part on the status of a health check. Configuring health checks makes sense only in the following configurations:</p> <ul> <li> <p> <b>Non-alias resource record sets</b>: You&#39;re checking the health of a group of non-alias resource record sets that have the same routing policy, name, and type (such as multiple weighted records named www.example.com with a type of A) and you specify health check IDs for all the resource record sets. </p> <p>If the health check status for a resource record set is healthy, Route 53 includes the record among the records that it responds to DNS queries with.</p> <p>If the health check status for a resource record set is unhealthy, Route 53 stops responding to DNS queries using the value for that resource record set.</p> <p>If the health check status for all resource record sets in the group is unhealthy, Route 53 considers all resource record sets in the group healthy and responds to DNS queries accordingly. </p> </li> <li> <p> <b>Alias resource record sets</b>: You specify the following settings:</p> <ul> <li> <p>You set <code>EvaluateTargetHealth</code> to true for an alias resource record set in a group of resource record sets that have the same routing policy, name, and type (such as multiple weighted records named www.example.com with a type of A). </p> </li> <li> <p>You configure the alias resource record set to route traffic to a non-alias resource record set in the same hosted zone.</p> </li> <li> <p>You specify a health check ID for the non-alias resource record set. </p> </li> </ul> <p>If the health check status is healthy, Route 53 considers the alias resource record set to be healthy and includes the alias record among the records that it responds to DNS queries with.</p> <p>If the health check status is unhealthy, Route 53 stops responding to DNS queries using the alias resource record set.</p> <note> <p>The alias resource record set can also route traffic to a <i>group</i> of non-alias resource record sets that have the same routing policy, name, and type. In that configuration, associate health checks with all of the resource record sets in the group of non-alias resource record sets.</p> </note> </li> </ul> <p> <b>Geolocation Routing</b> </p> <p>For geolocation resource record sets, if an endpoint is unhealthy, Route 53 looks for a resource record set for the larger, associated geographic region. For example, suppose you have resource record sets for a state in the United States, for the entire United States, for North America, and a resource record set that has <code><em></code> for <code>CountryCode</code> is <code></em></code>, which applies to all locations. If the endpoint for the state resource record set is unhealthy, Route 53 checks for healthy resource record sets in the following order until it finds a resource record set for which the endpoint is healthy:</p> <ul> <li> <p>The United States</p> </li> <li> <p>North America</p> </li> <li> <p>The default resource record set</p> </li> </ul> <p> <b>Specifying the Health Check Endpoint by Domain Name</b> </p> <p>If your health checks specify the endpoint only by domain name, we recommend that you create a separate health check for each endpoint. For example, create a health check for each <code>HTTP</code> server that is serving content for <code>www.example.com</code>. For the value of <code>FullyQualifiedDomainName</code>, specify the domain name of the server (such as <code>us-east-2-www.example.com</code>), not the name of the resource record sets (<code>www.example.com</code>).</p> <important> <p>Health check results will be unpredictable if you do the following:</p> <ul> <li> <p>Create a health check that has the same value for <code>FullyQualifiedDomainName</code> as the name of a resource record set.</p> </li> <li> <p>Associate that health check with the resource record set.</p> </li> </ul> </important></p>
+    #[serde(rename = "HealthCheckId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub health_check_id: Option<String>,
     /// <p> <i>Multivalue answer resource record sets only</i>: To route traffic approximately randomly to multiple resources, such as web servers, create one multivalue answer record for each resource and specify <code>true</code> for <code>MultiValueAnswer</code>. Note the following:</p> <ul> <li> <p>If you associate a health check with a multivalue answer resource record set, Amazon Route 53 responds to DNS queries with the corresponding IP address only when the health check is healthy.</p> </li> <li> <p>If you don't associate a health check with a multivalue answer record, Route 53 always considers the record to be healthy.</p> </li> <li> <p>Route 53 responds to DNS queries with up to eight healthy records; if you have eight or fewer healthy records, Route 53 responds to all DNS queries with all the healthy records.</p> </li> <li> <p>If you have more than eight healthy records, Route 53 responds to different DNS resolvers with different combinations of healthy records.</p> </li> <li> <p>When all records are unhealthy, Route 53 responds to DNS queries with up to eight unhealthy records.</p> </li> <li> <p>If a resource becomes unavailable after a resolver caches a response, client software typically tries another of the IP addresses in the response.</p> </li> </ul> <p>You can't create multivalue answer alias records.</p>
+    #[serde(rename = "MultiValueAnswer")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub multi_value_answer: Option<bool>,
     /// <p>For <code>ChangeResourceRecordSets</code> requests, the name of the record that you want to create, update, or delete. For <code>ListResourceRecordSets</code> responses, the name of a record in the specified hosted zone.</p> <p> <b>ChangeResourceRecordSets Only</b> </p> <p>Enter a fully qualified domain name, for example, <code>www.example.com</code>. You can optionally include a trailing dot. If you omit the trailing dot, Amazon Route 53 assumes that the domain name that you specify is fully qualified. This means that Route 53 treats <code>www.example.com</code> (without a trailing dot) and <code>www.example.com.</code> (with a trailing dot) as identical.</p> <p>For information about how to specify characters other than <code>a-z</code>, <code>0-9</code>, and <code>-</code> (hyphen) and how to specify internationalized domain names, see <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DomainNameFormat.html">DNS Domain Name Format</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> <p>You can use the asterisk (*) wildcard to replace the leftmost label in a domain name, for example, <code>*.example.com</code>. Note the following:</p> <ul> <li> <p>The * must replace the entire label. For example, you can't specify <code>*prod.example.com</code> or <code>prod*.example.com</code>.</p> </li> <li> <p>The * can't replace any of the middle labels, for example, marketing.*.example.com.</p> </li> <li> <p>If you include * in any position other than the leftmost label in a domain name, DNS treats it as an * character (ASCII 42), not as a wildcard.</p> <important> <p>You can't use the * wildcard for resource records sets that have a type of NS.</p> </important> </li> </ul> <p>You can use the * wildcard as the leftmost label in a domain name, for example, <code>*.example.com</code>. You can't use an * for one of the middle labels, for example, <code>marketing.*.example.com</code>. In addition, the * must replace the entire label; for example, you can't specify <code>prod*.example.com</code>.</p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p><p> <i>Latency-based resource record sets only:</i> The Amazon EC2 Region where you created the resource that this resource record set refers to. The resource typically is an AWS resource, such as an EC2 instance or an ELB load balancer, and is referred to by an IP address or a DNS domain name, depending on the record type.</p> <note> <p>Creating latency and latency alias resource record sets in private hosted zones is not supported.</p> </note> <p>When Amazon Route 53 receives a DNS query for a domain name and type for which you have created latency resource record sets, Route 53 selects the latency resource record set that has the lowest latency between the end user and the associated Amazon EC2 Region. Route 53 then returns the value that is associated with the selected resource record set.</p> <p>Note the following:</p> <ul> <li> <p>You can only specify one <code>ResourceRecord</code> per latency resource record set.</p> </li> <li> <p>You can only create one latency resource record set for each Amazon EC2 Region.</p> </li> <li> <p>You aren&#39;t required to create latency resource record sets for all Amazon EC2 Regions. Route 53 will choose the region with the best latency from among the regions that you create latency resource record sets for.</p> </li> <li> <p>You can&#39;t create non-latency resource record sets that have the same values for the <code>Name</code> and <code>Type</code> elements as latency resource record sets.</p> </li> </ul></p>
+    #[serde(rename = "Region")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
     /// <p><p>Information about the resource records to act upon.</p> <note> <p>If you&#39;re creating an alias resource record set, omit <code>ResourceRecords</code>.</p> </note></p>
+    #[serde(rename = "ResourceRecords")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_records: Option<Vec<ResourceRecord>>,
     /// <p> <i>Resource record sets that have a routing policy other than simple:</i> An identifier that differentiates among multiple resource record sets that have the same combination of name and type, such as multiple weighted resource record sets named acme.example.com that have a type of A. In a group of resource record sets that have the same name and type, the value of <code>SetIdentifier</code> must be unique for each resource record set. </p> <p>For information about routing policies, see <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html">Choosing a Routing Policy</a> in the <i>Amazon Route 53 Developer Guide</i>.</p>
+    #[serde(rename = "SetIdentifier")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub set_identifier: Option<String>,
     /// <p><p>The resource record cache time to live (TTL), in seconds. Note the following:</p> <ul> <li> <p>If you&#39;re creating or updating an alias resource record set, omit <code>TTL</code>. Amazon Route 53 uses the value of <code>TTL</code> for the alias target. </p> </li> <li> <p>If you&#39;re associating this resource record set with a health check (if you&#39;re adding a <code>HealthCheckId</code> element), we recommend that you specify a <code>TTL</code> of 60 seconds or less so clients respond quickly to changes in health status.</p> </li> <li> <p>All of the resource record sets in a group of weighted resource record sets must have the same value for <code>TTL</code>.</p> </li> <li> <p>If a group of weighted resource record sets includes one or more weighted alias resource record sets for which the alias target is an ELB load balancer, we recommend that you specify a <code>TTL</code> of 60 seconds for all of the non-alias weighted resource record sets that have the same name and type. Values other than 60 seconds (the TTL for load balancers) will change the effect of the values that you specify for <code>Weight</code>.</p> </li> </ul></p>
+    #[serde(rename = "TTL")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ttl: Option<i64>,
     /// <p><p>When you create a traffic policy instance, Amazon Route 53 automatically creates a resource record set. <code>TrafficPolicyInstanceId</code> is the ID of the traffic policy instance that Route 53 created this resource record set for.</p> <important> <p>To delete the resource record set that is associated with a traffic policy instance, use <code>DeleteTrafficPolicyInstance</code>. Route 53 will delete the resource record set automatically. If you delete the resource record set by using <code>ChangeResourceRecordSets</code>, Route 53 doesn&#39;t automatically delete the traffic policy instance, and you&#39;ll continue to be charged for it even though it&#39;s no longer in use. </p> </important></p>
+    #[serde(rename = "TrafficPolicyInstanceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub traffic_policy_instance_id: Option<String>,
     /// <p><p>The DNS record type. For information about different record types and how data is encoded for them, see <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html">Supported DNS Resource Record Types</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> <p>Valid values for basic resource record sets: <code>A</code> | <code>AAAA</code> | <code>CAA</code> | <code>CNAME</code> | <code>MX</code> | <code>NAPTR</code> | <code>NS</code> | <code>PTR</code> | <code>SOA</code> | <code>SPF</code> | <code>SRV</code> | <code>TXT</code> </p> <p>Values for weighted, latency, geolocation, and failover resource record sets: <code>A</code> | <code>AAAA</code> | <code>CAA</code> | <code>CNAME</code> | <code>MX</code> | <code>NAPTR</code> | <code>PTR</code> | <code>SPF</code> | <code>SRV</code> | <code>TXT</code>. When creating a group of weighted, latency, geolocation, or failover resource record sets, specify the same value for all of the resource record sets in the group.</p> <p>Valid values for multivalue answer resource record sets: <code>A</code> | <code>AAAA</code> | <code>MX</code> | <code>NAPTR</code> | <code>PTR</code> | <code>SPF</code> | <code>SRV</code> | <code>TXT</code> </p> <note> <p>SPF records were formerly used to verify the identity of the sender of email messages. However, we no longer recommend that you create resource record sets for which the value of <code>Type</code> is <code>SPF</code>. RFC 7208, <i>Sender Policy Framework (SPF) for Authorizing Use of Domains in Email, Version 1</i>, has been updated to say, &quot;...[I]ts existence and mechanism defined in [RFC4408] have led to some interoperability issues. Accordingly, its use is no longer appropriate for SPF version 1; implementations are not to use it.&quot; In RFC 7208, see section 14.1, <a href="http://tools.ietf.org/html/rfc7208#section-14.1">The SPF DNS Record Type</a>.</p> </note> <p>Values for alias resource record sets:</p> <ul> <li> <p> <b>Amazon API Gateway custom regional APIs and edge-optimized APIs:</b> <code>A</code> </p> </li> <li> <p> <b>CloudFront distributions:</b> <code>A</code> </p> <p>If IPv6 is enabled for the distribution, create two resource record sets to route traffic to your distribution, one with a value of <code>A</code> and one with a value of <code>AAAA</code>. </p> </li> <li> <p> <b>AWS Elastic Beanstalk environment that has a regionalized subdomain</b>: <code>A</code> </p> </li> <li> <p> <b>ELB load balancers:</b> <code>A</code> | <code>AAAA</code> </p> </li> <li> <p> <b>Amazon S3 buckets:</b> <code>A</code> </p> </li> <li> <p> <b>Amazon Virtual Private Cloud interface VPC endpoints</b> <code>A</code> </p> </li> <li> <p> <b>Another resource record set in this hosted zone:</b> Specify the type of the resource record set that you&#39;re creating the alias for. All values are supported except <code>NS</code> and <code>SOA</code>.</p> <note> <p>If you&#39;re creating an alias record that has the same name as the hosted zone (known as the zone apex), you can&#39;t route traffic to a record for which the value of <code>Type</code> is <code>CNAME</code>. This is because the alias record must have the same type as the record you&#39;re routing traffic to, and creating a CNAME record for the zone apex isn&#39;t supported even for an alias record.</p> </note> </li> </ul></p>
+    #[serde(rename = "Type")]
     pub type_: String,
     /// <p><p> <i>Weighted resource record sets only:</i> Among resource record sets that have the same combination of DNS name and type, a value that determines the proportion of DNS queries that Amazon Route 53 responds to using the current resource record set. Route 53 calculates the sum of the weights for the resource record sets that have the same combination of DNS name and type. Route 53 then responds to queries based on the ratio of a resource&#39;s weight to the total. Note the following:</p> <ul> <li> <p>You must specify a value for the <code>Weight</code> element for every weighted resource record set.</p> </li> <li> <p>You can only specify one <code>ResourceRecord</code> per weighted resource record set.</p> </li> <li> <p>You can&#39;t create latency, failover, or geolocation resource record sets that have the same values for the <code>Name</code> and <code>Type</code> elements as weighted resource record sets.</p> </li> <li> <p>You can create a maximum of 100 weighted resource record sets that have the same values for the <code>Name</code> and <code>Type</code> elements.</p> </li> <li> <p>For weighted (but not weighted alias) resource record sets, if you set <code>Weight</code> to <code>0</code> for a resource record set, Route 53 never responds to queries with the applicable value for that resource record set. However, if you set <code>Weight</code> to <code>0</code> for all resource record sets that have the same combination of DNS name and type, traffic is routed to all resources with equal probability.</p> <p>The effect of setting <code>Weight</code> to <code>0</code> is different when you associate health checks with weighted resource record sets. For more information, see <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-configuring-options.html">Options for Configuring Route 53 Active-Active and Active-Passive Failover</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> </li> </ul></p>
+    #[serde(rename = "Weight")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub weight: Option<i64>,
 }
 
@@ -6295,14 +6565,20 @@ impl ResourceRecordsSerializer {
 }
 
 /// <p>A complex type containing a resource and its associated tags.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ResourceTagSet {
     /// <p>The ID for the specified resource.</p>
+    #[serde(rename = "ResourceId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_id: Option<String>,
     /// <p><p>The type of the resource.</p> <ul> <li> <p>The resource type for health checks is <code>healthcheck</code>.</p> </li> <li> <p>The resource type for hosted zones is <code>hostedzone</code>.</p> </li> </ul></p>
+    #[serde(rename = "ResourceType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub resource_type: Option<String>,
     /// <p>The tags associated with the specified resource.</p>
+    #[serde(rename = "Tags")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
 }
 
@@ -6357,12 +6633,14 @@ impl ResourceTagSetListDeserializer {
     }
 }
 /// <p>A complex type that contains the type of limit that you specified in the request and the current value for that limit.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ReusableDelegationSetLimit {
     /// <p>The limit that you requested: <code>MAX_ZONES_BY_REUSABLE_DELEGATION_SET</code>, the maximum number of hosted zones that you can associate with the specified reusable delegation set.</p>
+    #[serde(rename = "Type")]
     pub type_: String,
     /// <p>The current value for the <code>MAX_ZONES_BY_REUSABLE_DELEGATION_SET</code> limit.</p>
+    #[serde(rename = "Value")]
     pub value: i64,
 }
 
@@ -6490,12 +6768,16 @@ impl StatusDeserializer {
     }
 }
 /// <p>A complex type that contains the status that one Amazon Route 53 health checker reports and the time of the health check.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct StatusReport {
     /// <p>The date and time that the health checker performed the health check in <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601 format</a> and Coordinated Universal Time (UTC). For example, the value <code>2017-03-27T17:48:16.751Z</code> represents March 27, 2017 at 17:48:16.751 UTC.</p>
+    #[serde(rename = "CheckedTime")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub checked_time: Option<String>,
     /// <p>A description of the status of the health check endpoint as reported by one of the Amazon Route 53 health checkers.</p>
+    #[serde(rename = "Status")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -6575,13 +6857,16 @@ impl TTLSerializer {
 }
 
 /// <p>A complex type that contains information about a tag that you want to add or edit for the specified health check or hosted zone.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Tag {
     /// <p><p>The value of <code>Key</code> depends on the operation that you want to perform:</p> <ul> <li> <p> <b>Add a tag to a health check or hosted zone</b>: <code>Key</code> is the name that you want to give the new tag.</p> </li> <li> <p> <b>Edit a tag</b>: <code>Key</code> is the name of the tag that you want to change the <code>Value</code> for.</p> </li> <li> <p> <b> Delete a key</b>: <code>Key</code> is the name of the tag you want to remove.</p> </li> <li> <p> <b>Give a name to a health check</b>: Edit the default <code>Name</code> tag. In the Amazon Route 53 console, the list of your health checks includes a <b>Name</b> column that lets you see the name that you&#39;ve given to each health check.</p> </li> </ul></p>
+    #[serde(rename = "Key")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// <p><p>The value of <code>Value</code> depends on the operation that you want to perform:</p> <ul> <li> <p> <b>Add a tag to a health check or hosted zone</b>: <code>Value</code> is the value that you want to give the new tag.</p> </li> <li> <p> <b>Edit a tag</b>: <code>Value</code> is the new value that you want to assign the tag.</p> </li> </ul></p>
+    #[serde(rename = "Value")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -6861,20 +7146,26 @@ pub struct TestDNSAnswerRequest {
 }
 
 /// <p>A complex type that contains the response to a <code>TestDNSAnswer</code> request. </p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TestDNSAnswerResponse {
     /// <p>The Amazon Route 53 name server used to respond to the request.</p>
+    #[serde(rename = "Nameserver")]
     pub nameserver: String,
     /// <p>The protocol that Amazon Route 53 used to respond to the request, either <code>UDP</code> or <code>TCP</code>. </p>
+    #[serde(rename = "Protocol")]
     pub protocol: String,
     /// <p>A list that contains values that Amazon Route 53 returned for this resource record set.</p>
+    #[serde(rename = "RecordData")]
     pub record_data: Vec<String>,
     /// <p>The name of the resource record set that you submitted a request for.</p>
+    #[serde(rename = "RecordName")]
     pub record_name: String,
     /// <p>The type of the resource record set that you submitted a request for.</p>
+    #[serde(rename = "RecordType")]
     pub record_type: String,
     /// <p>A code that indicates whether the request is valid or not. The most common response code is <code>NOERROR</code>, meaning that the request is valid. If the response is not valid, Amazon Route 53 returns a response code that describes the error. For a list of possible response codes, see <a href="http://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml#dns-parameters-6">DNS RCODES</a> on the IANA website. </p>
+    #[serde(rename = "ResponseCode")]
     pub response_code: String,
 }
 
@@ -6955,20 +7246,27 @@ impl TrafficPoliciesDeserializer {
     }
 }
 /// <p>A complex type that contains settings for a traffic policy.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TrafficPolicy {
     /// <p>The comment that you specify in the <code>CreateTrafficPolicy</code> request, if any.</p>
+    #[serde(rename = "Comment")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub comment: Option<String>,
     /// <p>The definition of a traffic policy in JSON format. You specify the JSON document to use for a new traffic policy in the <code>CreateTrafficPolicy</code> request. For more information about the JSON format, see <a href="https://docs.aws.amazon.com/Route53/latest/APIReference/api-policies-traffic-policy-document-format.html">Traffic Policy Document Format</a>.</p>
+    #[serde(rename = "Document")]
     pub document: String,
     /// <p>The ID that Amazon Route 53 assigned to a traffic policy when you created it.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The name that you specified when you created the traffic policy.</p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p>The DNS type of the resource record sets that Amazon Route 53 creates when you use a traffic policy to create a traffic policy instance.</p>
+    #[serde(rename = "Type")]
     pub type_: String,
     /// <p>The version number that Amazon Route 53 assigns to a traffic policy. For a new traffic policy, the value of <code>Version</code> is always 1.</p>
+    #[serde(rename = "Version")]
     pub version: i64,
 }
 
@@ -7105,26 +7403,35 @@ impl TrafficPolicyIdSerializer {
 }
 
 /// <p>A complex type that contains settings for the new traffic policy instance.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TrafficPolicyInstance {
     /// <p>The ID of the hosted zone that Amazon Route 53 created resource record sets in.</p>
+    #[serde(rename = "HostedZoneId")]
     pub hosted_zone_id: String,
     /// <p>The ID that Amazon Route 53 assigned to the new traffic policy instance.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>If <code>State</code> is <code>Failed</code>, an explanation of the reason for the failure. If <code>State</code> is another value, <code>Message</code> is empty.</p>
+    #[serde(rename = "Message")]
     pub message: String,
     /// <p>The DNS name, such as www.example.com, for which Amazon Route 53 responds to queries by using the resource record sets that are associated with this traffic policy instance. </p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p><p>The value of <code>State</code> is one of the following values:</p> <dl> <dt>Applied</dt> <dd> <p>Amazon Route 53 has finished creating resource record sets, and changes have propagated to all Route 53 edge locations.</p> </dd> <dt>Creating</dt> <dd> <p>Route 53 is creating the resource record sets. Use <code>GetTrafficPolicyInstance</code> to confirm that the <code>CreateTrafficPolicyInstance</code> request completed successfully.</p> </dd> <dt>Failed</dt> <dd> <p>Route 53 wasn&#39;t able to create or update the resource record sets. When the value of <code>State</code> is <code>Failed</code>, see <code>Message</code> for an explanation of what caused the request to fail.</p> </dd> </dl></p>
+    #[serde(rename = "State")]
     pub state: String,
     /// <p>The TTL that Amazon Route 53 assigned to all of the resource record sets that it created in the specified hosted zone.</p>
+    #[serde(rename = "TTL")]
     pub ttl: i64,
     /// <p>The ID of the traffic policy that Amazon Route 53 used to create resource record sets in the specified hosted zone.</p>
+    #[serde(rename = "TrafficPolicyId")]
     pub traffic_policy_id: String,
     /// <p>The DNS type that Amazon Route 53 assigned to all of the resource record sets that it created for this traffic policy instance. </p>
+    #[serde(rename = "TrafficPolicyType")]
     pub traffic_policy_type: String,
     /// <p>The version of the traffic policy that Amazon Route 53 used to create resource record sets in the specified hosted zone.</p>
+    #[serde(rename = "TrafficPolicyVersion")]
     pub traffic_policy_version: i64,
 }
 
@@ -7304,18 +7611,23 @@ impl TrafficPolicySummariesDeserializer {
     }
 }
 /// <p>A complex type that contains information about the latest version of one traffic policy that is associated with the current AWS account.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct TrafficPolicySummary {
     /// <p>The ID that Amazon Route 53 assigned to the traffic policy when you created it.</p>
+    #[serde(rename = "Id")]
     pub id: String,
     /// <p>The version number of the latest version of the traffic policy.</p>
+    #[serde(rename = "LatestVersion")]
     pub latest_version: i64,
     /// <p>The name that you specified for the traffic policy when you created it.</p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p>The number of traffic policies that are associated with the current AWS account.</p>
+    #[serde(rename = "TrafficPolicyCount")]
     pub traffic_policy_count: i64,
     /// <p>The DNS type of the resource record sets that Amazon Route 53 creates when you use a traffic policy to create a traffic policy instance.</p>
+    #[serde(rename = "Type")]
     pub type_: String,
 }
 
@@ -7539,10 +7851,11 @@ impl UpdateHealthCheckRequestSerializer {
     }
 }
 /// <p>A complex type that contains the response to the <code>UpdateHealthCheck</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateHealthCheckResponse {
     /// <p>A complex type that contains the response to an <code>UpdateHealthCheck</code> request.</p>
+    #[serde(rename = "HealthCheck")]
     pub health_check: HealthCheck,
 }
 
@@ -7599,10 +7912,11 @@ impl UpdateHostedZoneCommentRequestSerializer {
     }
 }
 /// <p>A complex type that contains the response to the <code>UpdateHostedZoneComment</code> request.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateHostedZoneCommentResponse {
     /// <p>A complex type that contains the response to the <code>UpdateHostedZoneComment</code> request.</p>
+    #[serde(rename = "HostedZone")]
     pub hosted_zone: HostedZone,
 }
 
@@ -7658,10 +7972,11 @@ impl UpdateTrafficPolicyCommentRequestSerializer {
     }
 }
 /// <p>A complex type that contains the response information for the traffic policy.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateTrafficPolicyCommentResponse {
     /// <p>A complex type that contains settings for the specified traffic policy.</p>
+    #[serde(rename = "TrafficPolicy")]
     pub traffic_policy: TrafficPolicy,
 }
 
@@ -7730,10 +8045,11 @@ impl UpdateTrafficPolicyInstanceRequestSerializer {
     }
 }
 /// <p>A complex type that contains information about the resource record sets that Amazon Route 53 created based on a specified traffic policy.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct UpdateTrafficPolicyInstanceResponse {
     /// <p>A complex type that contains settings for the updated traffic policy instance.</p>
+    #[serde(rename = "TrafficPolicyInstance")]
     pub traffic_policy_instance: TrafficPolicyInstance,
 }
 
@@ -7775,12 +8091,15 @@ impl UsageCountDeserializer {
     }
 }
 /// <p>(Private hosted zones only) A complex type that contains information about an Amazon VPC.</p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct VPC {
+    #[serde(rename = "VPCId")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vpc_id: Option<String>,
     /// <p>(Private hosted zones only) The region that an Amazon VPC was created in.</p>
+    #[serde(rename = "VPCRegion")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vpc_region: Option<String>,
 }
 

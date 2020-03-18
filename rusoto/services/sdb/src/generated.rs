@@ -37,17 +37,22 @@ use xml::reader::ParserConfig;
 use xml::EventReader;
 
 /// <p></p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
-#[cfg_attr(feature = "deserialize_structs", derive(Deserialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Attribute {
     /// <p></p>
+    #[serde(rename = "AlternateNameEncoding")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alternate_name_encoding: Option<String>,
     /// <p></p>
+    #[serde(rename = "AlternateValueEncoding")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alternate_value_encoding: Option<String>,
     /// <p>The name of the attribute.</p>
+    #[serde(rename = "Name")]
     pub name: String,
     /// <p>The value of the attribute.</p>
+    #[serde(rename = "Value")]
     pub value: String,
 }
 
@@ -354,22 +359,36 @@ impl DomainMetadataRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct DomainMetadataResult {
     /// <p>The number of unique attribute names in the domain.</p>
+    #[serde(rename = "AttributeNameCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attribute_name_count: Option<i64>,
     /// <p>The total size of all unique attribute names in the domain, in bytes.</p>
+    #[serde(rename = "AttributeNamesSizeBytes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attribute_names_size_bytes: Option<i64>,
     /// <p>The number of all attribute name/value pairs in the domain.</p>
+    #[serde(rename = "AttributeValueCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attribute_value_count: Option<i64>,
     /// <p>The total size of all attribute values in the domain, in bytes.</p>
+    #[serde(rename = "AttributeValuesSizeBytes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attribute_values_size_bytes: Option<i64>,
     /// <p>The number of all items in the domain.</p>
+    #[serde(rename = "ItemCount")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub item_count: Option<i64>,
     /// <p>The total size of all item names in the domain, in bytes.</p>
+    #[serde(rename = "ItemNamesSizeBytes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub item_names_size_bytes: Option<i64>,
     /// <p>The data and time when metadata was calculated, in Epoch (UNIX) seconds.</p>
+    #[serde(rename = "Timestamp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
 }
 
@@ -486,10 +505,12 @@ impl GetAttributesRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct GetAttributesResult {
     /// <p>The list of attributes returned by the operation.</p>
+    #[serde(rename = "Attributes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<Vec<Attribute>>,
 }
 
@@ -525,14 +546,18 @@ impl IntegerDeserializer {
     }
 }
 /// <p></p>
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct Item {
     /// <p></p>
+    #[serde(rename = "AlternateNameEncoding")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub alternate_name_encoding: Option<String>,
     /// <p>A list of attributes.</p>
+    #[serde(rename = "Attributes")]
     pub attributes: Vec<Attribute>,
     /// <p>The name of the item.</p>
+    #[serde(rename = "Name")]
     pub name: String,
 }
 
@@ -615,12 +640,16 @@ impl ListDomainsRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct ListDomainsResult {
     /// <p>A list of domain names that match the expression.</p>
+    #[serde(rename = "DomainNames")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub domain_names: Option<Vec<String>>,
     /// <p>An opaque token indicating that there are more domains than the specified <code>MaxNumberOfDomains</code> still available.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
@@ -809,12 +838,16 @@ impl SelectRequestSerializer {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serialize_structs", derive(Serialize))]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[cfg_attr(any(test, feature = "serialize_structs"), derive(Serialize))]
 pub struct SelectResult {
     /// <p>A list of items that match the select expression.</p>
+    #[serde(rename = "Items")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<Item>>,
     /// <p>An opaque token indicating that more items than <code>MaxNumberOfItems</code> were matched, the response size exceeded 1 megabyte, or the execution time exceeded 5 seconds.</p>
+    #[serde(rename = "NextToken")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 }
 
