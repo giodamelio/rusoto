@@ -490,9 +490,12 @@ where
     }
 
     if deserialized {
-        if let Some(deserialize_trait) = protocol_generator.deserialize_trait() {
-            derived.push(deserialize_trait);
-        }
+        let a = protocol_generator.deserialize_trait();
+        println!("--------------------- {:?}", a);
+        // if let Some(deserialize_trait) = a {
+        //     derived.push(deserialize_trait);
+        // }
+        derived.push("Deserialize");
     }
 
     let attributes = format!("#[derive({})]", derived.join(","));
